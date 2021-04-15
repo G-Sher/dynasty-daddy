@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="schema1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/scripts/KTCScraperScript/.idea/dataSources/4ade146d-6f2b-446d-bb01-3dfcaafcafb2/storage_v2/_src_/database/player_rankings.m_7MNw/schema/pg_catalog.0S1ZNQ.zip!/" />
+      <root url="jar://$PROJECT_DIR$/scripts/KTCScraperScript/.idea/dataSources/4ade146d-6f2b-446d-bb01-3dfcaafcafb2/storage_v2/_src_/database/player_rankings.m_7MNw/schema/information_schema.FNRwLQ.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
