@@ -1,0 +1,23 @@
+<div>
+  <div>
+    <mat-button-toggle-group [(ngModel)]="selectedDateFilter" (change)="updateTable()" class="margin-bot-20"
+                             style="overflow: auto">
+      <mat-button-toggle value="alltime">All-time</mat-button-toggle>
+      <mat-button-toggle value="month">A Month</mat-button-toggle>
+      <mat-button-toggle value="2week">2 Weeks</mat-button-toggle>
+      <mat-button-toggle value="week">A Week</mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+
+
+  <div style="display: block;">
+    <canvas baseChart width="600" height="400"
+            [datasets]="playerComparisonService.lineChartData"
+            [labels]="playerComparisonService.lineChartLabels"
+            [options]="lineChartOptions"
+            [legend]="lineChartLegend"
+            [chartType]="lineChartType"
+            [plugins]="lineChartPlugins">
+    </canvas>
+  </div>
+</div>

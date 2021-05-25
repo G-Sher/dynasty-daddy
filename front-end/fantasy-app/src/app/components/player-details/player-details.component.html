@@ -1,0 +1,78 @@
+<div *ngIf="playersLoaded && selectedPlayer" class="table-container">
+
+  <div class="margin-top-10">
+    <span class="link--text__no__underline mid-bold-text" style="padding-right: 3px" [routerLink]="['../../values']">Players</span>
+    <mat-icon class="arrow-icon__nav">chevron_right</mat-icon>
+    <span class="mid-bold-text">{{selectedPlayer.full_name}}</span>
+    <div class="link--text__no__underline mid-bold-text button-right" (click)="openPlayerComparison(selectedPlayer)">
+      View in Player Comparison<mat-icon class="arrow-icon__nav">chevron_right</mat-icon>
+    </div>
+  </div>
+  <div class="flex-start-container margin-top-50">
+    <div class="flex-item-home grid-25">
+      <div class="profile--pic">
+        <img #image [src]="'https://sleepercdn.com/content/nfl/players/thumb/' + selectedPlayer.sleeper_id + '.jpg'"
+             (error)="image.hidden = true" [hidden]="image.hidden" class="responsive">
+      </div>
+    </div>
+    <div class="flex-item-home grid-60">
+      <div class="large-bold-header-text">{{selectedPlayer.full_name}}</div>
+      <br>
+      <div>
+        <span
+          style="padding-right: 15px">{{playerService.getFullTeamNameFromACC(selectedPlayer.team)}} {{selectedPlayer.position}}</span>
+        <mat-icon class="icon--break">circle</mat-icon>
+        <span>{{selectedPlayer.age != -1 ? selectedPlayer.age : '??'}} y.o.</span>
+      </div>
+      <div *ngIf="sleeperService.selectedLeague">
+        <span class="small-text__light disabled__color">Owned By</span><span
+        style="padding-left: 10px" class="link--text__no__underline" [routerLink]="['../../../league/team', selectedPlayer.owner]">{{selectedPlayer.owner || 'None'}}</span>
+      </div>
+      <br>
+      <div class="standings-row">
+        <div class="standings-col vertical-break__right__dark">
+          <div class="small-text__light text__light disabled__color">Position Rank</div>
+          <div *ngIf="sleeperService.selectedLeague" class="mid-bold-text">{{sleeperService.selectedLeague.isSuperflex ? selectedPlayer.sf_position_rank : selectedPlayer.position_rank}}</div>
+          <div *ngIf="!sleeperService.selectedLeague" class="mid-bold-text">{{selectedPlayer.sf_position_rank}}</div>
+        </div>
+        <div class="standings-col vertical-break__right__dark">
+          <div class="small-text__light text__light disabled__color">Experience</div>
+          <div class="mid-bold-text">{{selectedPlayer.experience}}
+            Year{{selectedPlayer.experience == 1 ? 's' : ''}}</div>
+        </div>
+        <div class="standings-col vertical-break__right__dark">
+          <div class="small-text__light text__light disabled__color">{{playerService.playerStatsYear}} Points</div>
+          <div class="mid-bold-text">{{playerService.playerStats[selectedPlayer.sleeper_id]?.pts_half_ppr}}</div>
+        </div>
+        <div class="standings-col">
+          <div class="small-text__light text__light disabled__color">Last 5 Weeks Average</div>
+          <div class="mid-bold-text">{{getLast5WeekAverage()}}</div>
+        </div>
+      </div>
+    </div>
+    <div class="flex-item-home grid-15">
+      <div class="button-right center-text">
+        <mat-card>
+          <div class="text__light">Trade Value</div>
+          <div *ngIf="sleeperService.selectedLeague" class="large-bold-header-text">{{sleeperService.selectedLeague.isSuperflex ? selectedPlayer.sf_trade_value : selectedPlayer.trade_value}}</div>
+          <div *ngIf="!sleeperService.selectedLeague" class="large-bold-header-text">{{selectedPlayer.sf_trade_value}}</div>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+
+  <mat-tab-group mat-align-tabs="center" class="margin-top-25">
+    <mat-tab label="Past Week Summary">
+      <div class="mid-bold-text margin-top-10 center-text">Past 18 Weeks Points Vs. Projections</div>
+      <div class="margin-top-10 center-text">Below is the past 18 weeks of points and projections based on Sleeper's <span class="info__alert">0.5 PPR scoring</span>.
+      </div>
+      <app-player-details-weekly-stats-line-chart *ngIf="isPlayerStatsGenerated()"
+                                                  [selectedPlayer]="selectedPlayer"></app-player-details-weekly-stats-line-chart>
+    </mat-tab>
+    <mat-tab label="Past Box Scores">
+            <div class="mid-bold-text margin-top-10 center-text">Past 18 Box Scores</div>
+            <div class="margin-top-10 center-text">Below is the past 18 weeks of stats from Sleeper for the following player. The fantasy scoring is <span class="info__alert">0.5 PPR scoring</span>.</div>
+      <app-player-details-weekly-box-scores-table *ngIf="isPlayerStatsGenerated()" [selectedPlayer]="selectedPlayer"></app-player-details-weekly-box-scores-table>
+    </mat-tab>
+  </mat-tab-group>
+</div>

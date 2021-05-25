@@ -1,0 +1,39 @@
+<div class="table-container margin-top-10 mat-elevation-z8">
+  <div class="center-text mid-bold-text">
+    Completed Draft: {{selectedDraft.draft.rounds}} Rounds
+  </div>
+  <div class="small-text__light margin-top-10 center-text">
+    *Traded past picks are currently not updating properly
+  </div>
+  <mat-table [dataSource]="dataSource" class="margin-top-10">
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="pickNumber">
+      <mat-header-cell *matHeaderCellDef>Pick</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.pickNumber}}</mat-cell>
+    </ng-container>
+
+    <!-- Pos Column -->
+    <ng-container matColumnDef="team">
+      <mat-header-cell *matHeaderCellDef>Team</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{getTeamName(element.rosterId)}}</mat-cell>
+    </ng-container>
+
+    <!-- Age Column -->
+    <ng-container matColumnDef="owner">
+      <mat-header-cell *matHeaderCellDef>Owner</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{getOwnerName(element.rosterId)}}</mat-cell>
+    </ng-container>
+
+    <!-- Value Column -->
+    <ng-container matColumnDef="selectedPlayer">
+      <mat-header-cell *matHeaderCellDef>Selected Pick (current value)</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.position + ' ' + element.firstName + ' ' + element.lastName}} - {{sleeperService.selectedLeague.isSuperflex ? getPlayerBySleeperId(element.sleeperId)?.sf_trade_value || 'None' : getPlayerBySleeperId(element.sleeperId)?.trade_value || 'None'}}
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{'accent__color__background': sleeperService.sleeperUser.userData.username === getOwnerName(row.rosterId)}"></mat-row>
+  </mat-table>
+  <mat-paginator [pageSizeOptions]="[pageLength, 2 * pageLength, 4 * pageLength]" showFirstLastButtons></mat-paginator>
+</div>

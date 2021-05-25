@@ -1,0 +1,12 @@
+.mat-row:nth-child(even){
+  background-color: #373737;
+}
+
+.box-score-element-row:hover {
+  background: #577380;
+}
+
+.box-score-element-row:active {
+  background: #577380;
+}
+

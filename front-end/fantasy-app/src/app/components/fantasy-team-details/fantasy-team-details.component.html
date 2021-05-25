@@ -1,0 +1,100 @@
+<div class="table-container" *ngIf="sleeperService.leagueLoaded">
+  <div class="margin-top-10">
+    <span class="link--text__no__underline mid-bold-text" style="padding-right: 3px" [routerLink]="['../../rankings']">Power Rankings</span>
+    <mat-icon class="arrow-icon__nav">chevron_right</mat-icon>
+    <span class="mid-bold-text">{{selectedTeam.owner.ownerName}}</span>
+    <div class="link--text__no__underline mid-bold-text button-right" [routerLink]="['../../playoff/calculator']">
+      View in Standings
+      <mat-icon class="arrow-icon__nav">chevron_right</mat-icon>
+    </div>
+  </div>
+  <div class="flex-start-container margin-top-50">
+    <div class="flex-item-home grid-15">
+      <div class="profile--pic">
+        <img #image [src]="'https://sleepercdn.com/avatars/thumbs/' + selectedTeam.owner.avatar"
+             (error)="image.hidden = true" [hidden]="image.hidden" class="responsive">
+      </div>
+    </div>
+    <div class="flex-item-home grid-70">
+      <div class="large-bold-header-text">Team {{selectedTeam.owner.teamName}}</div>
+      <br>
+      <div>
+        <span
+          style="padding-right: 15px">Managed by {{selectedTeam.owner.ownerName}}</span>
+      </div>
+      <br>
+      <div class="standings-row">
+        <div class="standings-col vertical-break__right__dark">
+          <div class="small-text__light text__light disabled__color">Starter Rank</div>
+          <div class="mid-bold-text">{{powerRankingsService.getRankByTeam(selectedTeam, 'starterRank')}}</div>
+        </div>
+        <div class="standings-col vertical-break__right__dark">
+          <div class="small-text__light text__light disabled__color">Overall Rank</div>
+          <div class="mid-bold-text">{{powerRankingsService.getRankByTeam(selectedTeam, 'overallRank')}}</div>
+        </div>
+        <div class="standings-col vertical-break__right__dark">
+          <div class="small-text__light text__light disabled__color">Average Points</div>
+          <div class="mid-bold-text">{{getAveragePoints()}}</div>
+        </div>
+        <div class="standings-col vertical-break__right__dark">
+          <div class="small-text__light text__light disabled__color">Points For</div>
+          <div class="mid-bold-text">{{selectedTeam.roster.teamMetrics.fpts}}</div>
+        </div>
+        <div class="standings-col">
+          <div class="small-text__light text__light disabled__color">Max Points For</div>
+          <div class="mid-bold-text">{{selectedTeam.roster.teamMetrics.ppts}}</div>
+        </div>
+      </div>
+    </div>
+    <div class="flex-item-home grid-15">
+      <div class="button-right center-text">
+        <mat-card>
+          <div class="text__light" style="padding-right: 10px; padding-left: 10px">Record</div>
+          <div class="large-bold-header-text">{{selectedTeam.roster.teamMetrics.wins}}-{{selectedTeam.roster.teamMetrics.losses}}</div>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+
+  <mat-tab-group mat-align-tabs="center" class="margin-top-25">
+    <mat-tab label="Weekly MatchUps">
+      <div class="mid-bold-text margin-top-10 center-text">Weekly Points Vs. Opponents</div>
+      <div class="margin-top-10 center-text">Below is the {{sleeperService.selectedYear}} Season match ups vs opponents.
+      </div>
+      <app-fantasy-team-details-weekly-points-chart
+        [selectedTeam]="selectedTeam"></app-fantasy-team-details-weekly-points-chart>
+    </mat-tab>
+    <mat-tab label="Roster">
+      <div class="mid-bold-text margin-top-10 center-text">Team Roster</div>
+      <div class="margin-top-10 center-text">Below are the players sorted by most valuable to least valuable.</div>
+      <div class="content">
+        <div fxLayout="row wrap" fxLayoutAlign="center" class="margin-top-50" *ngIf="roster.length > 0">
+          <mat-card fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="33%" class="item mat-elevation-z4" *ngFor="let player of roster">
+            <mat-card-header>
+              <mat-card-title>{{player?.full_name}}</mat-card-title>
+              <mat-card-subtitle class="small-text__light">{{player.position}} {{player.age != -1 ? player.age : '??'}} y.o.</mat-card-subtitle>
+            </mat-card-header>
+            <img mat-card-image #image
+                 [src]="'https://sleepercdn.com/content/nfl/players/thumb/' + player?.sleeper_id + '.jpg'"
+                 (error)="image.hidden = true" [hidden]="image.hidden" style="max-width: 300px" class="responsive center-img">
+            <mat-card-content class="center-text">
+              <div class="small-text__light">Trade Value</div>
+              <div class="mid-bold-text">{{player?.sf_trade_value}}</div>
+            </mat-card-content>
+            <mat-card-actions class="center-text">
+              <button mat-button [routerLink]="['../../../players/details', player.name_id]">Player Details</button>
+              <button mat-button (click)="openPlayerComparison(player)">View Comparison</button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>
+
+
+<div class="center-text margin-top-50" *ngIf="!sleeperService.leagueLoaded">
+  <div class="warning__alert">Cannot fetch team information. Please select a league.</div>
+  <br>
+  <button mat-raised-button color="warn" routerLink="./home">Choose League</button>
+</div>

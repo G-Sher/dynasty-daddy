@@ -1,0 +1,66 @@
+<div class="table-container">
+  <div class="margin-top-10 large-bold-header-text center-text">Player Value Comparisons</div>
+  <div class="center-text margin-top-10">
+    Player values are scraped from <a class="info__alert" href="https://keeptradecut.com/" target="_blank">KeepTradeCut.com</a>
+    dynasty rankings calculated from over <span class="info__alert">600,000+</span> data points.
+    <div>The scoring is <span class="info__alert">0.5 PPR</span>, the table below will update depending on whether your
+      league is Superflex or not.
+    </div>
+  </div>
+
+  <div class="margin-top-25">
+    <div class="button-left">
+      <button mat-raised-button color="accent" (click)="addNewPlayerModal()"><mat-icon class="add-icon-button">add</mat-icon> Players {{playerComparisonService.isGroupMode ? 'to Group 1' : ''}}</button>
+      <mat-slide-toggle color="primary"
+                        [(ngModel)]="playerComparisonService.isGroupMode"
+                        (change)="playerComparisonService.toggleGroupMode()" class="player-value-checkbox-margin">
+        Enable Groups
+      </mat-slide-toggle>
+    </div>
+    <span class="container_spacer"></span>
+    <span class="button-right">
+      <mat-slide-toggle color="primary" class="player-value-checkbox-margin"
+                        [(ngModel)]="playerComparisonService.isSuperFlex"
+                        (change)="playerComparisonService.refreshTable()" class="player-value-checkbox-margin">
+      SuperFlex
+      </mat-slide-toggle>
+      <button mat-raised-button (click)="addRandomPlayer()" class="player-value-checkbox-margin"><mat-icon class="add-icon-button">add</mat-icon> Random Player</button>
+    </span>
+  </div>
+
+  <div class="margin-top-10">
+    <mat-chip-list *ngIf="playerComparisonService.selectedPlayers.length !== 0"
+                   cdkDropList
+                   cdkDropListOrientation="horizontal"
+                   [cdkDropListData]="playerComparisonService.selectedPlayers"
+                   (cdkDropListDropped)="drop($event)">
+      <mat-chip cdkDrag *ngFor="let player of playerComparisonService.selectedPlayers"
+                (removed)="playerComparisonService.onRemove(player)">{{player.name}}
+        <mat-icon matChipRemove>cancel</mat-icon>
+      </mat-chip>
+    </mat-chip-list>
+  </div>
+
+  <div class="margin-top-25" *ngIf="playerComparisonService.isGroupMode">
+    <div class="button-left">
+      <button mat-raised-button color="accent" (click)="addNewPlayerModal(true)"><mat-icon class="add-icon-button">add</mat-icon> Players to Group 2</button>
+    </div>
+  </div>
+
+  <div class="margin-top-10" *ngIf="playerComparisonService.isGroupMode">
+    <mat-chip-list *ngIf="playerComparisonService.group2SelectedPlayers.length !== 0"
+                   cdkDropList
+                   cdkDropListOrientation="horizontal"
+                   [cdkDropListData]="playerComparisonService.group2SelectedPlayers"
+                   (cdkDropListDropped)="drop($event)">
+      <mat-chip cdkDrag *ngFor="let player of playerComparisonService.group2SelectedPlayers"
+                (removed)="playerComparisonService.onRemove(player, true)">{{player.name}}
+        <mat-icon matChipRemove>cancel</mat-icon>
+      </mat-chip>
+    </mat-chip-list>
+  </div>
+
+  <div class="margin-top-50">
+    <app-trade-value-line-chart></app-trade-value-line-chart>
+  </div>
+</div>

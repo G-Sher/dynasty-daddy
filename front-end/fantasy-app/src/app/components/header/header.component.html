@@ -1,0 +1,18 @@
+<div class="app-header">
+  <mat-toolbar color="primary">
+    <button mat-button routerLink="./home"><mat-icon class="header-icon">home</mat-icon> Home</button>
+    <button mat-button [matMenuTriggerFor]="leagueMenu"><mat-icon class="header-icon">people</mat-icon> League</button>
+    <mat-menu #leagueMenu="matMenu">
+      <button mat-menu-item routerLink="./league/rankings">Power Rankings</button>
+      <button mat-menu-item routerLink="./league/playoff/calculator">Standings</button>
+      <button mat-menu-item routerLink="./league/draft">Draft Center</button>
+    </mat-menu>
+    <button mat-button [matMenuTriggerFor]="playerMenu"><mat-icon style="font-size: 22px">insights</mat-icon> Players</button>
+    <mat-menu #playerMenu="matMenu">
+      <button mat-menu-item routerLink="./players/values">Player Values</button>
+      <button mat-menu-item routerLink="./players/comparison">Player Comparisons</button>
+    </mat-menu>
+    <span class="spacer"></span>
+    <button mat-button routerLink="./home"><mat-icon class="header-icon">group_add</mat-icon> Change League</button>
+  </mat-toolbar>
+</div>

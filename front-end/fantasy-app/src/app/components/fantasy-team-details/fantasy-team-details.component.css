@@ -1,0 +1,46 @@
+.responsive {
+  width: 100%;
+  height: auto;
+}
+
+.profile--pic {
+  display: inline-block;
+  /*max-width: 2000px;*/
+  /*max-height: 2000px;*/
+}
+
+.icon--break {
+  vertical-align: baseline;
+  font-size: 10px;
+}
+
+.standings-row {
+  display: table;
+  width: 100%; /*Optional*/
+  /*table-layout: fixed; !*Optional*!*/
+  border-spacing: 10px; /*Optional*/
+}
+
+.standings-col {
+  display: table-cell;
+}
+
+.content {
+  /*padding: 16px;*/
+}
+
+.content > mat-card {
+  width: 200px;
+}
+
+.item{
+  margin-bottom: 16px;
+  margin-right: 16px;
+}
+
+.center-img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}

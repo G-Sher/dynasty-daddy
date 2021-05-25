@@ -1,0 +1,9 @@
+.community-box {
+  border: 1px solid grey;
+  min-width: 350px;
+  min-height: 500px;
+}
+
+.discord-widget {
+  padding: 4px;
+}

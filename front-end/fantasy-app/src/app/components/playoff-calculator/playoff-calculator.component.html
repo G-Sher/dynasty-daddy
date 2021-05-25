@@ -1,0 +1,63 @@
+<div class="margin-top-10 large-bold-header-text center-text">Playoff Calculator</div>
+<div class="center-text margin-top-10">
+  Team standings from the league with points for and realized points. Realized points is calculated by dividing the actual points for and the max potential points for.
+</div>
+<div *ngIf="sleeperService.leagueLoaded && playoffCalculatorService.divisions.length > 0 && (sleeperService.selectedLeague?.status !== 'pre_draft' && sleeperService.selectedLeague?.status !== 'drafting')" class="margin-top-10">
+  <div class="standings-row">
+    <div *ngFor="let division of playoffCalculatorService.divisions" class="standings-col">
+    <span
+      class="center-text mid-bold-text">{{sleeperService.selectedLeague.divisionNames[division.divisionId - 1]}}</span>
+      <mat-table [dataSource]="division.teams" class="mat-elevation-z8">
+
+        <ng-container matColumnDef="teamName">
+          <mat-header-cell *matHeaderCellDef>Team Name</mat-header-cell>
+          <mat-cell *matCellDef="let team" class="link--text__no__underline" [routerLink]="['../../team', team.owner.ownerName]"> {{team.owner.teamName}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="record">
+          <mat-header-cell *matHeaderCellDef>Record</mat-header-cell>
+          <mat-cell *matCellDef="let team">{{team.roster.teamMetrics.wins}}
+            - {{team.roster.teamMetrics.losses}}{{team.roster.teamMetrics.ties > 0 ? ' - ' + team.roster.teamMetrics.ties : ''}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="pf">
+          <mat-header-cell *matHeaderCellDef>Points For</mat-header-cell>
+          <mat-cell *matCellDef="let team">{{roundNumber(team.roster.teamMetrics.fpts)}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="pot">
+          <mat-header-cell *matHeaderCellDef>Realized Points</mat-header-cell>
+          <mat-cell *matCellDef="let team"><span>{{getPointPotentialPercent(team) || '0'}}%</span></mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="divisionTableCols"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: divisionTableCols;" [ngClass]="{'mat-table-highlight': row.roster.teamMetrics.rank <= sleeperService.selectedLeague.playoffTeams && row.roster.teamMetrics.wins > 0}"></mat-row>
+      </mat-table>
+    </div>
+  </div>
+
+  <mat-tab-group mat-align-tabs="center" class="margin-top-25">
+    <mat-tab label="Schedule Comparison">
+      <div class="mid-bold-text margin-top-10 center-text">Schedule Comparisons</div>
+      <div class="margin-top-10 center-text">Calculates what each teams record would be with the other team schedule. For games where the same team plays each-other, a win/loss is assigned if the team scored more than that weeks median</div>
+      <app-schedule-comparison></app-schedule-comparison>
+    </mat-tab>
+    <mat-tab label="Weekly Record Vs All">
+      <div class="mid-bold-text margin-top-10 center-text">Weekly Record Vs All Teams</div>
+      <div class="margin-top-10 center-text">A team's record versus each team during that week. The table is sorted by most overall wins.</div>
+      <app-weekly-record-vs-all></app-weekly-record-vs-all>
+    </mat-tab>
+  </mat-tab-group>
+</div>
+
+<div class="center-text margin-top-50" *ngIf="!sleeperService.leagueLoaded && sleeperService.selectedLeague?.status !== 'pre_draft' && sleeperService.selectedLeague?.status !== 'drafting'">
+  <div class="warning__alert">Cannot generate league analytics cause no league was selected. Please select a league.</div>
+  <br>
+  <button mat-raised-button color="warn" routerLink="./home">Choose League</button>
+</div>
+
+<div class="center-text margin-top-50" *ngIf="sleeperService.selectedLeague?.status === 'pre_draft' || sleeperService.selectedLeague?.status === 'drafting'">
+  <div class="warning__alert">Cannot generate league analytics because season hasn't started yet. Please select a different league or year.</div>
+  <br>
+  <button mat-raised-button color="warn" routerLink="./home">Choose League</button>
+</div>

@@ -1,0 +1,25 @@
+.ktc-table-container {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 24px 24px;
+  min-width: 300px;
+}
+
+.ktc-table-header {
+  min-height: 64px;
+  padding: 8px 24px 0;
+}
+
+.mat-column-position,
+.mat-column-age,
+.mat-column-actions {
+  max-width: 82px;
+}
+
+.ktc-table-element-row:hover {
+  background: #c33163;
+}
+
+.ktc-table-element-row:active {
+  background: #c33163;
+}

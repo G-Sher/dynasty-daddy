@@ -1,0 +1,13 @@
+.standings-row {
+  display: table;
+  width: 100%; /*Optional*/
+  /*table-layout: fixed; !*Optional*!*/
+  border-spacing: 10px; /*Optional*/
+}
+.standings-col {
+  display: table-cell;
+}
+
+.mat-table-highlight {
+  background: #577380;
+}

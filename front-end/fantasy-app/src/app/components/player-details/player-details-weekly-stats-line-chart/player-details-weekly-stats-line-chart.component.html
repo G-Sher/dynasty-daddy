@@ -1,0 +1,15 @@
+
+<div class="center-text">
+  This player has the tendency to <span class="warning__alert">{{totalPoints/totalProj >= 1 ? 'outperform' : 'underperform'}} their projections by {{generatePerformancePercent()}}%</span> over the past 18 weeks!
+</div>
+
+<div class="margin-top-50" style="display: block;">
+  <canvas baseChart width="600" height="400"
+          [datasets]="lineChartData"
+          [labels]="lineChartLabels"
+          [options]="lineChartOptions"
+          [legend]="lineChartLegend"
+          [chartType]="lineChartType"
+          [plugins]="lineChartPlugins">
+  </canvas>
+</div>

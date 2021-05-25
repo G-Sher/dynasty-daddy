@@ -1,0 +1,51 @@
+<div class="large-bold-header-text center-text margin-bot-20"> Add/Remove Players</div>
+
+<mat-chip-list
+  *ngIf="playerComparisonService.selectedPlayers.length !== 0 && (!playerComparisonService.isGroupMode || (playerComparisonService.isGroupMode && !data.isGroup2))">
+  <mat-chip *ngFor="let player of playerComparisonService.selectedPlayers"
+            (removed)="playerComparisonService.onRemove(player)">{{player.name}}
+    <mat-icon matChipRemove>cancel</mat-icon>
+  </mat-chip>
+</mat-chip-list>
+
+<mat-chip-list
+  *ngIf="playerComparisonService.group2SelectedPlayers.length !== 0 && (playerComparisonService.isGroupMode && data.isGroup2)">
+  <mat-chip *ngFor="let player of playerComparisonService.group2SelectedPlayers"
+            (removed)="playerComparisonService.onRemove(player, true)">{{player.name}}
+    <mat-icon matChipRemove>cancel</mat-icon>
+  </mat-chip>
+</mat-chip-list>
+
+<div class="margin-top-10">
+  <mat-form-field class="mat-dropdown-wide-100-percent">
+    <mat-label>Search Players by Name, Position, {{sleeperService.selectedLeague ? 'NFL Team, or Fantasy Owner' : 'or NFL Team'}}</mat-label>
+    <input matInput autocomplete="off" type="text" [(ngModel)]="playerSearch" (keyup)="updatePlayerFilters()">
+    <button mat-button *ngIf="playerSearch" matSuffix mat-icon-button aria-label="Clear"
+            (click)="playerSearch=''; updatePlayerFilters()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+  <span>
+      <mat-checkbox class="player-value-checkbox-margin" color="primary" [(ngModel)]="filterPosGroup[0]"
+                    (change)="updatePlayerFilters()">QB</mat-checkbox>
+      <mat-checkbox class="player-value-checkbox-margin" color="primary" [(ngModel)]="filterPosGroup[1]"
+                    (change)="updatePlayerFilters()">RB</mat-checkbox>
+      <mat-checkbox class="player-value-checkbox-margin" color="primary" [(ngModel)]="filterPosGroup[2]"
+                    (change)="updatePlayerFilters()">WR</mat-checkbox>
+      <mat-checkbox class="player-value-checkbox-margin" color="primary" [(ngModel)]="filterPosGroup[3]"
+                    (change)="updatePlayerFilters()">TE</mat-checkbox>
+      <mat-checkbox class="player-value-checkbox-margin" color="primary" [(ngModel)]="filterPosGroup[4]"
+                    (change)="updatePlayerFilters()">Picks</mat-checkbox>
+      <mat-checkbox class="player-value-checkbox-margin" color="primary" [(ngModel)]="filterPosGroup[5]"
+                    (change)="updatePlayerFilters()">Only Rookies</mat-checkbox>
+    </span>
+  <div class="margin-top-10">
+    <div *ngFor="let player of filteredList" (click)="addPlayer(player)"
+         class="modal-players-list__item">{{player.position}} - {{player.full_name}}
+      <span class="disabled__color"> {{player.team}}  {{player.position}}{{player.sf_position_rank}}</span></div>
+  </div>
+</div>
+<br>
+
+
+<button mat-raised-button color="accent" class="button-right" (click)="finishAdding()">Finish</button>

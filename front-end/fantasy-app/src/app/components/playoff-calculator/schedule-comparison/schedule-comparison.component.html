@@ -1,0 +1,23 @@
+
+<div *ngIf="displayColumns.length > 0" class="margin-top-10 table-container">
+  <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+    <ng-container matColumnDef="team">
+      <mat-header-cell *matHeaderCellDef>Teams</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{matchupService.getTeamName(element.rosterId, sleeperService.sleeperTeamDetails)}}</mat-cell>
+    </ng-container>
+
+    <!-- Position Column -->
+    <ng-container *ngFor="let col of displayColumns.slice(1)">
+      <ng-container [matColumnDef]="col">
+        <mat-header-cell class="mat-table-center-text" *matHeaderCellDef>{{matchupService.getTeamName(col, sleeperService.sleeperTeamDetails)}}</mat-header-cell>
+        <mat-cell class="mat-table-center-text" [ngClass]="{'accent__color__background': areSameTeam(col, element.rosterId)}" *matCellDef="let element">{{getRecord(element, col)}}</mat-cell>
+      </ng-container>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayColumns;"></mat-row>
+  </mat-table>
+</div>
+
+

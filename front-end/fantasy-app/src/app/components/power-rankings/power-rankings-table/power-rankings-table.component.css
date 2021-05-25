@@ -1,0 +1,31 @@
+table {
+  width: 100%;
+}
+
+tr.power-ranking-detail-row {
+  height: 0;
+}
+
+tr.power-ranking-element-row:not(.power-ranking-expanded-row):hover {
+  background: #c33163;
+}
+
+tr.power-ranking-element-row:not(.power-ranking-expanded-row):active {
+  background: #c33163;
+}
+
+.power-ranking-element-row td {
+  border-bottom-width: 0;
+}
+
+.power-ranking-element-detail {
+  overflow: hidden;
+  display: flex;
+}
+
+.power-ranking-container {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 24px 24px;
+  min-width: 300px;
+}

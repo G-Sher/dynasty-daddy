@@ -1,0 +1,343 @@
+/* You can add global styles to this file, and also import other style files */
+@import '~@angular/material/prebuilt-themes/pink-bluegrey.css';
+@import url( 'https://fonts.googleapis.com/css?family=Roboto:400,700|Material+Icons');
+
+@import '~@angular/material/theming';
+
+@include mat-core();
+
+/**
+ * mat custom theme for button toggles
+ */
+$app-primary: mat-palette($mat-pink);
+$app-accent:  mat-palette($mat-blue-gray, A200, A100, A400);
+
+$app-theme: mat-dark-theme($app-primary, $app-accent);
+
+@mixin mix-app-theme($app-theme) {
+  $primary: map-get($app-theme, primary);
+  $accent: map-get($app-theme, accent);
+
+  .mat-button-toggle {
+    background-color: mat-color($accent);
+    color: mat-color($accent, default-contrast);
+  }
+
+  .mat-button-toggle-checked {
+    background-color: mat-color($primary);
+    color: mat-color($primary, default-contrast);
+  }
+}
+
+// Include the mixin
+@include mix-app-theme($app-theme);
+
+app-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+}
+
+html, body, app-root, .app-frame {
+  background: #303030;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-size: 14px;
+  margin: 0;
+  height: 100%;
+  box-sizing: border-box;
+  overflow: auto;
+  color: #e0e0e0;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 15px 15px 0 0;
+}
+
+.container__no-padding {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.container_spacer {
+  flex: 1 1 auto;
+}
+
+.button-right {
+  float: right;
+}
+
+.button-left {
+  float: left;
+}
+
+.starter-icon {
+  font-size: 14px;
+}
+
+.header-icon {
+  font-size: 22px;
+}
+
+/**
+ * grids
+ */
+
+.grid-10 {
+  width: calc(10% - 14px);
+}
+
+.grid-15 {
+  width: calc(15% - 14px);
+}
+
+.grid-16 {
+  width: calc(16% - 14px);
+}
+
+.grid-20 {
+  width: calc(20% - 14px);
+}
+
+.grid-25 {
+  width: calc(25% - 14px);
+}
+
+.grid-30 {
+  width: calc(30% - 14px);
+}
+
+.grid-33 {
+  width: calc(33.3333% - 14px);
+}
+
+.grid-50 {
+  width: calc(50% - 14px);
+}
+
+.grid-60 {
+  width: calc(60% - 14px);
+}
+
+.grid-66 {
+  width: calc(66.6666% - 14px);
+}
+
+.grid-70 {
+  width: calc(70% - 14px);
+}
+
+.grid-75 {
+  width: calc(75% - 14px);
+}
+
+.grid-100 {
+  width: calc(100% - 14px);
+}
+
+/**
+ * margins
+ */
+
+.margin-bot-20 {
+  margin-bottom: 10px;
+}
+
+.margin-bot-20 {
+  margin-bottom: 20px;
+}
+
+.margin-bot-50 {
+  margin-bottom: 50px;
+}
+
+.margin-top-10 {
+  margin-top: 10px;
+}
+
+.margin-top-25 {
+  margin-top: 25px;
+}
+
+.margin-top-50 {
+  margin-top: 50px;
+}
+
+.margin-20 {
+  margin: 20px;
+}
+
+.player-value-checkbox-margin {
+  margin: 0 12px;
+}
+
+/**
+ * text
+ */
+.small-text__light {
+  color: lightgray;
+  font-size: 12px;
+}
+
+.text__light {
+  color: lightgray;
+}
+
+.mid-bold-text {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.large-bold-header-text {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.center-text {
+  text-align: center;
+}
+
+.link--text__no__underline:hover {
+  color: #fdca40;
+  cursor: pointer;
+}
+
+.modal-players-list__item {
+  padding: 8px;
+  border: 1px solid dimgray;
+  cursor: pointer;
+}
+.modal-players-list__item:hover {
+  background-color: #577380;
+}
+
+
+/**
+ * breaks
+ */
+.vertical-break__left {
+  border-left: thin solid #D3D3D3;
+}
+
+.vertical-break__right {
+  border-right: thin solid #D3D3D3;
+}
+
+.vertical-break__right__dark {
+  border-right: thin solid grey;
+}
+
+hr.dark {
+  border-top: 1px solid #A9A9A9;
+}
+
+.arrow-icon__nav {
+  font-size: 20px;
+  vertical-align: middle;
+  font-weight: bold;
+}
+
+.add-icon-button {
+  font-size: 22px;
+  vertical-align: middle
+}
+
+/**
+ * colors
+ */
+
+.success__alert {
+  color: palegreen;
+}
+
+.warning__alert {
+  color: #fdca40;
+}
+
+.urgent__alert {
+  color: #e74c3c;
+}
+
+.info__alert {
+  color: lightblue;
+}
+
+.accent__color__background {
+  background: #577380;
+}
+
+.disabled__color {
+  color: grey;
+}
+
+
+/**
+ * mat dropdowns
+ */
+.mat-dropdown-wide-200 {
+  width: 200px;
+}
+
+.mat-dropdown-wide-300 {
+  width: 300px;
+}
+
+.mat-dropdown-wide-100-percent {
+  width: 100%;
+}
+
+
+/**
+ * mat table
+ */
+.table-element-row td {
+  border-bottom-width: 0;
+}
+
+.table-element-detail {
+  overflow: hidden;
+  display: flex;
+}
+
+.table-container {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 24px 24px;
+  min-width: 300px;
+}
+
+.flex-start-container {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.flex-item-home {
+  align-self: auto;
+}
+
+
+table {
+  width: 100%;
+}
+
+tr.table-detail-row {
+  height: 0;
+}
+
+.mat-table-right {
+  display:flex;
+  justify-content:flex-end;
+}
+
+.mat-table-center-text {
+  justify-content: center;
+}
+
+

@@ -1,0 +1,26 @@
+.responsive {
+  width: 100%;
+  height: auto;
+}
+
+.profile--pic {
+  display: inline-flex;
+  /*max-width: 2000px;*/
+  /*max-height: 2000px;*/
+}
+
+.icon--break {
+  vertical-align: baseline;
+  font-size: 10px;
+}
+
+.standings-row {
+  display: table;
+  width: 100%; /*Optional*/
+  /*table-layout: fixed; !*Optional*!*/
+  border-spacing: 10px; /*Optional*/
+}
+
+.standings-col {
+  display: table-cell;
+}

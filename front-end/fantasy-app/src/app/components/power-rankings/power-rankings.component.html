@@ -1,0 +1,25 @@
+<div class="margin-top-10 large-bold-header-text center-text">Team Power Rankings</div>
+<div class="center-text margin-top-10">
+  Team power rankings are determined by <a class="info__alert" href="https://keeptradecut.com/" target="_blank">KeepTradeCut.com</a> value calculations taken from over <span class="info__alert">600,000+</span> data points.
+</div>
+
+<!--<div *ngIf="powerRankingService.powerRankings">-->
+<!--  <app-power-rankings-card *ngFor="let team of powerRankingService.powerRankings" [teamData]="team"></app-power-rankings-card>-->
+<!--</div>-->
+<div  *ngIf="sleeperService.leagueLoaded && powerRankingService.powerRankings.length > 0">
+  <app-power-rankings-chart></app-power-rankings-chart>
+
+  <app-power-rankings-table [powerRankings]="powerRankingService.powerRankings" [isSuperFlex]="sleeperService.selectedLeague.isSuperflex"></app-power-rankings-table>
+</div>
+
+<div class="center-text margin-top-50" *ngIf="!sleeperService.leagueLoaded">
+  <div class="warning__alert">Cannot generate Power Rankings. Please select a league.</div>
+  <br>
+  <button mat-raised-button color="warn" routerLink="./home">Choose League</button>
+</div>
+
+<div class="center-text margin-top-50" *ngIf="sleeperService.leagueLoaded && powerRankingService.powerRankings.length === 0">
+  <div class="warning__alert">Error creating power rankings. Please select a different league.</div>
+  <br>
+  <button mat-raised-button color="warn" routerLink="./home">Choose League</button>
+</div>

@@ -1,0 +1,12 @@
+<div class="table-container margin-top-25">
+  <div style="display: block;" *ngIf="data">
+    <canvas baseChart width="600" height="400"
+            [datasets]="data"
+            [labels]="dataLabels"
+            [options]="lineChartOptions"
+            [legend]="lineChartLegend"
+            [chartType]="lineChartType"
+            [plugins]="lineChartPlugins">
+    </canvas>
+  </div>
+</div>
