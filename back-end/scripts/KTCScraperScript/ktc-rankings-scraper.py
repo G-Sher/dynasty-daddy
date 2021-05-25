@@ -52,7 +52,7 @@ class Player:
 #       Scraping KTC data       #
 #  written by: Jeremy Timperio  #
 #################################
-
+print('Starting KTC Scraper...')
 # URL to scrape data uses requests import
 sf_URL = 'https://keeptradecut.com/dynasty-rankings?format=2'
 sf_page = requests.get(sf_URL)
@@ -132,6 +132,7 @@ for player in sf_rankings:
 
 # for players in players:
 #     players.toString()
+print(len(players))
 
 #################################
 #    Insert data into table     #
@@ -140,13 +141,13 @@ for player in sf_rankings:
 
 try:
     # Establishing the connection
-    # conn = psycopg2.connect(
-    #     database="docker", user='docker', password='docker', host='localhost', port='5432'
-    # )
-
     conn = psycopg2.connect(
-        database="player_rankings", user='postgres', password='postgres', host='localhost', port='5432'
+        database="docker", user='docker', password='docker', host='db', port='5432'
     )
+
+    # conn = psycopg2.connect(
+    #     database="player_rankings", user='postgres', password='postgres', host='localhost', port='5432'
+    # )
 
     # Setting auto commit false
     conn.autocommit = True

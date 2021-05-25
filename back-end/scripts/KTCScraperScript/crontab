@@ -1,0 +1,1 @@
+* * * * * python /app/ktc-rankings-scraper.py >> /var/log/cron.log 2>&1

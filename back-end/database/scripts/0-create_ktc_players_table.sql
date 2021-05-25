@@ -1,3 +1,7 @@
+-- CREATE USER docker;
+-- CREATE DATABASE docker;
+GRANT ALL PRIVILEGES ON DATABASE docker TO docker;
+
 create table ktc_players
 (
 	id serial not null,
@@ -8,13 +12,13 @@ create table ktc_players
 	last_name varchar(30),
 	team varchar(3),
 	position varchar(2),
-	sf_position_rank int,
 	position_rank int,
 	age int,
 	experience int,
 	sf_trade_value int,
 	trade_value int,
-	date timestamp not null default CURRENT_TIMESTAMP
+	date timestamp not null default CURRENT_TIMESTAMP,
+    sf_position_rank int
 );
 
 
