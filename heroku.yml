@@ -9,7 +9,7 @@ setup:
 build:
   docker:
     web: front-end/fantasy-app/Dockerfile
-    worker: back-end/express-api/Dockerfile
+    api: back-end/express-api/Dockerfile
     cron-service: back-end/scripts/KTCScraperScript/Dockerfile
   config:
     NODE_ENV: production
