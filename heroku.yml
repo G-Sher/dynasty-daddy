@@ -9,7 +9,7 @@ setup:
 build:
   docker:
     web: front-end/fantasy-app/Dockerfile
-    api: back-end/express-api/Dockerfile
+    worker: back-end/express-api/Dockerfile
     cron-service: back-end/scripts/KTCScraperScript/Dockerfile
   config:
     NODE_ENV: production
@@ -20,8 +20,7 @@ build:
 #  image: worker
 # The process types and commands to run
 run:
-  web: node server.js
-  worker: node ./build/bin/www
+  web: node server.js && node ./build/bin/www
 #  worker: python myworker.py
 #  asset-syncer:
 #    command:
