@@ -11,6 +11,8 @@ build:
     web: front-end/fantasy-app/Dockerfile
     api: back-end/express-api/Dockerfile
     cron-service: back-end/scripts/KTCScraperScript/Dockerfile
+  config:
+    NODE_ENV: production
 # Run a command on each release 
 #release:
 #  command:
@@ -19,6 +21,7 @@ build:
 # The process types and commands to run
 run:
   web: node server.js
+  api: node ./build/bin/www
 #  worker: python myworker.py
 #  asset-syncer:
 #    command:
