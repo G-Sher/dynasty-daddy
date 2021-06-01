@@ -1737,7 +1737,8 @@ class EndpointsService {
     constructor(ktcApiConfigService, sleeperApiConfigService) {
         this.ktcApiConfigService = ktcApiConfigService;
         this.sleeperApiConfigService = sleeperApiConfigService;
-        this.baseUrl = 'http://localhost:' + ((process.env.PORT + 1).toString() || '3000');
+        // TODO add cloud base url for api
+        this.baseUrl = 'http://localhost:3000';
     }
     assignEndpoints() {
         // KTC Database Endpoints
