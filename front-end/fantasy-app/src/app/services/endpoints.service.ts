@@ -7,7 +7,7 @@ import {SleeperApiConfigService} from './api/sleeper/sleeper-api-config.service'
 })
 export class EndpointsService {
 
-  private baseUrl = 'http://localhost:3000'
+  private baseUrl = 'http://localhost:' + ((process.env.PORT + 1).toString() || '3000');
 
   constructor( private ktcApiConfigService: KTCApiConfigService, private sleeperApiConfigService: SleeperApiConfigService) {
   }

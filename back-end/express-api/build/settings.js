@@ -11,6 +11,5 @@ var _dotenv = _interopRequireDefault(require("dotenv"));
 
 _dotenv["default"].config();
 
-var connectionString = process.env.DATABASE_URL || process.env.CONNECTION_STRING_Local;
+var connectionString = process.env.DATABASE_URL || process.env.CONNECTION_STRING;
 exports.connectionString = connectionString;
-console.log(connectionString);
