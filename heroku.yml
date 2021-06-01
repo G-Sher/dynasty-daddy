@@ -20,7 +20,8 @@ build:
 #  image: worker
 # The process types and commands to run
 run:
-  web: node server.js && node ./build/bin/www
+  web: node server.js
+  api: node ./build/bin/www
 #  worker: python myworker.py
 #  asset-syncer:
 #    command:
