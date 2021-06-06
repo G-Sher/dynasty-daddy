@@ -8,14 +8,20 @@ import {SleeperLeagueData} from '../../model/SleeperUser';
 })
 export class PlayoffCalculatorService {
 
+  /** division objects */
   divisions: Division[] = [];
 
-  generateDivisions(league: SleeperLeagueData, teams: SleeperTeam[]) {
+  /**
+   * generate league divisions
+   * @param league league data
+   * @param teams fantasy teams
+   */
+  generateDivisions(league: SleeperLeagueData, teams: SleeperTeam[]): void {
     if (this.divisions.length === 0) {
       if (league.divisions) {
         for (let i = 0; i < league.divisions; i++) {
           const divisionTeams: SleeperTeam[] = [];
-          for (let team of teams) {
+          for (const team of teams) {
             if (team.roster.teamMetrics.division === i + 1) {
               divisionTeams.push(team);
             }
@@ -28,24 +34,27 @@ export class PlayoffCalculatorService {
       } else {
         const allTeams = teams.slice();
         allTeams.sort((a, b) => {
-          if(a.roster.teamMetrics.rank != 0){
+          if (a.roster.teamMetrics.rank !== 0){
             return a.roster.teamMetrics.rank - b.roster.teamMetrics.rank;
           } else {
             return b.roster.teamMetrics.wins - a.roster.teamMetrics.wins ||  b.roster.teamMetrics.fpts - a.roster.teamMetrics.fpts;
           }
         });
-        if(allTeams[0].roster.teamMetrics.rank == 0) {
-          for(let i = 0; i < allTeams.length; i++) {
+        if (allTeams[0].roster.teamMetrics.rank === 0) {
+          for (let i = 0; i < allTeams.length; i++) {
             allTeams[i].roster.teamMetrics.rank = i + 1;
           }
         }
-        this.divisions.push(new Division(1, allTeams))
+        this.divisions.push(new Division(1, allTeams));
         league.divisions = 1;
       }
     }
   }
 
-  reset() {
+  /**
+   * resets division data
+   */
+  reset(): void {
     this.divisions = [];
   }
 }

@@ -15,7 +15,8 @@ export class DraftComponent extends BaseComponent implements OnInit {
   selectedDraft: CompletedDraft | string;
 
   constructor(public sleeperService: SleeperService,
-              private playersService: PlayerService, public mockDraftService: MockDraftService) {
+              private playersService: PlayerService,
+              public mockDraftService: MockDraftService) {
     super();
   }
 
@@ -33,10 +34,18 @@ export class DraftComponent extends BaseComponent implements OnInit {
     );
   }
 
-  private initServices() {
-    this.mockDraftService.generateDraft(this.playersService.playerValues, this.sleeperService.selectedLeague.isSuperflex, this.sleeperService.upcomingDrafts[0]?.playerType);
+  /**
+   * initializes mock draft service
+   * @private
+   */
+  private initServices(): void {
+    this.mockDraftService.generateDraft(
+      this.playersService.playerValues,
+      this.sleeperService.selectedLeague.isSuperflex,
+      this.sleeperService.upcomingDrafts[0]?.playerType
+    );
     this.mockDraftService.mapDraftObjects(this.sleeperService.sleeperTeamDetails);
-    if(this.mockDraftService.teamPicks.length > 0) {
+    if (this.mockDraftService.teamPicks.length > 0) {
       this.selectedDraft = 'upcoming';
     }
   }

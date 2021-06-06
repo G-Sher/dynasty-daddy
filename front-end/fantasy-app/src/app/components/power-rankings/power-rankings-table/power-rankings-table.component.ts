@@ -7,6 +7,7 @@ import {KTCPlayer} from '../../../model/KTCPlayer';
 import {SleeperTeam} from '../../../model/SleeperLeague';
 import {SleeperService} from '../../../services/sleeper.service';
 
+// details animation
 export const detailExpand = trigger('detailExpand',
   [
     state('collapsed, void', style({ height: '0px'})),
@@ -23,27 +24,36 @@ export const detailExpand = trigger('detailExpand',
 })
 export class PowerRankingsTableComponent implements OnInit {
 
+  // team power rankings generated from service
   @Input()
   powerRankings: TeamPowerRanking[];
 
+  // is league superflex, input
   @Input()
   isSuperFlex: boolean;
 
+  // datasource for mat table
   dataSource: MatTableDataSource<TeamPowerRanking> = new MatTableDataSource<TeamPowerRanking>();
 
+  // columns to display in table
   columnsToDisplay = ['team', 'owner', 'overallRank', 'starterRank', 'qbRank', 'rbRank', 'wrRank', 'teRank', 'draftRank'];
+
+  // list of expanded details for teams.
   expandedElement: any[] = [];
 
+  // determines if team is top 3rd or bottom 3rd of league
   alertThreshold: number;
 
+  // mat sort element
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
   constructor(public sleeperService: SleeperService) { }
 
   ngOnInit(): void {
-    this.alertThreshold = this.powerRankings.length/3;
+    this.alertThreshold = this.powerRankings.length / 3;
     this.dataSource = new MatTableDataSource<TeamPowerRanking>(this.powerRankings);
 
+    // sorting algorithm
     this.dataSource.sortingDataAccessor = (item, property) => {
       if (property === 'team') {
         return item.team.owner.teamName;
@@ -67,34 +77,52 @@ export class PowerRankingsTableComponent implements OnInit {
 
   }
 
+  /**
+   * checks if list is expanded or not
+   * @param element team power ranking
+   * returns true of expanded
+   */
   checkExpanded(element: TeamPowerRanking): boolean {
     let flag = false;
     this.expandedElement.forEach(e => {
-      if(e === element) {
+      if (e === element) {
         flag = true;
       }
     });
     return flag;
   }
 
-  pushPopElement(element: TeamPowerRanking) {
+  /**
+   * handles when row is clicked
+   * @param element team row that was clicked
+   */
+  pushPopElement(element: TeamPowerRanking): void {
     const index = this.expandedElement.indexOf(element);
-    if(index === -1) {
+    if (index === -1) {
       this.expandedElement.push(element);
     } else {
-      this.expandedElement.splice(index,1);
+      this.expandedElement.splice(index, 1);
     }
   }
 
-  expandCollapseAll() {
+  /**
+   * expands all power rankings details
+   */
+  expandCollapseAll(): void {
     this.dataSource.data = this.powerRankings;
-    if(this.expandedElement.length != this.powerRankings.length) {
-      this.expandedElement = this.powerRankings;
+    if (this.expandedElement.length !== this.powerRankings.length) {
+      this.expandedElement = this.powerRankings.slice();
     } else {
       this.expandedElement = [];
     }
   }
 
+  /**
+   * is player one of the teams starters?
+   * @param team team power ranking
+   * @param player player to check
+   * returns true if player is starter on team
+   */
   isStarter(team: TeamPowerRanking, player: KTCPlayer): boolean {
     return team.starters.includes(player);
   }

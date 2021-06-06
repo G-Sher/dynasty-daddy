@@ -24,7 +24,7 @@ export class BaseComponent implements OnDestroy {
    * @param subs list of subscriptions
    * @protected
    */
-  protected addSubscriptions(...subs: Subscription[]) {
+  protected addSubscriptions(...subs: Subscription[]): void {
     this.subscriptions.push(...subs);
   }
 }

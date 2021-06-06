@@ -5,6 +5,7 @@ import {CompletedDraft} from '../../../model/SleeperUser';
 import {MatPaginator} from '@angular/material/paginator';
 import {SleeperService} from '../../../services/sleeper.service';
 import {PlayerService} from '../../../services/player.service';
+import {KTCPlayer} from '../../../model/KTCPlayer';
 
 @Component({
   selector: 'app-completed-draft-table',
@@ -13,47 +14,66 @@ import {PlayerService} from '../../../services/player.service';
 })
 export class CompletedDraftTableComponent implements OnInit, OnChanges {
 
+  /** selected draft completed */
   @Input()
   selectedDraft: CompletedDraft;
 
+  /** columns */
   displayedColumns = ['pickNumber', 'team', 'owner', 'selectedPlayer'];
 
+  /** mat paginator */
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
+  /** page length */
   pageLength: number;
 
+  /** mat datasource */
   dataSource: MatTableDataSource<SleeperCompletedPickData> = new MatTableDataSource<SleeperCompletedPickData>();
 
-  constructor(private sleeperService: SleeperService, public playerService: PlayerService) { }
+  constructor(private sleeperService: SleeperService,
+              public playerService: PlayerService) { }
 
   ngOnInit(): void {
     this.pageLength = this.sleeperService.selectedLeague.totalRosters;
   }
 
-  ngOnChanges() {
+  ngOnChanges(): void {
     this.dataSource = new MatTableDataSource(this.selectedDraft.picks);
     this.dataSource.paginator = this.paginator;
   }
 
+  /**
+   * get team name from roster id
+   * @param rosterId roster id
+   * return name
+   */
   getTeamName(rosterId: string): string {
-    for (let team of this.sleeperService.sleeperTeamDetails) {
-      if (team.roster.rosterId == rosterId) {
-        return team.owner.teamName
+    for (const team of this.sleeperService.sleeperTeamDetails) {
+      if (team.roster.rosterId === rosterId) {
+        return team.owner.teamName;
       }
     }
-    return 'none'
+    return 'none';
   }
 
-  getOwnerName(rosterId: string) {
-    for (let team of this.sleeperService.sleeperTeamDetails) {
-      if (team.roster.rosterId == rosterId) {
-        return team.owner.ownerName
+  /**
+   * get owner name by roster id
+   * @param rosterId roster id
+   */
+  getOwnerName(rosterId: string): string {
+    for (const team of this.sleeperService.sleeperTeamDetails) {
+      if (team.roster.rosterId === rosterId) {
+        return team.owner.ownerName;
       }
     }
-    return 'none'
+    return 'none';
   }
 
-  getPlayerBySleeperId(sleeperId: string) {
+  /**
+   * get player by sleeper id
+   * @param sleeperId sleeper id
+   */
+  getPlayerBySleeperId(sleeperId: string): KTCPlayer {
     return this.playerService.getPlayerBySleeperId(sleeperId);
   }
 }

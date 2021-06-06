@@ -11,21 +11,35 @@ import {tap} from 'rxjs/operators';
 })
 export class KTCApiService {
 
+  /**
+   * cached players list
+   * @private
+   */
   private playersList: KTCPlayer[];
 
   constructor(private http: HttpClient, private ktcApiConfigService: KTCApiConfigService) {
   }
 
+  /**
+   * get player values for today
+   */
   getPlayerValuesForToday(): Observable<KTCPlayer[]> {
     return this.playersList ? of(this.playersList) : this.refreshPlayerValuesForToday();
   }
 
+  /**
+   * refresh cached player values for today
+   */
   refreshPlayerValuesForToday(): Observable<KTCPlayer[]> {
     return this.http.get<KTCPlayer[]>(this.ktcApiConfigService.getPlayerValuesForTodayEndpoint)
       .pipe(tap((players: KTCPlayer[]) => this.playersList = players
       ));
   }
 
+  /**
+   * get historical player value over time by id
+   * @param nameId player name id
+   */
   getHistoricalPlayerValueById(nameId: string): Observable<KTCPlayer[]> {
     return this.http.get<KTCPlayer[]>(this.ktcApiConfigService.getHistoricalPlayerValues + nameId)
       .pipe(tap((players: KTCPlayer[]) => players

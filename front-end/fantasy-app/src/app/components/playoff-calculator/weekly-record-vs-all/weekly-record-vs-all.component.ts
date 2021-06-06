@@ -12,10 +12,13 @@ import {MatSort} from '@angular/material/sort';
 })
 export class WeeklyRecordVsAllComponent implements OnInit, AfterViewInit {
 
+  /** mat sort */
   @ViewChild(MatSort) sort: MatSort;
 
+  /** columns to display */
   displayColumns: string[] = [];
 
+  /** datasource for table */
   dataSource: MatTableDataSource<WeeklyRecordComp> = new MatTableDataSource<WeeklyRecordComp>();
 
   constructor(private sleeperService: SleeperService, private matchupService: MatchupService) { }
@@ -25,9 +28,10 @@ export class WeeklyRecordVsAllComponent implements OnInit, AfterViewInit {
     this.dataSource = new MatTableDataSource(this.matchupService.weeklyComparison);
   }
 
-  ngAfterViewInit() {
+  /** sorting function */
+  ngAfterViewInit(): void {
     this.dataSource.sortingDataAccessor = (item, property) => {
-      switch(property) {
+      switch (property) {
         case 'total': return item.totalWins;
         default: return item.records[property][0];
       }
@@ -39,9 +43,9 @@ export class WeeklyRecordVsAllComponent implements OnInit, AfterViewInit {
    * generate col values
    * @private
    */
-  private generateCols() {
+  private generateCols(): string[] {
     const list = ['teams'];
-    for(let i = this.sleeperService.selectedLeague.startWeek; i < this.sleeperService.selectedLeague.playoffStartWeek; i++){
+    for (let i = this.sleeperService.selectedLeague.startWeek; i < this.sleeperService.selectedLeague.playoffStartWeek; i++){
       list.push(i.toString());
     }
     list.push('total');
@@ -61,7 +65,7 @@ export class WeeklyRecordVsAllComponent implements OnInit, AfterViewInit {
    * return total record string
    * @param element
    */
-  getTotalRecord(element) {
+  getTotalRecord(element): string {
     return `${element.totalWins}-${element.totalLosses}` + (element.totalTies > 0 ? `-${element.totalTies}` : '');
   }
 }

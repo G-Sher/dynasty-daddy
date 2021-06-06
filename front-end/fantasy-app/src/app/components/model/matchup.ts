@@ -1,7 +1,7 @@
 export class ScheduleComp {
   constructor(rosterId: number, record: {}) {
-    this.rosterId = rosterId
-    this.record = record
+    this.rosterId = rosterId;
+    this.record = record;
   }
 
   rosterId: number;

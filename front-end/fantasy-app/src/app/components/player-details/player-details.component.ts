@@ -14,20 +14,28 @@ import {PlayerComparisonService} from '../services/player-comparison.service';
 })
 export class PlayerDetailsComponent extends BaseComponent implements OnInit {
 
+  /** did players load */
   playersLoaded: boolean;
 
+  /** selected player */
   selectedPlayer: KTCPlayer;
 
+  /** historical player value data */
   historicalTradeValue: KTCPlayer[];
 
-  constructor(public playerService: PlayerService, private ktcApiService: KTCApiService, private route: ActivatedRoute, public sleeperService: SleeperService, private router: Router, private playerComparisonService: PlayerComparisonService) {
+  constructor(public playerService: PlayerService,
+              private ktcApiService: KTCApiService,
+              private route: ActivatedRoute,
+              public sleeperService: SleeperService,
+              private router: Router,
+              private playerComparisonService: PlayerComparisonService) {
     super();
   }
 
   ngOnInit(): void {
     const nameId = this.route.snapshot.paramMap.get('playerNameId');
     this.playersLoaded = (this.playerService.playerValues.length > 0);
-    if(this.playersLoaded) {
+    if (this.playersLoaded) {
       this.selectedPlayer = this.playerService.getPlayerByNameId(nameId);
     }
     this.playerService.loadPlayerValuesForToday();
@@ -41,18 +49,25 @@ export class PlayerDetailsComponent extends BaseComponent implements OnInit {
       ));
   }
 
-  getLast5WeekAverage() {
+  /**
+   * get last 5 week average for player fantasty points
+   */
+  getLast5WeekAverage(): number | string {
     let last5Weeks = 0;
-    for(let i = 1; i < 6; i++) {
+    for (let i = 1; i < 6; i++) {
       const weekStats = this.playerService.pastSeasonWeeklyStats[i];
-      if(weekStats) {
-        last5Weeks += weekStats[this.selectedPlayer.sleeper_id]?.pts_half_ppr || 0
+      if (weekStats) {
+        last5Weeks += weekStats[this.selectedPlayer.sleeper_id]?.pts_half_ppr || 0;
       }
     }
-    return Math.round(last5Weeks/5 * 100)/100 || '---';
+    return Math.round(last5Weeks / 5 * 100) / 100 || '---';
   }
 
-  isPlayerStatsGenerated() {
+  /**
+   * check if all player stats are generated from sleeper
+   * TODO update with rxjs
+   */
+  isPlayerStatsGenerated(): boolean {
     return this.playerService.pastSeasonWeeklyStats[1] &&
       this.playerService.pastSeasonWeeklyStats[2] &&
       this.playerService.pastSeasonWeeklyStats[3] &&
@@ -88,11 +103,15 @@ export class PlayerDetailsComponent extends BaseComponent implements OnInit {
       this.playerService.pastSeasonWeeklyProjections[15] &&
       this.playerService.pastSeasonWeeklyProjections[16] &&
       this.playerService.pastSeasonWeeklyProjections[17] &&
-      this.playerService.pastSeasonWeeklyProjections[18]
+      this.playerService.pastSeasonWeeklyProjections[18];
   }
 
-  openPlayerComparison(selectedPlayer: KTCPlayer) {
+  /**
+   * open up player comparison with selected player
+   * @param selectedPlayer player data
+   */
+  openPlayerComparison(selectedPlayer: KTCPlayer): void {
       this.playerComparisonService.addPlayerToCharts(selectedPlayer);
-      this.router.navigateByUrl('players/comparison')
+      this.router.navigateByUrl('players/comparison');
   }
 }

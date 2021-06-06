@@ -14,15 +14,19 @@ import {SleeperService} from '../../../services/sleeper.service';
 })
 export class FantasyTeamDetailsWeeklyPointsChartComponent implements OnInit {
 
+  /**
+   * team selected
+   */
   @Input()
   selectedTeam: SleeperTeam;
 
-  /** line chart data*/
+  /** line chart data */
   public lineChartData: ChartDataSets[] = [];
 
-  /** line chart labels*/
+  /** line chart labels */
   public lineChartLabels: Label[] = [];
 
+  /** line chart options */
   public lineChartOptions: (ChartOptions & { annotation?: any }) = {
     responsive: true,
     maintainAspectRatio: false,
@@ -70,38 +74,46 @@ export class FantasyTeamDetailsWeeklyPointsChartComponent implements OnInit {
   public lineChartType = 'line';
   public lineChartPlugins = [];
 
-  constructor(private sleeperService: SleeperService, private matchupService: MatchupService) { }
-
-  ngOnInit(): void {
-    this.createMatchupDataSets()
-    this.matchupService.initMatchUpCharts(this.sleeperService.selectedLeague)
+  constructor(private sleeperService: SleeperService, private matchupService: MatchupService) {
   }
 
-  createMatchupDataSets() {
+  ngOnInit(): void {
+    this.createMatchupDataSets();
+    this.matchupService.initMatchUpCharts(this.sleeperService.selectedLeague);
+  }
+
+  /**
+   * create data set for table
+   */
+  createMatchupDataSets(): void {
     const weeklyPoints = [];
     const oppPoints = [];
     const numOfWeeks = (Number(this.sleeperService.selectedYear) < 2021 ? 17 : 18);
-    for(let i = 0; i <= numOfWeeks; i++ ) {
+    for (let i = 0; i <= numOfWeeks; i++) {
       const week = this.sleeperService.selectedLeague.leagueMatchUps[i];
-      if(week) {
-        for(let matchup of week) {
-          if(matchup.rosterId === this.selectedTeam.roster.rosterId) {
+      if (week) {
+        for (const matchup of week) {
+          if (matchup.rosterId === this.selectedTeam.roster.rosterId) {
             weeklyPoints[i] = matchup.points;
             const matchId = matchup.matchupId;
-            for(let matchup of week) {
-              if(matchup.matchupId == matchId && matchup.rosterId !== this.selectedTeam.roster.rosterId) {
-                oppPoints[i] = matchup.points;
-                this.lineChartLabels.push('Week ' + i + ' vs. ' + this.sleeperService.getTeamByRosterId(matchup.rosterId).owner.teamName)
+            for (const weekMatchup of week) {
+              if (weekMatchup.matchupId === matchId && weekMatchup.rosterId !== this.selectedTeam.roster.rosterId) {
+                oppPoints[i] = weekMatchup.points;
+                this.lineChartLabels.push('Week ' + i + ' vs. ' +
+                  this.sleeperService.getTeamByRosterId(weekMatchup.rosterId).owner.teamName);
                 break;
               }
             }
-            break
+            break;
           }
         }
       }
     }
-    this.lineChartData.push({label: this.selectedTeam.owner.teamName, data: weeklyPoints.slice(this.sleeperService.selectedLeague.startWeek)})
-    this.lineChartData.push({label: 'Opponent', data: oppPoints.slice(this.sleeperService.selectedLeague.startWeek)})
+    this.lineChartData.push({
+      label: this.selectedTeam.owner.teamName,
+      data: weeklyPoints.slice(this.sleeperService.selectedLeague.startWeek)
+    });
+    this.lineChartData.push({label: 'Opponent', data: oppPoints.slice(this.sleeperService.selectedLeague.startWeek)});
   }
 
 }

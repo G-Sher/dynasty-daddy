@@ -16,24 +16,32 @@ import {PowerRankingsService} from '../../services/power-rankings.service';
 })
 export class DraftTableComponent implements OnInit {
 
+  /** mock draft config */
   mockDraftConfig: string;
 
+  /** display columns */
   displayedColumns: string[] = [];
 
+  /** list of selected players */
   selectedPlayers: KTCPlayer[] = [];
 
+  /** pagelength set to size of league */
   pageLength: number = 12;
 
+  /** mat paginator */
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
+  /** mat datasource */
   dataSource: MatTableDataSource<TeamMockDraftPick> = new MatTableDataSource<TeamMockDraftPick>();
 
-  constructor(private mockDraftService: MockDraftService, public sleeperService: SleeperService, private powerRankingService: PowerRankingsService) { }
+  constructor(private mockDraftService: MockDraftService,
+              public sleeperService: SleeperService) {
+  }
 
   ngOnInit(): void {
     this.mockDraftConfig = 'player';
     this.displayedColumns = ['pickNumber', 'team', 'owner', 'projectedPlayer'];
-    this.selectedPlayers = JSON.parse(JSON.stringify(this.mockDraftService.selectablePlayers))
+    this.selectedPlayers = JSON.parse(JSON.stringify(this.mockDraftService.selectablePlayers));
     this.pageLength = this.sleeperService.selectedLeague.totalRosters;
     this.dataSource = new MatTableDataSource(this.mockDraftService.teamPicks);
     this.dataSource.paginator = this.paginator;
@@ -41,21 +49,22 @@ export class DraftTableComponent implements OnInit {
 
   /**
    * updates draft dropdown to show for player value mode
-   * @param pick
+   * @param pick number
    */
-  updateDraftSelections(pick: number) {
+  updateDraftSelections(pick: number): void {
     const staticPicks = this.selectedPlayers.slice(0, pick);
-    let newDropDown = [];
-    for(let player of this.mockDraftService.selectablePlayers){
-      if(!staticPicks.some(picked => picked.sleeper_id === player.sleeper_id))
+    const newDropDown = [];
+    for (const player of this.mockDraftService.selectablePlayers) {
+      if (!staticPicks.some(picked => picked.sleeper_id === player.sleeper_id)) {
         newDropDown.push(player);
+      }
     }
-    this.selectedPlayers = staticPicks.concat(newDropDown)
+    this.selectedPlayers = staticPicks.concat(newDropDown);
   }
 
   /**
    * disable player in custom mode dropdown if already selected
-   * @param player
+   * @param player player data
    */
   isPlayerAlreadySelected(player: KTCPlayer): boolean {
     return this.selectedPlayers.some(picked => picked.name_id === player.name_id);
@@ -64,8 +73,8 @@ export class DraftTableComponent implements OnInit {
   /**
    * change mock draft type
    */
-  changeMockDraftType() {
-    if(this.mockDraftConfig !== 'custom') {
+  changeMockDraftType(): void {
+    if (this.mockDraftConfig !== 'custom') {
       this.selectedPlayers = JSON.parse(JSON.stringify(this.mockDraftService.selectablePlayers));
     } else {
       this.selectedPlayers = [];
@@ -75,7 +84,7 @@ export class DraftTableComponent implements OnInit {
   /**
    * resets mock draft values
    */
-  resetMockDraft() {
+  resetMockDraft(): void {
     this.changeMockDraftType();
   }
 }

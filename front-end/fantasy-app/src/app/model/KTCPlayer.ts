@@ -1,3 +1,4 @@
+/* tslint:disable */
 export class KTCPlayer {
   id: number;
   name_id: string;

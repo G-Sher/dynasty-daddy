@@ -12,51 +12,76 @@ import {SleeperService} from '../../../services/sleeper.service';
   styleUrls: ['./add-player-comparison-modal.component.css']
 })
 export class AddPlayerComparisonModalComponent implements OnInit {
-  playerSearch: string = '';
 
+  /** player search string */
+  playerSearch = '';
+
+  /** filtered search list */
   filteredList: KTCPlayer[];
+
+  /** filter grouping options */
   filterPosGroup: boolean[];
 
-  constructor(private playerService: PlayerService, private ktcApiService: KTCApiService, public playerComparisonService: PlayerComparisonService, private dialog: MatDialog,
-              @Inject(MAT_DIALOG_DATA) public data: { isGroup2: boolean }, public sleeperService: SleeperService) { }
+  constructor(private playerService: PlayerService,
+              private ktcApiService: KTCApiService,
+              public playerComparisonService: PlayerComparisonService,
+              private dialog: MatDialog,
+              @Inject(MAT_DIALOG_DATA) public data: { isGroup2: boolean },
+              public sleeperService: SleeperService) { }
 
   ngOnInit(): void {
     this.filterPosGroup = [true, true, true, true, true, false];
-    this.filteredList = this.playerService.playerValues.slice(0,7)
+    this.filteredList = this.playerService.playerValues.slice(0, 7);
   }
 
-  addPlayer(player: KTCPlayer) {
+  /**
+   * add player to comparison
+   * @param player selected player to add
+   */
+  addPlayer(player: KTCPlayer): void {
     let addable = true;
-    if(this.playerComparisonService.isGroupMode && this.data.isGroup2) {
-      for(let p of this.playerComparisonService.group2SelectedPlayers) {
-        if(p.id === player.name_id){
+    if (this.playerComparisonService.isGroupMode && this.data.isGroup2) {
+      for (const p of this.playerComparisonService.group2SelectedPlayers) {
+        if (p.id === player.name_id){
           addable = false;
         }
       }
     } else {
-      for(let p of this.playerComparisonService.selectedPlayers) {
-        if(p.id === player.name_id){
+      for (const p of this.playerComparisonService.selectedPlayers) {
+        if (p.id === player.name_id){
           addable = false;
         }
       }
     }
-    if(addable) {
-      this.playerComparisonService.isGroupMode ? this.playerComparisonService.addPlayerToCharts(player, this.data.isGroup2) : this.playerComparisonService.addPlayerToCharts(player)
+    if (addable) {
+      this.playerComparisonService.isGroupMode ? this.playerComparisonService.addPlayerToCharts(player, this.data.isGroup2)
+        : this.playerComparisonService.addPlayerToCharts(player);
     }
   }
 
-  onRemove(player: KTCPlayer, isGroup2: boolean = false) {
-    this.playerComparisonService.onRemove({name: player.full_name, data: [], id: player.name_id}, isGroup2)
+  /**
+   * remove player from comparison
+   * @param player player to remove
+   * @param isGroup2 is group 2 or not
+   */
+  onRemove(player: KTCPlayer, isGroup2: boolean = false): void {
+    this.playerComparisonService.onRemove({name: player.full_name, data: [], id: player.name_id}, isGroup2);
   }
 
-  finishAdding() {
-    this.dialog.closeAll()
+  /**
+   * close dialog
+   */
+  finishAdding(): void {
+    this.dialog.closeAll();
   }
 
-  updatePlayerFilters() {
+  /**
+   * update search filters
+   */
+  updatePlayerFilters(): void {
     this.filteredList = this.playerService.playerValues.slice(0);
     const filterOptions = ['QB', 'RB', 'WR', 'TE', 'PI'];
-    if(this.filterPosGroup[5]){
+    if (this.filterPosGroup[5]){
       this.filteredList = this.filteredList.filter(player => {
         if (player.experience === 0 && player.position !== 'PI') {
           return player;
@@ -72,12 +97,14 @@ export class AddPlayerComparisonModalComponent implements OnInit {
         });
       }
     }
-    if(!this.playerSearch || this.playerSearch === '') {
-      this.filteredList = this.filteredList.slice(0,7)
+    if (!this.playerSearch || this.playerSearch === '') {
+      this.filteredList = this.filteredList.slice(0, 7);
     } else {
       this.filteredList = this.filteredList.filter((player) => {
-        return player.full_name.toLowerCase().includes(this.playerSearch.toLowerCase()) || player.position.toLowerCase().includes(this.playerSearch.toLowerCase())
-          || player.team.toLowerCase().includes(this.playerSearch.toLowerCase()) || (player.owner?.toLowerCase().includes(this.playerSearch.toLowerCase()) && this.sleeperService.selectedLeague);
+        return player.full_name.toLowerCase().includes(this.playerSearch.toLowerCase())
+          || player.position.toLowerCase().includes(this.playerSearch.toLowerCase())
+          || player.team.toLowerCase().includes(this.playerSearch.toLowerCase())
+          || (player.owner?.toLowerCase().includes(this.playerSearch.toLowerCase()) && this.sleeperService.selectedLeague);
       }).slice(0, 7);
     }
   }

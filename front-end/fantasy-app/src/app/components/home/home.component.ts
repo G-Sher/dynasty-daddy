@@ -17,7 +17,7 @@ import {PlayoffCalculatorService} from '../services/playoff-calculator.service';
 })
 export class HomeComponent extends BaseComponent implements OnInit {
 
-  pathSource: string = './assets/cn.jpg'
+  pathSource: string = './assets/cn.jpg';
 
   userName: string = '';
 
@@ -27,16 +27,21 @@ export class HomeComponent extends BaseComponent implements OnInit {
 
   supportedYears: string[] = [];
 
-  constructor(private spinner: NgxSpinnerService, private sleeperApiService: SleeperApiService, public sleeperService: SleeperService,
-              private powerRankingService: PowerRankingsService, private playersService: PlayerService, private mockDraftService: MockDraftService,
-              private matchupService: MatchupService, private playoffCalculatorService: PlayoffCalculatorService) {
+  constructor(private spinner: NgxSpinnerService,
+              private sleeperApiService: SleeperApiService,
+              public sleeperService: SleeperService,
+              private powerRankingService: PowerRankingsService,
+              private playersService: PlayerService,
+              private mockDraftService: MockDraftService,
+              private matchupService: MatchupService,
+              private playoffCalculatorService: PlayoffCalculatorService) {
     super();
   }
 
   ngOnInit(): void {
     this.supportedYears = this.generateYears();
-    if(!this.sleeperService.selectedYear) {
-      this.selectedYear = this.supportedYears[0]
+    if (!this.sleeperService.selectedYear) {
+      this.selectedYear = this.supportedYears[0];
     } else {
       this.selectedYear = this.sleeperService.selectedYear;
     }
@@ -45,13 +50,20 @@ export class HomeComponent extends BaseComponent implements OnInit {
     this.playersService.loadPlayerValuesForToday();
   }
 
-  fetchSleeperInfo() {
+  /**
+   * loads sleeper data for user
+   */
+  fetchSleeperInfo(): void {
     this.sleeperService.loadNewUser(this.userName, this.selectedYear);
     this.sleeperService.selectedYear = this.selectedYear;
     this.sleeperService.resetLeague();
   }
 
-  loadLeague(value: SleeperLeagueData) {
+  /**
+   * load league data
+   * @param value league data
+   */
+  loadLeague(value: SleeperLeagueData): void {
     this.sleeperService.resetLeague();
     this.selectedLeague = value;
     this.spinner.show();
@@ -65,19 +77,23 @@ export class HomeComponent extends BaseComponent implements OnInit {
       this.addSubscriptions(this.sleeperService.$loadNewLeague(this.selectedLeague).subscribe((x) => {
           this.spinner.hide();
           this.sleeperService.sleeperTeamDetails.map((team) => {
-            this.playersService.generateRoster(team)
-          })
-        this.sleeperService.leagueLoaded = true;
-        console.timeEnd('Fetch Sleeper League Data');
+            this.playersService.generateRoster(team);
+          });
+          this.sleeperService.leagueLoaded = true;
+          console.timeEnd('Fetch Sleeper League Data');
         }
       ));
 
     }
   }
 
-  generateYears() {
+  /**
+   * generate selectable years
+   * TODO dynamic checking of available years for user??
+   */
+  generateYears(): string[] {
     const years = [];
-    let currentYear = new Date().getFullYear();
+    const currentYear = new Date().getFullYear();
     for (let i = 0; i < 16; i++) {
       years.push((currentYear - i).toString());
     }

@@ -13,6 +13,7 @@ import {SleeperService} from '../../services/sleeper.service';
 })
 export class PlayerValuesComponent extends BaseComponent implements OnInit {
 
+  /** are players loaded */
   playersLoaded: boolean;
 
   constructor(public playerService: PlayerService) {
@@ -20,11 +21,11 @@ export class PlayerValuesComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.playersLoaded = (this.playerService.playerValues.length > 0)
-    this.playerService.loadPlayerValuesForToday()
+    this.playersLoaded = (this.playerService.playerValues.length > 0);
+    this.playerService.loadPlayerValuesForToday();
     this.addSubscriptions(this.playerService.$currentPlayerValuesLoaded.subscribe(() => {
       this.playersLoaded = true;
-    }))
+    }));
   }
 
 }

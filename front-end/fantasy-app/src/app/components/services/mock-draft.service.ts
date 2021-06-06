@@ -11,8 +11,10 @@ import {SleeperService} from '../../services/sleeper.service';
 })
 export class MockDraftService {
 
+  /** team picks */
   teamPicks: TeamMockDraftPick[] = [];
 
+  /** available players */
   selectablePlayers: KTCPlayer[] = [];
 
   // picks: KTCPlayer[] = [];
@@ -20,55 +22,74 @@ export class MockDraftService {
   constructor(private sleeperService: SleeperService) {
   }
 
-  generateDraft(players: KTCPlayer[], isSuperFlex: boolean = true, playerType: number = 1) {
-    if(playerType === 1) { // rookies only
+  /**
+   * generate draft order
+   * @param players list of players
+   * @param isSuperFlex is draft superflex
+   * @param playerType draft type, 1 == rookies only, 2 == vets only, 3 == all players
+   */
+  generateDraft(players: KTCPlayer[], isSuperFlex: boolean = true, playerType: number = 1): void {
+    if (playerType === 1) { // rookies only
       this.selectablePlayers = players.filter(player => {
-        return player.experience === 0 && player.position != 'PI';
-      })
+        return player.experience === 0 && player.position !== 'PI';
+      });
     } else if (playerType === 2) { // vets only
       this.selectablePlayers = players.filter(player => {
-        return player.experience !== 0 && player.position != 'PI';
-      })
+        return player.experience !== 0 && player.position !== 'PI';
+      });
     } else { // all players
       this.selectablePlayers = players.filter(player => {
-        return player.position != 'PI';
-      })
+        return player.position !== 'PI';
+      });
     }
+    // sort players by value
     this.selectablePlayers.sort((playerA, playerB) => {
-      if(this.sleeperService.selectedLeague.isSuperflex){
+      if (this.sleeperService.selectedLeague.isSuperflex){
         return playerB.sf_trade_value - playerA.sf_trade_value;
       } else {
         return playerB.trade_value - playerA.trade_value;
       }
-    })
+    });
 
     // this.picks = players.filter(player => {
     //   return player.position === 'PI';
     // })
   }
 
-  mapDraftObjects(teams: SleeperTeam[]) {
-    if(this.teamPicks.length === 0) {
+  /**
+   * map draft objects to teams
+   * @param teams fantasy teams
+   */
+  mapDraftObjects(teams: SleeperTeam[]): void {
+    if (this.teamPicks.length === 0) {
       teams.map(team => {
-        for(const pick of team.draftCapital) {
-          this.teamPicks.push(new TeamMockDraftPick(((pick.round-1) * 12) + pick.pick, this.createPickString(pick), team.owner.ownerName, team.owner.teamName))
+        for (const pick of team.draftCapital) {
+          this.teamPicks.push(new TeamMockDraftPick(((pick.round - 1) * 12) + pick.pick,
+            this.createPickString(pick),
+            team.owner.ownerName,
+            team.owner.teamName));
         }
-      })
+      });
       this.teamPicks.sort((pickA, pickB) => {
         return pickA.pick - pickB.pick;
-      })
+      });
     }
   }
 
-
-  private createPickString(pick: DraftCapital) {
+  /**
+   * create pick string display
+   * @param pick pick details
+   * @private
+   * returns string
+   */
+  private createPickString(pick: DraftCapital): string {
     return pick.round.toString() + '.' + (pick.pick > 9 ? pick.pick.toString() : '0' + pick.pick.toString());
   }
 
   /**
    * reset variables when league is changed
    */
-  reset() {
+  reset(): void {
     this.teamPicks = [];
     this.selectablePlayers = [];
     // this.picks = [];

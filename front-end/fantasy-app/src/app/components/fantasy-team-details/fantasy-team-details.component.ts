@@ -16,11 +16,18 @@ import {PlayerComparisonService} from '../services/player-comparison.service';
 })
 export class FantasyTeamDetailsComponent implements OnInit {
 
+  /** selected fantasy team */
   selectedTeam: SleeperTeam;
 
+  /** roster of players */
   roster: KTCPlayer[] = [];
 
-  constructor(public sleeperService: SleeperService, private route: ActivatedRoute, public powerRankingsService: PowerRankingsService, public playerService: PlayerService, private playerComparisonService: PlayerComparisonService, private router: Router) {
+  constructor(public sleeperService: SleeperService,
+              private route: ActivatedRoute,
+              public powerRankingsService: PowerRankingsService,
+              public playerService: PlayerService,
+              private playerComparisonService: PlayerComparisonService,
+              private router: Router) {
   }
 
   ngOnInit(): void {
@@ -29,30 +36,38 @@ export class FantasyTeamDetailsComponent implements OnInit {
     if (this.sleeperService.leagueLoaded) {
       const teamIndex = this.sleeperService.sleeperTeamDetails.map(e => e.owner.ownerName).indexOf(ownerName);
       this.selectedTeam = this.sleeperService.sleeperTeamDetails[teamIndex];
-      this.powerRankingsService.mapPowerRankings(this.sleeperService.sleeperTeamDetails, this.playerService.playerValues)
-      for(let sleeperId of this.selectedTeam.roster.players) {
-        const player = this.playerService.getPlayerBySleeperId(sleeperId)
-        if(player) {
-          this.roster.push(player)
+      this.powerRankingsService.mapPowerRankings(this.sleeperService.sleeperTeamDetails, this.playerService.playerValues);
+      for (const sleeperId of this.selectedTeam.roster.players) {
+        const player = this.playerService.getPlayerBySleeperId(sleeperId);
+        if (player) {
+          this.roster.push(player);
         }
       }
-      this.roster.sort((a,b) => {
-        if(this.sleeperService.selectedLeague.isSuperflex) {
+      this.roster.sort((a, b) => {
+        if (this.sleeperService.selectedLeague.isSuperflex) {
           return b.sf_trade_value - a.sf_trade_value;
         } else {
           return b.trade_value - a.trade_value;
         }
-      })
+      });
     }
   }
 
-  getAveragePoints() {
-    return Math.round(this.selectedTeam.roster.teamMetrics.fpts/(this.sleeperService.selectedLeague.playoffStartWeek - this.sleeperService.selectedLeague.startWeek));
+  /**
+   * get average points for team
+   */
+  getAveragePoints(): number {
+    return Math.round(this.selectedTeam.roster.teamMetrics.fpts
+      / (this.sleeperService.selectedLeague.playoffStartWeek - this.sleeperService.selectedLeague.startWeek));
   }
 
-  openPlayerComparison(selectedPlayer: KTCPlayer) {
+  /**
+   * open player comparison page
+   * @param selectedPlayer selected player
+   */
+  openPlayerComparison(selectedPlayer: KTCPlayer): void {
     this.playerComparisonService.addPlayerToCharts(selectedPlayer);
-    this.router.navigateByUrl('players/comparison')
+    this.router.navigateByUrl('players/comparison');
   }
 
 }

@@ -1,3 +1,4 @@
+/* tslint:disable:variable-name */
 import {SleeperCompletedPickData, SleeperRawDraftOrderData} from './SleeperLeague';
 
 export class SleeperUserData {
@@ -13,11 +14,19 @@ export class CompletedDraft {
   }
 
   draft: SleeperRawDraftOrderData;
-  picks: SleeperCompletedPickData[]
+  picks: SleeperCompletedPickData[];
 }
 
 export class SleeperLeagueData {
-  constructor(b: boolean, name: string, league_id: string, total_rosters: number, roster_positions: string[], previous_league_id: string, status: string, metadata: any, settings: any) {
+  constructor(b: boolean,
+              name: string,
+              league_id: string,
+              total_rosters: number,
+              roster_positions: string[],
+              previous_league_id: string,
+              status: string,
+              metadata: any,
+              settings: any) {
     this.isSuperflex = b;
     this.name = name;
     this.leagueId = league_id;
@@ -27,7 +36,7 @@ export class SleeperLeagueData {
     this.status = status;
     this.divisions = settings.divisions;
     for (let i = 0; i < this.divisions; i++) {
-      this.divisionNames.push( metadata ? metadata[`division_${i+1}`] : `Division ${i+1}`);
+      this.divisionNames.push( metadata ? metadata[`division_${i + 1}`] : `Division ${i + 1}`);
     }
     this.playoffTeams = settings.playoff_teams;
     this.startWeek = settings.start_week;

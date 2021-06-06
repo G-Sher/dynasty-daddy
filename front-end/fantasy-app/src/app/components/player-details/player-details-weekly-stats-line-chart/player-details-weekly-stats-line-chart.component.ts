@@ -14,22 +14,26 @@ import {BaseComponent} from '../../base-component.abstract';
 })
 export class PlayerDetailsWeeklyStatsLineChartComponent extends BaseComponent implements OnInit {
 
+  /** chart set up */
   @ViewChild(BaseChartDirective, {static: true}) chart: BaseChartDirective;
 
+  /** selected player data */
   @Input()
   selectedPlayer: KTCPlayer;
 
-  totalPoints: number = 0;
+  /** total points aggregate */
+  totalPoints = 0;
 
-  totalProj: number = 0;
+  /** total projected points */
+  totalProj = 0;
 
-  /** line chart data*/
+  /** line chart data */
   public lineChartData: ChartDataSets[] = [];
 
-  /** line chart labels*/
+  /** line chart labels */
   public lineChartLabels: Label[] = [];
 
-
+  /** line chart options */
   public lineChartOptions: (ChartOptions & { annotation?: any }) = {
     responsive: true,
     maintainAspectRatio: false,
@@ -82,43 +86,51 @@ export class PlayerDetailsWeeklyStatsLineChartComponent extends BaseComponent im
   }
 
   ngOnInit(): void {
-    this.generateDataSets()
+    this.generateDataSets();
     this.addSubscriptions(this.playerService.$currentPlayerValuesLoaded.subscribe(() => {
-      this.generateDataSets()
+      this.generateDataSets();
     }));
   }
 
-  generateDataSets() {
+  /**
+   * generate dataset for chart
+   */
+  generateDataSets(): void {
     this.lineChartData = [];
     this.lineChartLabels = [];
     this.totalPoints = 0;
     this.totalProj = 0;
     const stats = [];
     const projections = [];
-    for(let i = 1; i < 19; i++) {
+    for (let i = 1; i < 19; i++) {
       const weekStats = this.playerService.pastSeasonWeeklyStats[i];
       const weekProj = this.playerService.pastSeasonWeeklyProjections[i];
-      if(weekStats && weekProj) {
+      if (weekStats && weekProj) {
         const stat = weekStats[this.selectedPlayer.sleeper_id]?.pts_half_ppr || 0;
         const proj = weekProj[this.selectedPlayer.sleeper_id]?.pts_half_ppr || 0;
         this.totalPoints += stat;
-        stats.push(stat)
+        stats.push(stat);
         this.totalProj += proj;
-        projections.push(proj)
+        projections.push(proj);
         this.lineChartLabels.push(this.playerService.getWeekByIndex(i));
       }
     }
     this.lineChartData.push({label: 'Actual', data: stats.reverse()});
     this.lineChartData.push({label: 'Projected', data: projections.reverse()});
-    this.lineChartLabels.reverse()
+    this.lineChartLabels.reverse();
     if(this.chart && this.chart.chart) {
       this.chart.chart.data.datasets = this.lineChartData;
       this.chart.chart.data.labels = this.lineChartLabels;
     }
   }
 
-  generatePerformancePercent() {
-    const percent = (this.totalPoints/this.totalProj) > 1 ? (this.totalPoints/this.totalProj) - 1 : 1 - (this.totalPoints/this.totalProj);
+  /**
+   * calculate how player performed based on projected
+   */
+  generatePerformancePercent(): number {
+    const percent = (this.totalPoints / this.totalProj) > 1
+      ? (this.totalPoints / this.totalProj) - 1
+      : 1 - (this.totalPoints / this.totalProj);
     return Math.round(percent * 10000) / 100;
   }
 

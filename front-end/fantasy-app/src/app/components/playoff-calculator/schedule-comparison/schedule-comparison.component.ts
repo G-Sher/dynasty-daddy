@@ -12,8 +12,10 @@ import {ScheduleComp} from '../../model/matchup';
 })
 export class ScheduleComparisonComponent implements OnInit {
 
+  /** display columns on table */
   displayColumns: string[] = [];
 
+  /** datasource for table */
   dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
 
   constructor(private sleeperService: SleeperService, private matchupService: MatchupService) { }
@@ -27,10 +29,10 @@ export class ScheduleComparisonComponent implements OnInit {
    * generate columns
    * @private
    */
-  private generateCols() {
+  private generateCols(): string[] {
     const rosterIds = ['team'];
-    for(let team of this.sleeperService.sleeperTeamDetails){
-      rosterIds.push(team.roster.rosterId.toString())
+    for (const team of this.sleeperService.sleeperTeamDetails){
+      rosterIds.push(team.roster.rosterId.toString());
     }
     return rosterIds;
   }
@@ -50,7 +52,7 @@ export class ScheduleComparisonComponent implements OnInit {
    * @param col
    * @param rosterId
    */
-  areSameTeam(col: string, rosterId: number) {
+  areSameTeam(col: string, rosterId: number): boolean {
     return Number(col) === rosterId;
   }
 }

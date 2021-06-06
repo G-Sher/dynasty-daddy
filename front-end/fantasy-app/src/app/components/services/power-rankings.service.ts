@@ -24,7 +24,7 @@ export class PowerRankingsService {
    * @param teams
    * @param players
    */
-  mapPowerRankings(teams: SleeperTeam[], players: KTCPlayer[]) {
+  mapPowerRankings(teams: SleeperTeam[], players: KTCPlayer[]): void {
     try{
       if (this.powerRankings.length === 0) {
         teams.map((team) => {
@@ -95,8 +95,8 @@ export class PowerRankingsService {
         });
         this.rankTeams(this.sleeperService.selectedLeague.isSuperflex);
       }
-    } catch(e: any) {
-      console.error('Error Mapping League Data: ', e)
+    } catch (e: any) {
+      console.error('Error Mapping League Data: ', e);
     }
 
   }
@@ -105,9 +105,9 @@ export class PowerRankingsService {
    * sort position groups based on value
    * @param isSuperflex
    */
-  sortRosterByValue(isSuperflex: boolean) {
+  sortRosterByValue(isSuperflex: boolean): void {
     this.powerRankings.map(team => {
-      for (let group of team.roster) {
+      for (const group of team.roster) {
         group.players.sort((a, b) => {
           if (isSuperflex) {
             return b.sf_trade_value - a.sf_trade_value;
@@ -130,7 +130,7 @@ export class PowerRankingsService {
    * calulates and ranks teams based on trade value
    * @param isSuperflex
    */
-  rankTeams(isSuperflex: boolean) {
+  rankTeams(isSuperflex: boolean): void {
     // Sort position groups and picks desc
     this.sortRosterByValue(isSuperflex);
     // Rank position groups
@@ -148,10 +148,10 @@ export class PowerRankingsService {
     });
     // Rank picks
     this.powerRankings.sort((teamA, teamB) => {
-      if(isSuperflex){
+      if (isSuperflex){
         return teamB.picks.sfTradeValue - teamA.picks.sfTradeValue;
       } else {
-        return teamB.picks.tradeValue - teamA.picks.tradeValue
+        return teamB.picks.tradeValue - teamA.picks.tradeValue;
       }
     });
     this.powerRankings.forEach((team, teamIndex) => {
@@ -186,7 +186,7 @@ export class PowerRankingsService {
   /**
    * calculates starters for teams
    */
-  calculateStarterValue() {
+  calculateStarterValue(): void {
     const positionGroupCount: number[] = [];
     for (const pos of this.positionGroups) {
       positionGroupCount.push(this.getCountForPosition(pos));
@@ -195,7 +195,7 @@ export class PowerRankingsService {
     positionGroupCount.push(this.getCountForPosition('SUPER_FLEX'));
     this.powerRankings.map(team => {
       let teamRosterCount: number[] = positionGroupCount.slice();
-      if (teamRosterCount[0] > 0) //qb
+      if (teamRosterCount[0] > 0) // qb
       {
         team.starters.push(...team.roster[0].players.slice(0, teamRosterCount[0]));
       }
@@ -286,20 +286,25 @@ export class PowerRankingsService {
    * @param position
    * @private
    */
-  private getCountForPosition(position: string) {
+  private getCountForPosition(position: string): number {
     return this.sleeperService.selectedLeague.rosterPositions.filter(x => x === position).length;
   }
 
   /**
    * resets power rankings
    */
-  reset() {
+  reset(): void {
     this.powerRankings = [];
   }
 
-  getRankByTeam(selectedTeam: SleeperTeam, property = 'overallRank') {
-    for( let team of this.powerRankings) {
-      if(team.team.roster.rosterId == selectedTeam.roster.rosterId) {
+  /**
+   * gets Rank by team
+   * @param selectedTeam selected team
+   * @param property power ranking search property
+   */
+  getRankByTeam(selectedTeam: SleeperTeam, property = 'overallRank'): TeamPowerRanking {
+    for (const team of this.powerRankings) {
+      if (team.team.roster.rosterId === selectedTeam.roster.rosterId) {
         return team[property];
       }
     }

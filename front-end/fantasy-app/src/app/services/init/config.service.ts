@@ -10,7 +10,7 @@ export class ConfigService {
   constructor(private endpointsService: EndpointsService) {
   }
 
-  applyConfigs() {
+  applyConfigs(): void {
     this.endpointsService.assignEndpoints();
   }
 }

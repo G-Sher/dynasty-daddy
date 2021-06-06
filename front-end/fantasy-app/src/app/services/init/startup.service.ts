@@ -11,8 +11,8 @@ export class StartupService {
 
   public startupApplication(): Promise<any> {
     return new Promise(resolve => {
-      resolve(this.configService.applyConfigs())
-    })
+      resolve(this.configService.applyConfigs());
+    });
   }
 }
 

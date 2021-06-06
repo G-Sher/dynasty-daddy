@@ -14,10 +14,13 @@ import {Classic10} from 'chartjs-plugin-colorschemes/src/colorschemes/colorschem
 })
 export class TradeValueLineChartComponent extends BaseComponent implements OnInit {
 
+  /** chart set up */
   @ViewChild(BaseChartDirective, {static: true}) chart: BaseChartDirective;
 
-  selectedDateFilter: string = 'alltime';
+  /** selected filter range */
+  selectedDateFilter = 'alltime';
 
+  /** ng2-chart options */
   public lineChartOptions: (ChartOptions & { annotation?: any }) = {
     responsive: true,
     maintainAspectRatio: false,
@@ -79,7 +82,7 @@ export class TradeValueLineChartComponent extends BaseComponent implements OnIni
     this.addSubscriptions(this.playerComparisonService.$updatePlayer.subscribe((player) => {
       setTimeout(() => {
         if (this.chart && this.chart.chart) {
-          for (let dataset of this.playerComparisonService.lineChartData) {
+          for (const dataset of this.playerComparisonService.lineChartData) {
             dataset.fill = this.playerComparisonService.lineChartData.length < 4;
           }
           this.chart.chart.config.data.datasets = this.playerComparisonService.lineChartData;
@@ -91,7 +94,10 @@ export class TradeValueLineChartComponent extends BaseComponent implements OnIni
     }));
   }
 
-  updateTable() {
+  /**
+   * rerender chart with data
+   */
+  updateTable(): void {
     this.playerComparisonService.lineChartLabels = [];
     let displayDays;
     switch (this.selectedDateFilter) {
@@ -117,6 +123,11 @@ export class TradeValueLineChartComponent extends BaseComponent implements OnIni
     this.playerComparisonService.refreshTable();
   }
 
+  /**
+   * calculate all time range from today's date
+   * @private
+   * return difference in days
+   */
   private calculateAllTime(): number {
     const oneDay = 24 * 60 * 60 * 1000;
     const firstDate = new Date();

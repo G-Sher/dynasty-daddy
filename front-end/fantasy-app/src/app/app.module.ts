@@ -10,7 +10,7 @@ import { HomeComponent } from './components/home/home.component';
 import { PowerRankingsComponent } from './components/power-rankings/power-rankings.component';
 import {AppRoutingModule} from './app-routing.module';
 import { HeaderComponent } from './components/header/header.component';
-import {NgxSpinnerModule} from "ngx-spinner";
+import {NgxSpinnerModule} from 'ngx-spinner';
 import { KtcTableComponent } from './components/player-values/ktc-table/ktc-table.component';
 import { PlayerValuesComponent } from './components/player-values/player-values.component';
 
@@ -59,10 +59,10 @@ import {PowerRankingsChartComponent} from './components/power-rankings/power-ran
 import { FantasyTeamDetailsWeeklyPointsChartComponent } from './components/fantasy-team-details/fantasy-team-details-weekly-points-chart/fantasy-team-details-weekly-points-chart.component';
 import {FlexLayoutModule} from '@angular/flex-layout';
 
-export function initialize(startupService: StartupService) {
+export function initialize(startupService: StartupService): any {
   return (): Promise<any> => {
     return startupService.startupApplication();
-  }
+  };
 }
 
 @NgModule({

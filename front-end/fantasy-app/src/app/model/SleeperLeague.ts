@@ -1,3 +1,4 @@
+/* tslint:disable:variable-name */
 import {DraftCapital} from './SleeperUser';
 import set = Reflect.set;
 
@@ -21,7 +22,7 @@ export class TeamMetrics {
   rank: number;
   ppts: number;
   losses: number;
-  ties: number
+  ties: number;
   fptsAgainst: number;
   fpts: number;
   division: number;
@@ -67,7 +68,14 @@ export class SleeperTeam {
 }
 
 export class SleeperRawDraftOrderData {
-  constructor(draft_id: string, league_id: string, status: string, type: string, draft_order: any, slot_to_roster_id: any, year: string, settings: any) {
+  constructor(draft_id: string,
+              league_id: string,
+              status: string,
+              type: string,
+              draft_order: any,
+              slot_to_roster_id: any,
+              year: string,
+              settings: any) {
     this.draftId = draft_id;
     this.leagueId = league_id;
     this.status = status;
