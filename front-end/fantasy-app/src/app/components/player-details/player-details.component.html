@@ -55,7 +55,9 @@
         <mat-card>
           <div class="text__light">Trade Value</div>
           <div *ngIf="sleeperService.selectedLeague" class="large-bold-header-text">{{sleeperService.selectedLeague.isSuperflex ? selectedPlayer.sf_trade_value : selectedPlayer.trade_value}}</div>
-          <div *ngIf="!sleeperService.selectedLeague" class="large-bold-header-text">{{selectedPlayer.sf_trade_value}}</div>
+          <div *ngIf="!sleeperService.selectedLeague" class="large-bold-header-text"><span class="small-text__light">Superflex: </span>  {{selectedPlayer.sf_trade_value}}
+            <div><span class="small-text__light">Standard: </span> {{selectedPlayer.trade_value}}</div>
+          </div>
         </mat-card>
       </div>
     </div>

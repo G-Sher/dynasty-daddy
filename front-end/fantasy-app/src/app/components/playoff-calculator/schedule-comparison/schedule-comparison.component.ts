@@ -18,7 +18,7 @@ export class ScheduleComparisonComponent implements OnInit {
   /** datasource for table */
   dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
 
-  constructor(private sleeperService: SleeperService, private matchupService: MatchupService) { }
+  constructor(private sleeperService: SleeperService, public matchupService: MatchupService) { }
 
   ngOnInit(): void {
     this.displayColumns = this.generateCols();

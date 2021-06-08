@@ -145,7 +145,7 @@ export class MatchupService {
    */
   getTeamName(col: string, teams: SleeperTeam[]): string {
     for (const team of teams) {
-      if (team.roster.rosterId === col) {
+      if (team.roster.rosterId.toString() === col) {
         return team.owner.teamName;
       }
     }

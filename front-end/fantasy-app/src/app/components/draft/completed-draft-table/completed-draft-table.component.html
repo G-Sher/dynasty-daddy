@@ -16,7 +16,7 @@
     <!-- Pos Column -->
     <ng-container matColumnDef="team">
       <mat-header-cell *matHeaderCellDef>Team</mat-header-cell>
-      <mat-cell *matCellDef="let element">{{getTeamName(element.rosterId)}}</mat-cell>
+      <mat-cell *matCellDef="let element">{{getTeamName(element.rosterId.toString())}}</mat-cell>
     </ng-container>
 
     <!-- Age Column -->

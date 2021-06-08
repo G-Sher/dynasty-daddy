@@ -41,7 +41,10 @@ export class KtcTableComponent implements OnInit {
   dataSource: MatTableDataSource<KTCPlayer> = new MatTableDataSource<KTCPlayer>();
 
   /** show rookies in table */
-  showRookies = false;
+  showRookies: boolean = false;
+
+  /** show free agents, only show if league is loaded */
+  showFreeAgents: boolean = false;
 
   /** search value from search box */
   searchVal: string;
@@ -76,8 +79,17 @@ export class KtcTableComponent implements OnInit {
     this.filteredPlayers = this.players.slice(0);
     const filterOptions = ['QB', 'RB', 'WR', 'TE', 'PI'];
     if (this.showRookies){
+      this.filterPosGroup[4] = false;
       this.filteredPlayers = this.filteredPlayers.filter(player => {
         if (player.experience === 0 && player.position !== 'PI') {
+          return player;
+        }
+      });
+    }
+    if (this.showFreeAgents){
+      this.filterPosGroup[4] = false;
+      this.filteredPlayers = this.filteredPlayers.filter(player => {
+        if (!player.owner && player.position !== 'PI') {
           return player;
         }
       });
@@ -99,6 +111,7 @@ export class KtcTableComponent implements OnInit {
             && this.sleeperService.selectedLeague));
       });
     }
+    this.paginator.pageIndex = 0;
     this.dataSource.data = this.filteredPlayers;
   }
 

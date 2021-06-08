@@ -107,11 +107,11 @@ export class TradeValueLineChartComponent extends BaseComponent implements OnIni
       case 'month':
         displayDays = 30;
         break;
-      case '2week':
-        displayDays = 14;
+      case '3month':
+        displayDays = 90;
         break;
       default:
-        displayDays = 7;
+        displayDays = 14;
         break;
     }
     for (let i = 0; i < displayDays + 1; i++) {

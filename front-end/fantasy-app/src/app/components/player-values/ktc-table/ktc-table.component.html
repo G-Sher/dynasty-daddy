@@ -15,11 +15,14 @@
                     (change)="updatePlayerFilters()">WR</mat-checkbox>
       <mat-checkbox class="player-value-checkbox-margin" color="primary" [(ngModel)]="filterPosGroup[3]"
                     (change)="updatePlayerFilters()">TE</mat-checkbox>
-      <mat-checkbox class="player-value-checkbox-margin" color="primary" [(ngModel)]="filterPosGroup[4]"
+      <mat-checkbox class="player-value-checkbox-margin" color="primary" [(ngModel)]="filterPosGroup[4]" [disabled]="showFreeAgents || showRookies"
                     (change)="updatePlayerFilters()">Picks</mat-checkbox>
     </span>
     <span class="container_spacer"></span>
     <span class="button-right">
+      <mat-slide-toggle *ngIf="sleeperService.leagueLoaded" color="primary" [(ngModel)]="showFreeAgents" (change)="updatePlayerFilters()" class="player-value-checkbox-margin">
+        Free Agents
+      </mat-slide-toggle>
           <mat-slide-toggle color="primary" [(ngModel)]="showRookies" (change)="updatePlayerFilters()" class="player-value-checkbox-margin">
       Rookies Only
     </mat-slide-toggle>

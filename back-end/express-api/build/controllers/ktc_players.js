@@ -24,38 +24,29 @@ var getCurrentPlayerValues = /*#__PURE__*/function () {
           case 0:
             _context.prev = 0;
             _context.next = 3;
-            return playersModel.select('*', ' WHERE date::date = now()::date order by sf_trade_value desc ');
+            return playersModel.selectSubQuery('*', '(\n' + '    select distinct on (name_id) * \n' + '    from ktc_players \n' + '    order by name_id, id desc \n' + ') as T \n' + '  order by sf_trade_value desc  ');
 
           case 3:
             data = _context.sent;
-
-            if (!(data.rows.length === 0)) {
-              _context.next = 8;
-              break;
-            }
-
-            _context.next = 7;
-            return playersModel.select('*', ' WHERE date::date = (NOW() - interval \'1 day\')::date order by sf_trade_value desc ');
-
-          case 7:
-            data = _context.sent;
-
-          case 8:
+            // let data = await playersModel.select('*', ' WHERE date::date = now()::date order by sf_trade_value desc ');
+            // if (data.rows.length === 0) {
+            //   data = await playersModel.select('*', ' WHERE date::date = (NOW() - interval \'1 day\')::date order by sf_trade_value desc ');
+            // }
             res.status(200).json(data.rows);
-            _context.next = 14;
+            _context.next = 10;
             break;
 
-          case 11:
-            _context.prev = 11;
+          case 7:
+            _context.prev = 7;
             _context.t0 = _context["catch"](0);
             res.status(405).json(_context.t0.stack);
 
-          case 14:
+          case 10:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[0, 11]]);
+    }, _callee, null, [[0, 7]]);
   }));
 
   return function getCurrentPlayerValues(_x, _x2) {
