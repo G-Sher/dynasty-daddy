@@ -92,7 +92,7 @@
             <button mat-menu-item (click)="openPlayerComparison(element)">
               <span>Add to Player Comparison</span>
             </button>
-            <button mat-menu-item *ngIf="sleeperService.selectedLeague && element.position !== 'PI'" [routerLink]="['../../league/team', element.owner]">
+            <button mat-menu-item *ngIf="sleeperService.selectedLeague && element.position !== 'PI' && element.owner" [routerLink]="['../../league/team', element.owner]">
               <span>View Team Page</span>
             </button>
           </mat-menu>

@@ -25,8 +25,13 @@
         <span>{{selectedPlayer.age != -1 ? selectedPlayer.age : '??'}} y.o.</span>
       </div>
       <div *ngIf="sleeperService.selectedLeague">
-        <span class="small-text__light disabled__color">Owned By</span><span
-        style="padding-left: 10px" class="link--text__no__underline" [routerLink]="['../../../league/team', selectedPlayer.owner]">{{selectedPlayer.owner || 'None'}}</span>
+        <div *ngIf="selectedPlayer.owner">
+          <span class="small-text__light disabled__color">Owned By</span>
+          <span style="padding-left: 10px" class="link--text__no__underline" [routerLink]="['../../../league/team', selectedPlayer.owner]">{{selectedPlayer.owner || 'None'}}</span>
+        </div>
+        <div *ngIf="!selectedPlayer.owner">
+          <span class="small-text__light disabled__color">Free Agent</span>
+        </div>
       </div>
       <br>
       <div class="standings-row">
