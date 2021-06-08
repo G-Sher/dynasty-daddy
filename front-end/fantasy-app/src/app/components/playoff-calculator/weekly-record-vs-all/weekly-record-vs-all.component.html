@@ -4,7 +4,7 @@
 
     <ng-container matColumnDef="teams">
       <mat-header-cell *matHeaderCellDef>Teams</mat-header-cell>
-      <mat-cell *matCellDef="let element">{{matchupService.getTeamName(element.rosterId, sleeperService.sleeperTeamDetails)}}</mat-cell>
+      <mat-cell *matCellDef="let element">{{matchupService.getTeamName(element.rosterId.toString(), sleeperService.sleeperTeamDetails)}}</mat-cell>
     </ng-container>
 
     <!-- Position Column -->
