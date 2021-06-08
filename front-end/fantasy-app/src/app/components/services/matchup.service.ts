@@ -143,9 +143,9 @@ export class MatchupService {
    * @param col col number
    * @param teams team list
    */
-  getTeamName(col: string, teams: SleeperTeam[]): string {
+  getTeamName(col: string | number, teams: SleeperTeam[]): string {
     for (const team of teams) {
-      if (team.roster.rosterId.toString() === col) {
+      if (team.roster.rosterId.toString() === col.toString()) {
         return team.owner.teamName;
       }
     }
