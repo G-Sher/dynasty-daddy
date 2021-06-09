@@ -81,7 +81,13 @@ export class PlayerService {
   loadPlayerValuesForToday(): void {
     this.spinner.show();
     this.ktcApiService.getPlayerValuesForToday().subscribe((response: KTCPlayer[]) => {
-      this.playerValues = response;
+      this.playerValues = response.filter(player => {
+        if (player.position === 'PI') {
+          return Number(player.first_name) >= new Date().getFullYear();
+        } else {
+          return player;
+        }
+      });
       this.$loadPlayerStatsForSeason().subscribe((playerStatsResponse) => {
         this.playerStats = playerStatsResponse;
         this.spinner.hide();
