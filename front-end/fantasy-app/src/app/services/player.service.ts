@@ -28,6 +28,7 @@ export class PlayerService {
   /** state of nfl from sleeper */
   stateOfNFL: SleeperStateOfNFL;
 
+  /** full team name based on acc */
   private teamAccToFullName = {
     'CAR': 'Carolina Panthers',
     'NOS': 'New Orleans Saints',

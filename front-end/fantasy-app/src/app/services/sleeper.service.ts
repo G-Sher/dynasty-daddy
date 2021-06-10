@@ -165,21 +165,20 @@ export class SleeperService {
           }));
       }
       if (draft.status === 'complete' && draft.draftOrder) {
-        return this.sleeperApiService.getSleeperCompletedDraftsByDraftId(draft.draftId).pipe(mergeMap((picks) => {
-          return this.sleeperApiService.getSleeperTradedPicksByDraftId(draft.draftId)
-            .pipe(mergeMap((tradedPicks: SleeperRawTradePicksData[]) => {
-              tradedPicks.map((tradedPick: SleeperRawTradePicksData) => {
-                picks.filter(pick => {
-                  if (pick.round === tradedPick.round && tradedPick.previousOwnerId === pick.rosterId) {
-                    pick.rosterId = tradedPick.rosterId;
-                  }
-                });
-              });
-              this.completedDrafts.push(new CompletedDraft(draft, picks));
-              return of(this.sleeperTeamDetails);
-            }));
-          return of(this.sleeperTeamDetails);
-        }));
+        forkJoin(
+          this.sleeperApiService.getSleeperCompletedDraftsByDraftId(draft.draftId),
+          this.sleeperApiService.getSleeperTradedPicksByDraftId(draft.draftId)
+          ).subscribe(([picks, tradedPicks]) => {
+            tradedPicks.reverse().map((tradedPick: SleeperRawTradePicksData) => {
+                    picks.filter(pick => {
+                      if (pick.round === tradedPick.round && tradedPick.previousOwnerId === pick.rosterId) {
+                        pick.rosterId = tradedPick.previousOwnerId;
+                      }
+                    });
+                  });
+            this.completedDrafts.push(new CompletedDraft(draft, picks));
+          }
+        );
       }
       return of(this.sleeperTeamDetails);
     }));
