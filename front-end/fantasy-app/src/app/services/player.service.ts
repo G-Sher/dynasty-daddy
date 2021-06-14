@@ -154,7 +154,7 @@ export class PlayerService {
     for (const sleeperId of team.roster?.players) {
       for (const player of this.playerValues) {
         if (sleeperId === player.sleeper_id) {
-          player.owner = team.owner.ownerName;
+          player.owner = team.owner;
           roster.push(player);
           break;
         }
@@ -181,7 +181,7 @@ export class PlayerService {
    */
   resetOwners(): void {
     for (const player of this.playerValues) {
-      player.owner = '';
+      player.owner = null;
     }
   }
 
