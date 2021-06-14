@@ -39,7 +39,7 @@ export class SleeperApiService {
   getSleeperLeaguesByUserID(userId: string, year: string): Observable<SleeperLeagueData[]> {
     return this.http.get<SleeperLeagueData[]>(this.sleeperApiConfigService.getSleeperUsernameEndpoint + userId + '/leagues/nfl/' + year).pipe(map((leagues: any[]) => {
       const leagueList: SleeperLeagueData[] = [];
-      leagues.map(league => leagueList.push(new SleeperLeagueData(league.roster_positions.includes('SUPER_FLEX'), league.name, league.league_id, league.total_rosters, league.roster_positions, league.previous_league_id, league.status, league.metadata, league.settings)));
+      leagues.map(league => leagueList.push(new SleeperLeagueData(league.roster_positions.includes('SUPER_FLEX'), league.name, league.league_id, league.total_rosters, league.roster_positions, league.previous_league_id, league.status, league.season, league.metadata, league.settings)));
       return leagueList;
     }));
   }
@@ -62,7 +62,7 @@ export class SleeperApiService {
    */
   getSleeperLeaguebyLeagueId(leagueId: string): Observable<SleeperLeagueData> {
     return this.http.get<SleeperRosterData[]>(this.sleeperApiConfigService.getSleeperLeagueEndpoint + leagueId).pipe(map((league: any) => {
-      return new SleeperLeagueData(league.roster_positions.includes('SUPER_FLEX'), league.name, league.league_id, league.total_rosters, league.roster_positions, league.previous_league_id, league.status, league.metadata, league.settings);
+      return new SleeperLeagueData(league.roster_positions.includes('SUPER_FLEX'), league.name, league.league_id, league.total_rosters, league.roster_positions, league.previous_league_id, league.status, league.season, league.metadata, league.settings);
     }));
   }
 
@@ -106,6 +106,18 @@ export class SleeperApiService {
    */
   getSleeperTradedPicksByDraftId(draftId: string): Observable<SleeperRawTradePicksData[]> {
     return this.http.get<SleeperRawTradePicksData[]>(this.sleeperApiConfigService.getSleeperDraftEndpoint + draftId + '/traded_picks').pipe(map((picks: any[]) => {
+      const pickList: SleeperRawTradePicksData[] = [];
+      picks.map(pick => pickList.push(new SleeperRawTradePicksData(pick.owner_id, pick.previous_owner_id, pick.roster_id, pick.round, pick.season)));
+      return pickList;
+    }));
+  }
+
+  /**
+   * get traded draft picks by league id
+   * @param leagueId league id
+   */
+  getSleeperTradedPicksByLeagueId(leagueId: string): Observable<SleeperRawTradePicksData[]> {
+    return this.http.get<SleeperRawTradePicksData[]>(this.sleeperApiConfigService.getSleeperLeagueEndpoint + leagueId + '/traded_picks').pipe(map((picks: any[]) => {
       const pickList: SleeperRawTradePicksData[] = [];
       picks.map(pick => pickList.push(new SleeperRawTradePicksData(pick.owner_id, pick.previous_owner_id, pick.roster_id, pick.round, pick.season)));
       return pickList;

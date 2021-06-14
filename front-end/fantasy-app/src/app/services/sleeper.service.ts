@@ -10,7 +10,7 @@ import {
   SleeperTeam, SleeperTeamMatchUpData,
 } from '../model/SleeperLeague';
 import {forkJoin, Observable, of, Subject} from 'rxjs';
-import {delay, mergeMap} from 'rxjs/operators';
+import {delay, map, mergeMap} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -86,13 +86,10 @@ export class SleeperService {
             return this.sleeperApiService.getSleeperDraftbyLeagueId(selectedLeague.leagueId).pipe(mergeMap((draftIds: string[]) => {
               draftIds.map((draftId: string) => {
                   console.log('processing draft:', draftId);
-                  return this.$assignPicks(draftId).subscribe((x) => {
-                      return of(x);
-                    }
-                  );
+                  return this.$assignPicks(draftId).subscribe();
                 }
               );
-              return of(this.sleeperTeamDetails);
+              return this.$generateFutureDraftCapital();
             }));
           })
         );
@@ -127,10 +124,47 @@ export class SleeperService {
     }
   }
 
+  /**
+   * generate future draft capital for teams
+   * @private
+   */
+  private $generateFutureDraftCapital(): Observable<SleeperTeam[]> {
+    return this.sleeperApiService.getSleeperTradedPicksByLeagueId(this.selectedLeague.leagueId)
+      .pipe(mergeMap((tradedPicks: SleeperRawTradePicksData[]) => {
+        this.sleeperTeamDetails.map((team: SleeperTeam) => {
+          let draftPicks: DraftCapital[] = [];
+          for (let year = Number(this.selectedLeague.season) + 1; year < Number(this.selectedLeague.season) + 4; year++) {
+            for (let i = 0; i < this.selectedLeague.draftRounds; i++) {
+              draftPicks.push(new DraftCapital(true, i + 1, this.selectedLeague.totalRosters / 2, year.toString()));
+            }
+          }
+          tradedPicks.map((tradedPick: SleeperRawTradePicksData) => {
+            if (Number(tradedPick.season) > Number(this.selectedLeague.season)
+              && tradedPick.ownerId === Number(team.roster.rosterId)
+              && tradedPick.rosterId !== Number(team.roster.rosterId)
+            ) {
+              draftPicks.push(new DraftCapital(false, tradedPick.round,
+                        this.selectedLeague.totalRosters / 2, tradedPick.season));
+            }
+          });
+          tradedPicks.map((tradedPick: SleeperRawTradePicksData) => {
+              if (Number(tradedPick.season) > Number(this.selectedLeague.season)
+              && tradedPick.ownerId !== Number(team.roster.rosterId)
+              && tradedPick.rosterId === Number(team.roster.rosterId)
+              ) {
+              draftPicks = this.removeDraftPick(draftPicks.slice(), tradedPick);
+            }
+          });
+          team.draftCapital = [...team.draftCapital, ...draftPicks];
+        });
+        return of(this.sleeperTeamDetails);
+      }));
+  }
+
+  // TODO clean up mock draft code... create separate object or use draft capital from team details
   private $assignPicks(draftId: string): Observable<SleeperTeam[]> {
     return this.sleeperApiService.getSleeperDraftDetailsByDraftId(draftId).pipe(mergeMap((draft: SleeperRawDraftOrderData) => {
       if (draft.status === 'pre_draft' && draft.draftOrder) {
-        this.upcomingDrafts.push(draft);
         return this.sleeperApiService.getSleeperTradedPicksByDraftId(draft.draftId)
           .pipe(mergeMap((tradedPicks: SleeperRawTradePicksData[]) => {
             this.sleeperTeamDetails.map((team: SleeperTeam) => {
@@ -150,7 +184,8 @@ export class SleeperService {
                   const index = draftPicks.map((i) => i.round).indexOf(tradedPick.round);
                   draftPicks.splice(index, 1);
                 } else if (tradedPick.ownerId === rosterId) {
-                  let pickSlot = Number(Object.keys(draft.slotToRosterId).find(key => draft.slotToRosterId[key] === tradedPick.rosterId));
+                  let pickSlot = Number(Object.keys(draft.slotToRosterId).find(key => draft.slotToRosterId[key] ===
+                    tradedPick.rosterId));
                   if (draft.type === 'snake' && tradedPick.round % 2 === 0) {
                     pickSlot = this.selectedLeague.totalRosters - pickSlot;
                   }
@@ -163,19 +198,19 @@ export class SleeperService {
             });
             return of(this.sleeperTeamDetails);
           }));
-      }
-      if (draft.status === 'complete' && draft.draftOrder) {
+        this.upcomingDrafts.push(draft);
+      } else if (draft.status === 'complete' && draft.draftOrder) {
         forkJoin(
           this.sleeperApiService.getSleeperCompletedDraftsByDraftId(draft.draftId),
           this.sleeperApiService.getSleeperTradedPicksByDraftId(draft.draftId)
-          ).subscribe(([picks, tradedPicks]) => {
+        ).subscribe(([picks, tradedPicks]) => {
             tradedPicks.reverse().map((tradedPick: SleeperRawTradePicksData) => {
-                    picks.filter(pick => {
-                      if (pick.round === tradedPick.round && tradedPick.previousOwnerId === pick.rosterId) {
-                        pick.rosterId = tradedPick.previousOwnerId;
-                      }
-                    });
-                  });
+              picks.filter(pick => {
+                if (pick.round === tradedPick.round && tradedPick.previousOwnerId === pick.rosterId) {
+                  pick.rosterId = tradedPick.previousOwnerId;
+                }
+              });
+            });
             this.completedDrafts.push(new CompletedDraft(draft, picks));
           }
         );
@@ -225,5 +260,21 @@ export class SleeperService {
       }
     }
     return null;
+  }
+
+  /**
+   * handles removing draft pick from draft capital
+   * @param draftPicks
+   * @param tradedPick
+   * @private
+   */
+  private removeDraftPick(draftPicks: DraftCapital[], tradedPick: SleeperRawTradePicksData): DraftCapital[] {
+    for (let i = 0; i < draftPicks.length; i++) {
+      if (draftPicks[i].round === tradedPick.round && draftPicks[i].year === tradedPick.season) {
+        draftPicks.splice(i, 1);
+        return draftPicks;
+      }
+    }
+    return draftPicks;
   }
 }
