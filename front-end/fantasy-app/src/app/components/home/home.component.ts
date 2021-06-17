@@ -61,6 +61,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
 
   /**
    * load league data
+   * TODO clean up reset and initializing service data
    * @param value league data
    */
   loadLeague(value: SleeperLeagueData): void {
@@ -79,6 +80,9 @@ export class HomeComponent extends BaseComponent implements OnInit {
           this.sleeperService.sleeperTeamDetails.map((team) => {
             this.playersService.generateRoster(team);
           });
+          this.powerRankingService.mapPowerRankings(this.sleeperService.sleeperTeamDetails, this.playersService.playerValues);
+          this.matchupService.initMatchUpCharts(this.selectedLeague);
+          this.playoffCalculatorService.generateDivisions(this.selectedLeague, this.sleeperService.sleeperTeamDetails);
           this.sleeperService.leagueLoaded = true;
           console.timeEnd('Fetch Sleeper League Data');
         }

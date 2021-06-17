@@ -2,17 +2,21 @@ import {Injectable} from '@angular/core';
 import {SleeperLeagueData} from '../../model/SleeperUser';
 import {ScheduleComp, WeeklyRecordComp} from '../model/matchup';
 import {SleeperTeam} from '../../model/SleeperLeague';
+import {ChartDataSets} from 'chart.js';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MatchupService {
 
-  // schedule comparisons
+  /** schedule comparisons */
   scheduleComparison: ScheduleComp[] = [];
 
-  // weekly record comparisons
+  /** weekly record comparisons */
   weeklyComparison: WeeklyRecordComp[] = [];
+
+  /** chart data for stength of schedule */
+  strengthOfSchedule: ChartDataSets[] = [];
 
   /**
    * initializes matchup data
@@ -52,7 +56,7 @@ export class MatchupService {
    * @param selectedLeague league data
    * @param rosterId which roster is selected
    */
-  calculateScheduleForTeam(selectedLeague: SleeperLeagueData, rosterId: number): {} {
+  private calculateScheduleForTeam(selectedLeague: SleeperLeagueData, rosterId: number): {} {
     const schedule = {};
     for (let selectedRosterId = 1; selectedRosterId < selectedLeague.totalRosters + 1; selectedRosterId++) {
       let wins = 0;

@@ -3,6 +3,8 @@ import {SleeperService} from '../../services/sleeper.service';
 import {PlayoffCalculatorService} from '../services/playoff-calculator.service';
 import {SleeperTeam} from '../../model/SleeperLeague';
 import {MatchupService} from '../services/matchup.service';
+import {PowerRankingsService} from "../services/power-rankings.service";
+import {PlayerService} from "../../services/player.service";
 
 @Component({
   selector: 'app-playoff-calculator',
@@ -13,19 +15,14 @@ export class PlayoffCalculatorComponent implements OnInit {
 
   constructor(public sleeperService: SleeperService,
               public playoffCalculatorService: PlayoffCalculatorService,
-              public matchupService: MatchupService) {
+              public matchupService: MatchupService,
+              private powerRankingService: PowerRankingsService,
+              private playersService: PlayerService) {
   }
 
-  divisionTableCols = ['teamName', 'record', 'pf', 'pot']
+  divisionTableCols = ['teamName', 'record', 'pf', 'pot'];
 
-  ngOnInit(): void {
-    if (this.sleeperService.leagueLoaded) {
-      this.matchupService.initMatchUpCharts(this.sleeperService.selectedLeague);
-      this.playoffCalculatorService.generateDivisions(this.sleeperService.selectedLeague,
-        this.sleeperService.sleeperTeamDetails);
-      console.log(this.sleeperService.selectedLeague);
-    }
-  }
+  ngOnInit(): void {}
 
   roundNumber(num: number): number {
     return Math.round(num);

@@ -3,7 +3,6 @@ import {BaseChartDirective, Label} from 'ng2-charts';
 import {ChartDataSets, ChartOptions} from 'chart.js';
 import {PowerRankingsService} from '../../services/power-rankings.service';
 import {SleeperService} from '../../../services/sleeper.service';
-import {getAllChanges} from "@angular/cdk/schematics";
 
 @Component({
   selector: 'app-power-rankings-chart',
