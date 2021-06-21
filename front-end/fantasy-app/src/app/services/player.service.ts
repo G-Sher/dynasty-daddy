@@ -6,7 +6,8 @@ import {NgxSpinnerService} from 'ngx-spinner';
 import {forkJoin, Observable, of, Subject, timer} from 'rxjs';
 import {SleeperStateOfNFL, SleeperTeam, SleeperTeamMatchUpData} from '../model/SleeperLeague';
 import {SleeperApiService} from './api/sleeper/sleeper-api.service';
-import {mergeMap} from 'rxjs/operators';
+import {map, mergeMap} from 'rxjs/operators';
+import {NflService} from './utilities/nfl.service';
 
 @Injectable({
   providedIn: 'root'
@@ -25,9 +26,7 @@ export class PlayerService {
   /** past week dict from sleeper for projections. 18 weeks */
   pastSeasonWeeklyProjections = {};
 
-  /** state of nfl from sleeper */
-  stateOfNFL: SleeperStateOfNFL;
-
+  /** full team name based on acc */
   private teamAccToFullName = {
     'CAR': 'Carolina Panthers',
     'NOS': 'New Orleans Saints',
@@ -72,7 +71,8 @@ export class PlayerService {
 
   constructor(private ktcApiService: KTCApiService,
               private sleeperApiService: SleeperApiService,
-              private spinner: NgxSpinnerService) {
+              private spinner: NgxSpinnerService,
+              private nflService: NflService) {
   }
 
   /**
@@ -81,7 +81,13 @@ export class PlayerService {
   loadPlayerValuesForToday(): void {
     this.spinner.show();
     this.ktcApiService.getPlayerValuesForToday().subscribe((response: KTCPlayer[]) => {
-      this.playerValues = response;
+      this.playerValues = response.filter(player => {
+        if (player.position === 'PI') {
+          return Number(player.first_name) >= new Date().getFullYear();
+        } else {
+          return player;
+        }
+      });
       this.$loadPlayerStatsForSeason().subscribe((playerStatsResponse) => {
         this.playerStats = playerStatsResponse;
         this.spinner.hide();
@@ -98,17 +104,16 @@ export class PlayerService {
     if (this.playerStatsYear !== '') {
       return of(this.playerStats);
     }
-    return this.sleeperApiService.getSleeperStateOfNFL().pipe(mergeMap((season) => {
-      this.stateOfNFL = season;
-      this.playerStatsYear = this.stateOfNFL.seasonType === 'off'
-      || this.stateOfNFL.seasonType === 'pre' ? this.stateOfNFL.previousSeason : this.stateOfNFL.season;
+    return this.nflService.$initStateOfNfl().pipe(map((season) => {
+      this.playerStatsYear = this.nflService.stateOfNFL.seasonType === 'off'
+      || this.nflService.stateOfNFL.seasonType === 'pre' ? this.nflService.stateOfNFL.previousSeason : this.nflService.stateOfNFL.season;
       const observe = [];
-      observe.push(this.sleeperApiService.getSleeperStatsForYear(this.playerStatsYear).pipe(mergeMap((response: any) => {
+      observe.push(this.sleeperApiService.getSleeperStatsForYear(this.playerStatsYear).pipe(map((response: any) => {
         this.playerStats = response;
         return of(this.playerStats);
       })));
-      let currentWeekInd = this.stateOfNFL.week;
-      let currentYearInd = Number(this.stateOfNFL.season);
+      let currentWeekInd = this.nflService.stateOfNFL.week;
+      let currentYearInd = Number(this.nflService.stateOfNFL.season);
       for (let weekNum = 1; weekNum < 19; weekNum++) {
         if (currentWeekInd === 0) {
           currentYearInd = currentYearInd - 1;
@@ -116,14 +121,14 @@ export class PlayerService {
         }
         observe.push(this.sleeperApiService.getSleeperStatsForWeek(
           currentYearInd.toString(),
-          currentWeekInd).pipe(mergeMap((weeklyStats) => {
+          currentWeekInd).pipe(map((weeklyStats) => {
             this.pastSeasonWeeklyStats[weekNum] = weeklyStats;
             return of(weeklyStats);
         })));
 
         observe.push(this.sleeperApiService.getSleeperProjectionsForWeek(
           currentYearInd.toString(),
-          currentWeekInd).pipe(mergeMap((weeklyStats) => {
+          currentWeekInd).pipe(map((weeklyStats) => {
             this.pastSeasonWeeklyProjections[weekNum] = weeklyStats;
             return of(weeklyStats);
         })));
@@ -147,7 +152,7 @@ export class PlayerService {
     for (const sleeperId of team.roster?.players) {
       for (const player of this.playerValues) {
         if (sleeperId === player.sleeper_id) {
-          player.owner = team.owner.ownerName;
+          player.owner = team.owner;
           roster.push(player);
           break;
         }
@@ -174,7 +179,7 @@ export class PlayerService {
    */
   resetOwners(): void {
     for (const player of this.playerValues) {
-      player.owner = '';
+      player.owner = null;
     }
   }
 
@@ -205,9 +210,9 @@ export class PlayerService {
    */
   getWeekByIndex(index: number): string {
     index--;
-    if (this.stateOfNFL) {
-      let weekNum = this.stateOfNFL.week - index;
-      let year = Number(this.stateOfNFL.season);
+    if (this.nflService.stateOfNFL) {
+      let weekNum = this.nflService.stateOfNFL.week - index;
+      let year = Number(this.nflService.stateOfNFL.season);
       if (weekNum < 1) {
         year--;
         weekNum = (year < 2021 ? 17 : 18) - Math.abs(weekNum);
@@ -218,5 +223,22 @@ export class PlayerService {
       }
       return 'Week ' + weekNum + ' ' + year;
     }
+  }
+
+  /**
+   * return mid round pick for given year and round
+   * @param round
+   * @param season
+   */
+  getEstimatePickValueBy(round: number, season: string): KTCPlayer {
+    for (const player of this.playerValues) {
+      if (player.first_name === season) {
+        if (round === 1 && player.full_name.includes('Mid 1st')) { return player; }
+        else if (round === 2 && player.full_name.includes('Mid 2nd')) { return player; }
+        else if (round === 3 && player.full_name.includes('Mid 3rd')) { return player; }
+        else if (round === 4 && player.full_name.includes('Mid 4th')) { return player; }
+      }
+    }
+    return null;
   }
 }

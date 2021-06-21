@@ -16,16 +16,9 @@ export class PlayoffCalculatorComponent implements OnInit {
               public matchupService: MatchupService) {
   }
 
-  divisionTableCols = ['teamName', 'record', 'pf', 'pot']
+  divisionTableCols = ['teamName', 'record', 'pf', 'pot'];
 
-  ngOnInit(): void {
-    if (this.sleeperService.leagueLoaded) {
-      this.matchupService.initMatchUpCharts(this.sleeperService.selectedLeague);
-      this.playoffCalculatorService.generateDivisions(this.sleeperService.selectedLeague,
-        this.sleeperService.sleeperTeamDetails);
-      console.log(this.sleeperService.selectedLeague);
-    }
-  }
+  ngOnInit(): void {}
 
   roundNumber(num: number): number {
     return Math.round(num);

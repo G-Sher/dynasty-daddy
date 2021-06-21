@@ -60,7 +60,7 @@ First, clone repo and open up in your preferred IDE.
 
 - ng2-charts - chart.js with angular 11
 - Angular mat - for tables, and other styling components
-
+- javascript-color-gradient - for bar chart color gradients
 
 
 ## Credits

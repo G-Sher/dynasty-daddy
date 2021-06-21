@@ -17,8 +17,8 @@ export class PlayoffCalculatorService {
    * @param teams fantasy teams
    */
   generateDivisions(league: SleeperLeagueData, teams: SleeperTeam[]): void {
-    if (this.divisions.length === 0) {
-      if (league.divisions) {
+    if (this.divisions?.length === 0) {
+      if (league.divisions && league.divisions > 1) {
         for (let i = 0; i < league.divisions; i++) {
           const divisionTeams: SleeperTeam[] = [];
           for (const team of teams) {

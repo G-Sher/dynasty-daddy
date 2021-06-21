@@ -28,9 +28,11 @@ var getCurrentPlayerValues = /*#__PURE__*/function () {
 
           case 3:
             data = _context.sent;
-            // let data = await playersModel.select('*', ' WHERE date::date = now()::date order by sf_trade_value desc ');
+            // let data = await playersModel.select('*',
+            // ' WHERE date::date = now()::date order by sf_trade_value desc ');
             // if (data.rows.length === 0) {
-            //   data = await playersModel.select('*', ' WHERE date::date = (NOW() - interval \'1 day\')::date order by sf_trade_value desc ');
+            //   data = await playersModel.select('*',
+            //   ' WHERE date::date = (NOW() - interval \'1 day\')::date order by sf_trade_value desc ');
             // }
             res.status(200).json(data.rows);
             _context.next = 10;

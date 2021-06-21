@@ -107,7 +107,7 @@ export class KtcTableComponent implements OnInit {
       this.filteredPlayers = this.filteredPlayers.filter(player => {
         return (player.full_name.toLowerCase().indexOf(this.searchVal.toLowerCase()) >= 0
           || player.age?.toString().indexOf(this.searchVal) >= 0
-          || ((player.owner?.toLowerCase().indexOf(this.searchVal.toLowerCase()) >= 0)
+          || ((player.owner?.ownerName.toLowerCase().indexOf(this.searchVal.toLowerCase()) >= 0)
             && this.sleeperService.selectedLeague));
       });
     }

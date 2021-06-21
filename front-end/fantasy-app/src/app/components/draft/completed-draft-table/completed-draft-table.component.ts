@@ -49,7 +49,7 @@ export class CompletedDraftTableComponent implements OnInit, OnChanges {
    */
   getTeamName(rosterId: string): string {
     for (const team of this.sleeperService.sleeperTeamDetails) {
-      if (team.roster.rosterId === rosterId) {
+      if (team.roster.rosterId.toString() === rosterId.toString()) {
         return team.owner.teamName;
       }
     }

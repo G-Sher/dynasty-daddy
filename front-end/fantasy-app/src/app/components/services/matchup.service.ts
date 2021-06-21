@@ -2,17 +2,21 @@ import {Injectable} from '@angular/core';
 import {SleeperLeagueData} from '../../model/SleeperUser';
 import {ScheduleComp, WeeklyRecordComp} from '../model/matchup';
 import {SleeperTeam} from '../../model/SleeperLeague';
+import {ChartDataSets} from 'chart.js';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MatchupService {
 
-  // schedule comparisons
+  /** schedule comparisons */
   scheduleComparison: ScheduleComp[] = [];
 
-  // weekly record comparisons
+  /** weekly record comparisons */
   weeklyComparison: WeeklyRecordComp[] = [];
+
+  /** chart data for stength of schedule */
+  strengthOfSchedule: ChartDataSets[] = [];
 
   /**
    * initializes matchup data
@@ -52,7 +56,7 @@ export class MatchupService {
    * @param selectedLeague league data
    * @param rosterId which roster is selected
    */
-  calculateScheduleForTeam(selectedLeague: SleeperLeagueData, rosterId: number): {} {
+  private calculateScheduleForTeam(selectedLeague: SleeperLeagueData, rosterId: number): {} {
     const schedule = {};
     for (let selectedRosterId = 1; selectedRosterId < selectedLeague.totalRosters + 1; selectedRosterId++) {
       let wins = 0;
@@ -114,7 +118,7 @@ export class MatchupService {
       let wins = 0;
       let losses = 0;
       let ties = 0;
-      if (selectedLeague.leagueMatchUps[week] !== undefined) {
+      if (selectedLeague.leagueMatchUps && selectedLeague.leagueMatchUps[week] !== undefined) {
         const teamPoints = selectedLeague.leagueMatchUps[week]?.filter(matchup => {
           return matchup.rosterId === rosterId;
         })[0]?.points;
@@ -143,9 +147,9 @@ export class MatchupService {
    * @param col col number
    * @param teams team list
    */
-  getTeamName(col: string, teams: SleeperTeam[]): string {
+  getTeamName(col: string | number, teams: SleeperTeam[]): string {
     for (const team of teams) {
-      if (team.roster.rosterId.toString() === col) {
+      if (team.roster.rosterId.toString() === col.toString()) {
         return team.owner.teamName;
       }
     }

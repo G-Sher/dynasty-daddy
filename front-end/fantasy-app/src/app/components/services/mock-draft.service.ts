@@ -64,10 +64,12 @@ export class MockDraftService {
     if (this.teamPicks.length === 0) {
       teams.map(team => {
         for (const pick of team.draftCapital) {
-          this.teamPicks.push(new TeamMockDraftPick(((pick.round - 1) * 12) + pick.pick,
-            this.createPickString(pick),
-            team.owner.ownerName,
-            team.owner.teamName));
+          if (pick.year === this.sleeperService.selectedLeague.season) {
+            this.teamPicks.push(new TeamMockDraftPick(((pick.round - 1) * 12) + pick.pick,
+              this.createPickString(pick),
+              team.owner.ownerName,
+              team.owner.teamName));
+          }
         }
       });
       this.teamPicks.sort((pickA, pickB) => {

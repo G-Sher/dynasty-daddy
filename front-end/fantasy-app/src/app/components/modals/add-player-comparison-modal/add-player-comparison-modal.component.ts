@@ -104,7 +104,7 @@ export class AddPlayerComparisonModalComponent implements OnInit {
         return player.full_name.toLowerCase().includes(this.playerSearch.toLowerCase())
           || player.position.toLowerCase().includes(this.playerSearch.toLowerCase())
           || player.team.toLowerCase().includes(this.playerSearch.toLowerCase())
-          || (player.owner?.toLowerCase().includes(this.playerSearch.toLowerCase()) && this.sleeperService.selectedLeague);
+          || (player.owner?.ownerName.toLowerCase().includes(this.playerSearch.toLowerCase()) && this.sleeperService.selectedLeague);
       }).slice(0, 7);
     }
   }

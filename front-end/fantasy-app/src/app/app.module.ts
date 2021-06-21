@@ -58,6 +58,7 @@ import { FantasyTeamDetailsComponent } from './components/fantasy-team-details/f
 import {PowerRankingsChartComponent} from './components/power-rankings/power-rankings-chart/power-rankings-chart.component';
 import { FantasyTeamDetailsWeeklyPointsChartComponent } from './components/fantasy-team-details/fantasy-team-details-weekly-points-chart/fantasy-team-details-weekly-points-chart.component';
 import {FlexLayoutModule} from '@angular/flex-layout';
+import { StrengthOfScheduleChartComponent } from './components/playoff-calculator/strength-of-schedule-chart/strength-of-schedule-chart.component';
 
 export function initialize(startupService: StartupService): any {
   return (): Promise<any> => {
@@ -89,6 +90,7 @@ export function initialize(startupService: StartupService): any {
     PlayerDetailsWeeklyBoxScoresTableComponent,
     FantasyTeamDetailsComponent,
     FantasyTeamDetailsWeeklyPointsChartComponent,
+    StrengthOfScheduleChartComponent,
   ],
   imports: [
     BrowserModule,

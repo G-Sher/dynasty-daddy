@@ -17,6 +17,16 @@ export class SleeperApiConfigService {
 
   private _getSleeperProjectionsEndpoint = '';
 
+  private _getSleeperPlayersEndpoint = '';
+
+  get getSleeperPlayersEndpoint(): string {
+    return this._getSleeperPlayersEndpoint;
+  }
+
+  set getSleeperPlayersEndpoint(value: string) {
+    this._getSleeperPlayersEndpoint = value;
+  }
+
   get getSleeperUsernameEndpoint(): string {
     return this._getSleeperUsernameEndpoint;
   }

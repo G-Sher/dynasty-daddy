@@ -1,4 +1,6 @@
 /* tslint:disable */
+import {SleeperOwnerData} from "./SleeperLeague";
+
 export class KTCPlayer {
   id: number;
   name_id: string;
@@ -14,7 +16,7 @@ export class KTCPlayer {
   experience: number;
   sf_trade_value: number;
   trade_value: number;
-  owner: string = '';
+  owner: SleeperOwnerData = null;
   date: string;
 }
 

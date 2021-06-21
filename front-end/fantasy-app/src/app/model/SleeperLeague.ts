@@ -134,6 +134,31 @@ export class SleeperTeamMatchUpData {
   customPoints: number;
 }
 
+export class SleeperTeamTransactionData {
+  constructor(transaction: any, picks: SleeperRawTradePicksData[] = []) {
+    this.type = transaction.type;
+    this.transactionId = transaction.transaction_id;
+    this.status = transaction.status;
+    this.settings = transaction.settings;
+    this.rosterIds = transaction.roster_ids;
+    this.drops = transaction.drops;
+    this.adds = transaction.adds;
+    this.draftpicks = picks;
+    this.createdAt = transaction.created;
+  }
+
+
+  type: string;
+  transactionId: string;
+  status: string;
+  settings: {};
+  rosterIds: number[];
+  drops: {};
+  adds: {};
+  draftpicks: SleeperRawTradePicksData[];
+  createdAt: number;
+}
+
 export class SleeperCompletedPickData {
 
   constructor(pick: any) {

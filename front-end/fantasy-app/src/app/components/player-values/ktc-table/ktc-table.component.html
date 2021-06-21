@@ -86,13 +86,13 @@
           <mat-icon>more_horiz</mat-icon>
         </button>
           <mat-menu #menu="matMenu">
-            <button *ngIf="element.position !== 'PI'" mat-menu-item [routerLink]="['../details', element.name_id]">
-              <span>View Player Page</span>
-            </button>
             <button mat-menu-item (click)="openPlayerComparison(element)">
               <span>Add to Player Comparison</span>
             </button>
-            <button mat-menu-item *ngIf="sleeperService.selectedLeague && element.position !== 'PI' && element.owner" [routerLink]="['../../league/team', element.owner]">
+            <button *ngIf="element.position !== 'PI'" mat-menu-item [routerLink]="['../details', element.name_id]">
+              <span>View Player Page</span>
+            </button>
+            <button mat-menu-item *ngIf="sleeperService.selectedLeague && element.position !== 'PI' && element.owner" [routerLink]="['../../league/team', element.owner.ownerName]">
               <span>View Team Page</span>
             </button>
           </mat-menu>
@@ -101,13 +101,13 @@
 
           <ng-container *ngIf="sleeperService.selectedLeague" matColumnDef="owner">
             <mat-header-cell *matHeaderCellDef mat-sort-header>Owner</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{element.owner || '---'}}</mat-cell>
+            <mat-cell *matCellDef="let element">{{element.owner?.ownerName || '---'}}</mat-cell>
           </ng-container>
 
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
       <mat-row class="ktc-table-element-row" *matRowDef="let row; columns: displayedColumns;"
                [routerLink]="['../details', row.name_id]"
-               [ngClass]="{'accent__color__background': sleeperService.sleeperUser?.userData?.username === row.owner?.toLowerCase() && sleeperService.selectedLeague}"></mat-row>
+               [ngClass]="{'accent__color__background': sleeperService.sleeperUser?.userData?.user_id === row.owner?.userId && sleeperService.selectedLeague}"></mat-row>
     </mat-table>
     <mat-paginator [pageSizeOptions]="[25, 50, 100]" showFirstLastButtons></mat-paginator>
   </div>

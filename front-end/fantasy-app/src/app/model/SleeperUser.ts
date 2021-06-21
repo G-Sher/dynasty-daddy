@@ -1,5 +1,5 @@
 /* tslint:disable:variable-name */
-import {SleeperCompletedPickData, SleeperRawDraftOrderData} from './SleeperLeague';
+import {SleeperCompletedPickData, SleeperRawDraftOrderData, SleeperRawTradePicksData} from './SleeperLeague';
 
 export class SleeperUserData {
   username: string;
@@ -25,6 +25,7 @@ export class SleeperLeagueData {
               roster_positions: string[],
               previous_league_id: string,
               status: string,
+              season: string,
               metadata: any,
               settings: any) {
     this.isSuperflex = b;
@@ -41,6 +42,8 @@ export class SleeperLeagueData {
     this.playoffTeams = settings.playoff_teams;
     this.startWeek = settings.start_week;
     this.playoffStartWeek = settings.playoff_week_start;
+    this.draftRounds = settings.draft_rounds;
+    this.season = season;
   }
 
   isSuperflex: boolean = true;
@@ -56,6 +59,9 @@ export class SleeperLeagueData {
   startWeek: number;
   playoffStartWeek: number;
   leagueMatchUps: {};
+  leagueTransactions: {};
+  draftRounds: number;
+  season: string;
 }
 
 export class SleeperData {

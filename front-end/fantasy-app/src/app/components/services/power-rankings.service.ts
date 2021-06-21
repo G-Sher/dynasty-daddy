@@ -3,7 +3,7 @@ import {SleeperTeam} from '../../model/SleeperLeague';
 import {KTCPlayer} from '../../model/KTCPlayer';
 import {PositionPowerRanking, TeamPowerRanking} from '../model/powerRankings';
 import {SleeperService} from '../../services/sleeper.service';
-import {Subject} from 'rxjs';
+import {ChartDataSets} from 'chart.js';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +25,7 @@ export class PowerRankingsService {
    * @param players
    */
   mapPowerRankings(teams: SleeperTeam[], players: KTCPlayer[]): void {
-    try{
+    try {
       if (this.powerRankings.length === 0) {
         teams.map((team) => {
           const roster = [];
@@ -127,7 +127,7 @@ export class PowerRankingsService {
   }
 
   /**
-   * calulates and ranks teams based on trade value
+   * calculates and ranks teams based on trade value
    * @param isSuperflex
    */
   rankTeams(isSuperflex: boolean): void {
@@ -148,7 +148,7 @@ export class PowerRankingsService {
     });
     // Rank picks
     this.powerRankings.sort((teamA, teamB) => {
-      if (isSuperflex){
+      if (isSuperflex) {
         return teamB.picks.sfTradeValue - teamA.picks.sfTradeValue;
       } else {
         return teamB.picks.tradeValue - teamA.picks.tradeValue;
