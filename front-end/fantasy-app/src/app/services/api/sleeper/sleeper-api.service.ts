@@ -187,4 +187,22 @@ export class SleeperApiService {
       return stats;
     }));
   }
+
+  /**
+   * get sleeper transaction by league for week
+   * @param leagueId string
+   * @param weekNum number
+   */
+  getSleeperTransactionByLeagueIdForWeek(leagueId: string, weekNum: number): Observable<any> {
+    return this.http.get<any>(this.sleeperApiConfigService.getSleeperLeagueEndpoint + leagueId + '/transactions/' + weekNum).pipe(map((transactions: any) => {
+      return transactions;
+    }));
+  }
+
+  /**
+   * fetches all players in sleeper with sleeper ids
+   */
+  fetchAllSleeperPlayers(): Observable<any> {
+    return this.http.get<any>(this.sleeperApiConfigService.getSleeperPlayersEndpoint);
+  }
 }

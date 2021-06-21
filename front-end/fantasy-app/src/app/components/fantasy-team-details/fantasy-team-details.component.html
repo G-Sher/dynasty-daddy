@@ -50,7 +50,7 @@
       <div class="button-right center-text">
         <mat-card>
           <div class="text__light" style="padding-right: 10px; padding-left: 10px">Record</div>
-          <div class="large-bold-header-text">{{selectedTeam.roster.teamMetrics.wins}}-{{selectedTeam.roster.teamMetrics.losses}}</div>
+          <div class="large-bold-header-text">{{selectedTeam.roster.teamMetrics.wins}} - {{selectedTeam.roster.teamMetrics.losses}}</div>
         </mat-card>
       </div>
     </div>
@@ -69,14 +69,18 @@
       <div class="margin-top-10 center-text">Below are the players sorted by most valuable to least valuable.</div>
       <div class="content">
         <div fxLayout="row wrap" fxLayoutAlign="center" class="margin-top-50" *ngIf="roster.length > 0">
-          <mat-card fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="33%" class="item mat-elevation-z4" *ngFor="let player of roster">
+          <mat-card fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="33%" class="item mat-elevation-z4"
+                    *ngFor="let player of roster">
             <mat-card-header>
               <mat-card-title>{{player?.full_name}}</mat-card-title>
-              <mat-card-subtitle class="small-text__light">{{player.position}} {{player.age != -1 ? player.age : '??'}} y.o.</mat-card-subtitle>
+              <mat-card-subtitle class="small-text__light">{{player.position}} {{player.age != -1 ? player.age : '??'}}
+                y.o.
+              </mat-card-subtitle>
             </mat-card-header>
             <img mat-card-image #image
                  [src]="'https://sleepercdn.com/content/nfl/players/thumb/' + player?.sleeper_id + '.jpg'"
-                 (error)="image.hidden = true" [hidden]="image.hidden" style="max-width: 300px" class="responsive center-img">
+                 onerror="style.display = 'none'" style="max-width: 300px"
+                 class="responsive center-img">
             <mat-card-content class="center-text">
               <div class="small-text__light">Trade Value</div>
               <div class="mid-bold-text">{{player?.sf_trade_value}}</div>
@@ -87,6 +91,54 @@
             </mat-card-actions>
           </mat-card>
         </div>
+      </div>
+    </mat-tab>
+    <mat-tab label="Activity Feed">
+      <div class="mid-bold-text margin-top-10 center-text">Activity Feed</div>
+      <div class="margin-top-10 center-text">Recent moves by {{selectedTeam.owner.teamName}} by week.</div>
+      <div class="margin-top-25">
+        <div class="center-text">Activity Metrics</div>
+        <div class="metrics--box">
+          <mat-card>
+            <div class="small-text__light text__light disabled__color">Total Moves</div>
+            <div class="mid-bold-text">{{teamActivity.length}}</div>
+          </mat-card>
+          <mat-card>
+            <div class="small-text__light text__light disabled__color">Total Trades</div>
+            <div class="mid-bold-text">{{transactionsService.getTradeTotal(teamActivity)}}</div>
+          </mat-card>
+          <mat-card>
+            <div class="small-text__light text__light disabled__color">Net Value Added</div>
+            <div class="mid-bold-text">{{transactionsService.getNetValueAdded(teamActivity)}}</div>
+          </mat-card>
+        </div>
+      </div>
+      <div class="transaction--box">
+        <mat-form-field class="mat-dropdown-wide-300">
+          <mat-label>Search Activities</mat-label>
+          <input matInput type="text" (keyup)="updateActivityFilter()" [(ngModel)]="activitySearchVal">
+        </mat-form-field>
+      </div>
+      <div>
+        <div *ngFor="let transaction of filterTeamActivity" class="transaction--box">
+          <div class="transaction--box__row">
+            <span class="mid-bold-text transaction--box__start">{{transaction.headerDisplay}}</span>
+            <span class="mid-bold-text transaction--box__end" [ngClass]="transaction.netValue > 0 ? 'success__alert' : 'urgent__alert'">{{transaction.netValue}}</span>
+          </div>
+          <div *ngIf="transaction.adds.length > 0">
+            <div *ngFor="let addedPlayer of transaction.adds" class="transaction--box__row">
+              <span class="transaction--box__start"><mat-icon class="transaction-icon">add</mat-icon>{{addedPlayer?.playerName}}</span>
+              <span class="transaction--box__end">{{addedPlayer?.value}}</span>
+            </div>
+          </div>
+          <div *ngIf="transaction.drops.length > 0">
+            <div *ngFor="let droppedPlayer of transaction.drops" class="transaction--box__row">
+              <span class="transaction--box__start"><mat-icon class="transaction-icon">remove</mat-icon>{{droppedPlayer?.playerName}}</span>
+              <span class="transaction--box__end">{{droppedPlayer?.value}}</span>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="!activityShowMore" (click)="activityShowMore = true; updateActivityFilter()" class="link--text__no__underline center-text">Show More <mat-icon class="transaction-icon">expand_more</mat-icon></div>
       </div>
     </mat-tab>
   </mat-tab-group>

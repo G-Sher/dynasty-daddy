@@ -244,6 +244,7 @@ hr.dark {
   font-weight: bold;
 }
 
+.transaction-icon,
 .add-icon-button {
   font-size: 22px;
   vertical-align: middle
@@ -340,4 +341,38 @@ tr.table-detail-row {
   justify-content: center;
 }
 
+// activity feed
+.transaction--feed {
+  border-left: 1px dashed #7f7f7f;
+}
 
+.transaction--box {
+  display: flex;
+  flex-direction: column;
+  //padding-left: 20px;
+  max-width: 300px;
+  margin:15px auto;
+}
+
+.metrics--box {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 10px;
+  padding: 15px;
+}
+
+.transaction--box__row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.transaction--box__end {
+  width: 20%;
+  text-align: right;
+}
+
+.transaction--box__start {
+  width: 70%;
+  text-align: left;
+}

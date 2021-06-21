@@ -59,6 +59,7 @@ export class SleeperLeagueData {
   startWeek: number;
   playoffStartWeek: number;
   leagueMatchUps: {};
+  leagueTransactions: {};
   draftRounds: number;
   season: string;
 }

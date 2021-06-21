@@ -13,8 +13,7 @@
     "target": "es2015",
     "module": "es2020",
     "lib": [
-      "es2018",
-      "dom"
+      "es5", "es6", "dom", "dom.iterable"
     ]
   },
   "angularCompilerOptions": {
