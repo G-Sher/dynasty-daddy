@@ -66,7 +66,7 @@ export class MatchupService {
         let matchUpId = 0;
         let teamPoints = 0;
         let totalPoints = 0;
-        if (selectedLeague.leagueMatchUps[week] !== undefined) {
+        if (selectedLeague.leagueMatchUps && selectedLeague.leagueMatchUps[week] !== undefined) {
           for (const matchup of selectedLeague.leagueMatchUps[week]) {
             totalPoints += matchup.points;
             if (matchup.rosterId === selectedRosterId) {

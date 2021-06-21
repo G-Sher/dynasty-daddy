@@ -108,7 +108,7 @@ export class StrengthOfScheduleChartComponent implements OnInit {
       teamData.push(
         {value: Math.round(competitionStarterValue /
             (this.sleeperService.selectedLeague.playoffStartWeek - this.sleeperService.selectedLeague.startWeek)),
-          team: team.owner.ownerName});
+          team: team.owner.teamName});
     }
     return teamData.sort((a, b) => {
       return b.value - a.value;

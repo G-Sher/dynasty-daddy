@@ -34,10 +34,10 @@ import {MatMenuModule} from '@angular/material/menu';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatCheckboxModule} from '@angular/material/checkbox';
-import { PlayoffCalculatorComponent } from './components/playoff-calculator/playoff-calculator.component';
-import { ScheduleComparisonComponent } from './components/playoff-calculator/schedule-comparison/schedule-comparison.component';
+import { StandingsComponent } from './components/standings/standings.component';
+import { ScheduleComparisonComponent } from './components/standings/schedule-comparison/schedule-comparison.component';
 import {MatTabsModule} from '@angular/material/tabs';
-import { WeeklyRecordVsAllComponent } from './components/playoff-calculator/weekly-record-vs-all/weekly-record-vs-all.component';
+import { WeeklyRecordVsAllComponent } from './components/standings/weekly-record-vs-all/weekly-record-vs-all.component';
 import { CompletedDraftTableComponent } from './components/draft/completed-draft-table/completed-draft-table.component';
 import { PlayerComparisonsComponent } from './components/player-comparisons/player-comparisons.component';
 import {ChartsModule} from 'ng2-charts';
@@ -58,7 +58,7 @@ import { FantasyTeamDetailsComponent } from './components/fantasy-team-details/f
 import {PowerRankingsChartComponent} from './components/power-rankings/power-rankings-chart/power-rankings-chart.component';
 import { FantasyTeamDetailsWeeklyPointsChartComponent } from './components/fantasy-team-details/fantasy-team-details-weekly-points-chart/fantasy-team-details-weekly-points-chart.component';
 import {FlexLayoutModule} from '@angular/flex-layout';
-import { StrengthOfScheduleChartComponent } from './components/playoff-calculator/strength-of-schedule-chart/strength-of-schedule-chart.component';
+import { StrengthOfScheduleChartComponent } from './components/standings/strength-of-schedule-chart/strength-of-schedule-chart.component';
 
 export function initialize(startupService: StartupService): any {
   return (): Promise<any> => {
@@ -77,7 +77,7 @@ export function initialize(startupService: StartupService): any {
     PowerRankingsTableComponent,
     DraftComponent,
     DraftTableComponent,
-    PlayoffCalculatorComponent,
+    StandingsComponent,
     ScheduleComparisonComponent,
     WeeklyRecordVsAllComponent,
     CompletedDraftTableComponent,

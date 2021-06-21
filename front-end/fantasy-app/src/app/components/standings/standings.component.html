@@ -1,4 +1,4 @@
-<div class="margin-top-10 large-bold-header-text center-text">Playoff Calculator</div>
+<div class="margin-top-10 large-bold-header-text center-text">Standings</div>
 <div class="center-text margin-top-10">
   Team standings from the league with points for and realized points. Realized points is calculated by dividing the actual points for and the max potential points for.
 </div>
@@ -11,7 +11,7 @@
 
         <ng-container matColumnDef="teamName">
           <mat-header-cell *matHeaderCellDef>Team Name</mat-header-cell>
-          <mat-cell *matCellDef="let team" class="link--text__no__underline" [routerLink]="['../../team', team.owner.ownerName]"> {{team.owner.teamName}} </mat-cell>
+          <mat-cell *matCellDef="let team" class="link--text__no__underline" [routerLink]="['../team', team.owner.ownerName]"> {{team.owner.teamName}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="record">

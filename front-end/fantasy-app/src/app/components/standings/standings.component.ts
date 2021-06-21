@@ -5,11 +5,11 @@ import {SleeperTeam} from '../../model/SleeperLeague';
 import {MatchupService} from '../services/matchup.service';
 
 @Component({
-  selector: 'app-playoff-calculator',
-  templateUrl: './playoff-calculator.component.html',
-  styleUrls: ['./playoff-calculator.component.css']
+  selector: 'app-standings',
+  templateUrl: './standings.component.html',
+  styleUrls: ['./standings.component.css']
 })
-export class PlayoffCalculatorComponent implements OnInit {
+export class StandingsComponent implements OnInit {
 
   constructor(public sleeperService: SleeperService,
               public playoffCalculatorService: PlayoffCalculatorService,
