@@ -3,8 +3,6 @@ import {SleeperService} from '../../services/sleeper.service';
 import {PlayoffCalculatorService} from '../services/playoff-calculator.service';
 import {SleeperTeam} from '../../model/SleeperLeague';
 import {MatchupService} from '../services/matchup.service';
-import {PowerRankingsService} from "../services/power-rankings.service";
-import {PlayerService} from "../../services/player.service";
 
 @Component({
   selector: 'app-playoff-calculator',
@@ -15,9 +13,7 @@ export class PlayoffCalculatorComponent implements OnInit {
 
   constructor(public sleeperService: SleeperService,
               public playoffCalculatorService: PlayoffCalculatorService,
-              public matchupService: MatchupService,
-              private powerRankingService: PowerRankingsService,
-              private playersService: PlayerService) {
+              public matchupService: MatchupService) {
   }
 
   divisionTableCols = ['teamName', 'record', 'pf', 'pot'];

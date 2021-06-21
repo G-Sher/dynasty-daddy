@@ -118,7 +118,7 @@ export class MatchupService {
       let wins = 0;
       let losses = 0;
       let ties = 0;
-      if (selectedLeague.leagueMatchUps[week] !== undefined) {
+      if (selectedLeague.leagueMatchUps && selectedLeague.leagueMatchUps[week] !== undefined) {
         const teamPoints = selectedLeague.leagueMatchUps[week]?.filter(matchup => {
           return matchup.rosterId === rosterId;
         })[0]?.points;
