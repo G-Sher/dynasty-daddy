@@ -1,0 +1,22 @@
+.mat-column-teamRating,
+.mat-column-record,
+.mat-column-winChampionship,
+.mat-column-winDivision,
+.mat-column-makePlayoffs {
+  max-width: 90px;
+}
+
+.mat-column-record,
+.mat-column-winChampionship,
+.mat-column-winDivision,
+.mat-column-makePlayoffs {
+  text-align: right;
+  justify-content: flex-end ;
+}
+
+.mat-column-teamRating,
+.mat-column-teamDivision,
+.mat-column-teamName {
+  text-align: left;
+  justify-content: start;
+}

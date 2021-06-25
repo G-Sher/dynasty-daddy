@@ -125,7 +125,7 @@ export class SleeperTeamMatchUpData {
     this.customPoints = matchup.custom_points;
   }
 
-  starterPoints: string[];
+  starterPoints: number[];
   starters: string[];
   rosterId: number;
   points: number;

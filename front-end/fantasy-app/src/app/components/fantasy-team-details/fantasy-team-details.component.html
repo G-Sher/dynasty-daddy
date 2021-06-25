@@ -26,11 +26,11 @@
       <div class="standings-row">
         <div class="standings-col vertical-break__right__dark">
           <div class="small-text__light text__light disabled__color">Starter Rank</div>
-          <div class="mid-bold-text">{{powerRankingsService.getRankByTeam(selectedTeam, 'starterRank')}}</div>
+          <div class="mid-bold-text">{{powerRankingsService.findTeamFromRankingsByRosterId(selectedTeam.roster.rosterId).starterRank}}</div>
         </div>
         <div class="standings-col vertical-break__right__dark">
           <div class="small-text__light text__light disabled__color">Overall Rank</div>
-          <div class="mid-bold-text">{{powerRankingsService.getRankByTeam(selectedTeam, 'overallRank')}}</div>
+          <div class="mid-bold-text">{{powerRankingsService.findTeamFromRankingsByRosterId(selectedTeam.roster.rosterId).overallRank}}</div>
         </div>
         <div class="standings-col vertical-break__right__dark">
           <div class="small-text__light text__light disabled__color">Average Points</div>

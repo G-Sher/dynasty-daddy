@@ -5,6 +5,7 @@ import {ChartDataSets, ChartOptions} from 'chart.js';
 import {SleeperService} from '../../../services/sleeper.service';
 import {Color} from 'chartjs-plugin-datalabels/types/options';
 import Gradient from 'javascript-color-gradient';
+import {ColorService} from '../../services/color.service';
 
 
 @Component({
@@ -53,8 +54,7 @@ export class StrengthOfScheduleChartComponent implements OnInit {
         }
       }]
     },
-    plugins: {
-    }
+    plugins: {}
   };
   public chartLegend = false;
   public chartType = 'bar';
@@ -63,7 +63,12 @@ export class StrengthOfScheduleChartComponent implements OnInit {
   public dataLabels: Label[] = [];
   public chartColors: Color;
 
-  constructor(public powerRankingsService: PowerRankingsService, private sleeperService: SleeperService) { }
+  constructor(
+    public powerRankingsService: PowerRankingsService,
+    private sleeperService: SleeperService,
+    private colorService: ColorService
+  ) {
+  }
 
   ngOnInit(): void {
     const sortedData = this.generateStrengthOfSchedule();
@@ -71,7 +76,7 @@ export class StrengthOfScheduleChartComponent implements OnInit {
       this.data.push({
         data: team.value,
         label: 'Avg. Opp. Starters',
-        backgroundColor: this.createBarColors(sortedData.length),
+        backgroundColor: this.colorService.getColorGradientArray(sortedData.length, '#ED2938', '#00FF7F'),
         hoverBackgroundColor: [],
       });
       this.dataLabels.push(team.team);
@@ -83,7 +88,7 @@ export class StrengthOfScheduleChartComponent implements OnInit {
    * TODO cleanup redundant code with matchup service
    * @private
    */
-  private generateStrengthOfSchedule(): {value: any, team: string}[] {
+  private generateStrengthOfSchedule(): { value: any, team: string }[] {
     const teamData = [];
     for (const team of this.sleeperService.sleeperTeamDetails) {
       let competitionStarterValue = 0;
@@ -106,28 +111,15 @@ export class StrengthOfScheduleChartComponent implements OnInit {
         }
       }
       teamData.push(
-        {value: Math.round(competitionStarterValue /
+        {
+          value: Math.round(competitionStarterValue /
             (this.sleeperService.selectedLeague.playoffStartWeek - this.sleeperService.selectedLeague.startWeek)),
-          team: team.owner.teamName});
+          team: team.owner.teamName
+        });
     }
     return teamData.sort((a, b) => {
-      return b.value - a.value;
+        return b.value - a.value;
       }
     );
-  }
-
-  /**
-   * returns array of hexs in a gradient between red and green
-   * TODO abstract into chart service
-   * @param length
-   * @private
-   */
-  private createBarColors(length: number): [] {
-    const colorGradient = new Gradient();
-    const color1 = '#ED2938';
-    const color2 = '#00FF7F';
-    colorGradient.setMidpoint(length);
-    colorGradient.setGradient(color1, color2);
-    return colorGradient.getArray();
   }
 }

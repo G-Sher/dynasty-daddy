@@ -55,6 +55,13 @@ html, body, app-root, .app-frame {
   box-sizing: inherit;
 }
 
+.games-container {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 10%;
+  min-width: 300px;
+}
+
 .container {
   display: flex;
   flex-wrap: wrap;
@@ -152,6 +159,10 @@ html, body, app-root, .app-frame {
 
 .margin-bot-20 {
   margin-bottom: 20px;
+}
+
+.margin-bot-25 {
+  margin-bottom: 25px;
 }
 
 .margin-bot-50 {
@@ -362,6 +373,9 @@ tr.table-detail-row {
   padding: 15px;
 }
 
+/**
+ * transactions styling
+ */
 .transaction--box__row {
   display: flex;
   justify-content: space-between;
@@ -375,4 +389,18 @@ tr.table-detail-row {
 .transaction--box__start {
   width: 70%;
   text-align: left;
+}
+
+.table-image {
+  width: 100%;
+  height: auto;
+  max-width: 60px;
+  padding: 15px;
+}
+
+.games-image {
+  width: 100%;
+  height: auto;
+  max-width: 25px;
+  padding-right: 5px;
 }

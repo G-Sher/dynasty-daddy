@@ -1,0 +1,47 @@
+<div class="table-container">
+  <mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort matSortActive="teamRating" matSortDirection="desc">
+
+    <ng-container matColumnDef="teamRating">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Team Rating</mat-header-cell>
+      <mat-cell *matCellDef="let team">{{sleeperService.selectedLeague.isSuperflex ? powerRankingsService.findTeamFromRankingsByRosterId(team.roster.rosterId).sfTradeValueStarter : powerRankingsService.findTeamFromRankingsByRosterId(team.roster.rosterId).tradeValueStarter}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="teamName">
+      <mat-header-cell *matHeaderCellDef>Team</mat-header-cell>
+      <mat-cell *matCellDef="let team" class="link--text__no__underline" [routerLink]="['../team', team.owner.ownerName]">
+        <img #image [src]="'https://sleepercdn.com/avatars/thumbs/' + team.owner.avatar"
+             onerror="style.display = 'none'" class="table-image">
+        {{team.owner.teamName}}
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="teamDivision">
+      <mat-header-cell *matHeaderCellDef>Team Division</mat-header-cell>
+      <mat-cell *matCellDef="let team">East</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="record">
+      <mat-header-cell *matHeaderCellDef>Projected Record</mat-header-cell>
+      <mat-cell *matCellDef="let team">{{team.roster.teamMetrics.wins}}
+        - {{team.roster.teamMetrics.losses}}{{team.roster.teamMetrics.ties > 0 ? ' - ' + team.roster.teamMetrics.ties : ''}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="makePlayoffs">
+      <mat-header-cell *matHeaderCellDef>Make Playoffs</mat-header-cell>
+      <mat-cell *matCellDef="let team">0</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="winDivision">
+      <mat-header-cell *matHeaderCellDef>Win Division</mat-header-cell>
+      <mat-cell *matCellDef="let team"><span>0</span></mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="winChampionship">
+      <mat-header-cell *matHeaderCellDef>Win Finals</mat-header-cell>
+      <mat-cell *matCellDef="let team"><span>0</span></mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="divisionTableCols"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: divisionTableCols;" [ngClass]="{'mat-table-highlight': row.roster.teamMetrics.rank <= sleeperService.selectedLeague.playoffTeams && row.roster.teamMetrics.wins > 0}"></mat-row>
+  </mat-table>
+</div>

@@ -78,8 +78,12 @@ export class FantasyTeamDetailsWeeklyPointsChartComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // TODO fix this
+    if (this.matchupService.leagueMatchUpUI.length === 0) {
+      console.warn('Warning: Match Data was not loaded correctly. Recalculating Data...');
+      this.matchupService.initMatchUpCharts(this.sleeperService.selectedLeague);
+    }
     this.createMatchupDataSets();
-    this.matchupService.initMatchUpCharts(this.sleeperService.selectedLeague);
   }
 
   /**
@@ -88,32 +92,34 @@ export class FantasyTeamDetailsWeeklyPointsChartComponent implements OnInit {
   createMatchupDataSets(): void {
     const weeklyPoints = [];
     const oppPoints = [];
-    const numOfWeeks = (Number(this.sleeperService.selectedYear) < 2021 ? 17 : 18);
-    for (let i = 0; i <= numOfWeeks; i++) {
-      const week = this.sleeperService.selectedLeague.leagueMatchUps[i];
-      if (week) {
-        for (const matchup of week) {
-          if (matchup.rosterId === this.selectedTeam.roster.rosterId) {
-            weeklyPoints[i] = matchup.points;
-            const matchId = matchup.matchupId;
-            for (const weekMatchup of week) {
-              if (weekMatchup.matchupId === matchId && weekMatchup.rosterId !== this.selectedTeam.roster.rosterId) {
-                oppPoints[i] = weekMatchup.points;
-                this.lineChartLabels.push('Week ' + i + ' vs. ' +
-                  this.sleeperService.getTeamByRosterId(weekMatchup.rosterId).owner.teamName);
-                break;
-              }
-            }
-            break;
-          }
+    for (const weekMatchups of this.matchupService.leagueMatchUpUI) {
+      weeklyPoints[weekMatchups[0]?.week - 1] = 0;
+      oppPoints[weekMatchups[0]?.week - 1] = 0;
+      for (const matchUp of weekMatchups) {
+        if (matchUp.team1RosterId === Number(this.selectedTeam.roster.rosterId)) {
+          weeklyPoints[matchUp.week - 1] = matchUp.team1Points;
+          oppPoints[matchUp.week - 1] = matchUp.team2Points;
+          this.lineChartLabels.push('Week ' + matchUp.week + ' vs. ' +
+                        this.sleeperService.getTeamByRosterId(matchUp.team2RosterId).owner.teamName);
+          break;
+        } else if (matchUp.team2RosterId === Number(this.selectedTeam.roster.rosterId)) {
+          weeklyPoints[matchUp.week - 1] = matchUp.team2Points;
+          oppPoints[matchUp.week - 1] = matchUp.team1Points;
+          this.lineChartLabels.push('Week ' + matchUp.week + ' vs. ' +
+            this.sleeperService.getTeamByRosterId(matchUp.team1RosterId).owner.teamName);
+          break;
         }
+      }
+      // if no match up was scheduled this week add a BYE week label
+      if (this.lineChartLabels.length !== weekMatchups[0]?.week) {
+        this.lineChartLabels.push('Week ' + weekMatchups[0]?.week + ' BYE');
       }
     }
     this.lineChartData.push({
       label: this.selectedTeam.owner.teamName,
-      data: weeklyPoints.slice(this.sleeperService.selectedLeague.startWeek)
+      data: weeklyPoints
     });
-    this.lineChartData.push({label: 'Opponent', data: oppPoints.slice(this.sleeperService.selectedLeague.startWeek)});
+    this.lineChartData.push({label: 'Opponent', data: oppPoints});
   }
 
 }

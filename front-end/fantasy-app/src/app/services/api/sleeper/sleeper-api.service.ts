@@ -48,7 +48,7 @@ export class SleeperApiService {
    * get sleeper rosters by league id
    * @param leagueId selected league id
    */
-  getSleeperRostersbyLeagueId(leagueId: string): Observable<SleeperRosterData[]> {
+  getSleeperRostersByLeagueId(leagueId: string): Observable<SleeperRosterData[]> {
     return this.http.get<SleeperRosterData[]>(this.sleeperApiConfigService.getSleeperLeagueEndpoint + leagueId + '/rosters').pipe(map((rosters: any[]) => {
       const rosterList: SleeperRosterData[] = [];
       rosters.map(roster => rosterList.push(new SleeperRosterData(roster.roster_id, roster.owner_id, roster.players, new TeamMetrics(roster.settings))));
@@ -60,7 +60,7 @@ export class SleeperApiService {
    * get league data by league id
    * @param leagueId selected league id
    */
-  getSleeperLeaguebyLeagueId(leagueId: string): Observable<SleeperLeagueData> {
+  getSleeperLeagueByLeagueId(leagueId: string): Observable<SleeperLeagueData> {
     return this.http.get<SleeperRosterData[]>(this.sleeperApiConfigService.getSleeperLeagueEndpoint + leagueId).pipe(map((league: any) => {
       return new SleeperLeagueData(league.roster_positions.includes('SUPER_FLEX'), league.name, league.league_id, league.total_rosters, league.roster_positions, league.previous_league_id, league.status, league.season, league.metadata, league.settings);
     }));

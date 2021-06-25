@@ -19,13 +19,17 @@ export class HomeComponent extends BaseComponent implements OnInit {
 
   pathSource: string = './assets/cn.jpg';
 
-  userName: string = '';
+  usernameInput: string = '';
+
+  leagueIdInput: string = '';
 
   selectedLeague: SleeperLeagueData;
 
   selectedYear: string;
 
   supportedYears: string[] = [];
+
+  loginMethod: string = 'sleeper_username';
 
   constructor(private spinner: NgxSpinnerService,
               private sleeperApiService: SleeperApiService,
@@ -45,7 +49,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
     } else {
       this.selectedYear = this.sleeperService.selectedYear;
     }
-    this.userName = this.sleeperService.sleeperUser?.userData?.username || '';
+    this.usernameInput = this.sleeperService.sleeperUser?.userData?.username || '';
     this.selectedLeague = this.sleeperService.selectedLeague || null;
     this.playersService.loadPlayerValuesForToday();
   }
@@ -54,7 +58,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
    * loads sleeper data for user
    */
   fetchSleeperInfo(): void {
-    this.sleeperService.loadNewUser(this.userName, this.selectedYear);
+    this.sleeperService.loadNewUser(this.usernameInput, this.selectedYear);
     this.sleeperService.selectedYear = this.selectedYear;
     this.sleeperService.resetLeague();
   }
@@ -102,5 +106,23 @@ export class HomeComponent extends BaseComponent implements OnInit {
       years.push((currentYear - i).toString());
     }
     return years;
+  }
+
+  /**
+   * handles logging in for demo
+   */
+  loginWithDemo(): void {
+    this.loginWithLeagueId('553670046391185408');
+  }
+
+  /**
+   * handles logging in with league id
+   * @param demoId string of demo league id
+   */
+  loginWithLeagueId(demoId?: string): void {
+    this.sleeperService.sleeperUser = null;
+    this.sleeperApiService.getSleeperLeagueByLeagueId(demoId || this.leagueIdInput).subscribe(leagueData => {
+      this.loadLeague(leagueData);
+    });
   }
 }

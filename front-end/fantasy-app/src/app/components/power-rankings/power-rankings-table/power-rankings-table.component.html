@@ -124,7 +124,7 @@
         class="power-ranking-element-row"
         [class.power-ranking-expanded-row]="checkExpanded(element)"
         (click)="pushPopElement(element)"
-        [ngClass]="{'accent__color__background': sleeperService.sleeperUser.userData.user_id === element.team.owner.userId}">
+        [ngClass]="{'accent__color__background': sleeperService.sleeperUser?.userData.user_id === element.team.owner.userId}">
     </tr>
     <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="power-ranking-detail-row"></tr>
   </table>

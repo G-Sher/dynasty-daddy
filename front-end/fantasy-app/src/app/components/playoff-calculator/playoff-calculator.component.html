@@ -1,0 +1,53 @@
+<div class="margin-top-10 large-bold-header-text center-text">Playoff Calculator</div>
+<div class="center-text margin-top-10">
+  Season and games probability based on trade value.
+</div>
+<div *ngIf="sleeperService.leagueLoaded && playoffCalculatorService.divisions.length > 0 && (sleeperService.selectedLeague?.status !== 'pre_draft' && sleeperService.selectedLeague?.status !== 'drafting')" class="margin-top-10">
+  <mat-tab-group mat-align-tabs="center" class="margin-top-25">
+    <mat-tab label="Season">
+      <div class="mid-bold-text margin-top-10 center-text">Season</div>
+      <div class="margin-top-10 center-text table-container">Season probability of a team reaching certain goals and record projection.</div>
+      <app-playoff-calculator-season-table></app-playoff-calculator-season-table>
+    </mat-tab>
+    <mat-tab label="Games">
+      <div class="mid-bold-text margin-top-10 center-text">Games</div>
+      <div class="margin-top-10 center-text">Weekly breakdown of match up and team odds to win.</div>
+      <div *ngIf="upcomingMatchUps.length > 0">
+        <div class="center-text mid-bold-text margin-top-50">Upcoming Games</div>
+        <div *ngFor="let weekGames of upcomingMatchUps">
+          <app-playoff-calculator-games-container [weekMatchUps]="weekGames"></app-playoff-calculator-games-container>
+        </div>
+      </div>
+      <div *ngIf="playoffMatchUps.length > 0">
+        <div class="center-text mid-bold-text margin-top-50">Playoff Games</div>
+        <div class="margin-top-10 center-text">These match ups are suspect to change based the games above.</div>
+        <div *ngFor="let weekGames of playoffMatchUps">
+          <app-playoff-calculator-games-container [weekMatchUps]="weekGames"></app-playoff-calculator-games-container>
+        </div>
+      </div>
+      <div *ngIf="completedMatchUps.length > 0">
+        <div class="center-text mid-bold-text margin-top-50">Completed Games</div>
+        <div *ngFor="let weekGames of completedMatchUps">
+          <app-playoff-calculator-games-container [weekMatchUps]="weekGames"></app-playoff-calculator-games-container>
+        </div>
+      </div>
+      <div class="center-text margin-top-50" *ngIf="playoffCalculatorService.matchUpsWithProb.length === 0">
+        <div class="warning__alert">Couldn't load matchups properly. Press reselect league.</div>
+        <br>
+        <button mat-raised-button color="warn" routerLink="../home">Try Again</button>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>
+
+<div class="center-text margin-top-50" *ngIf="!sleeperService.leagueLoaded && sleeperService.selectedLeague?.status !== 'pre_draft' && sleeperService.selectedLeague?.status !== 'drafting'">
+  <div class="warning__alert">Cannot generate league analytics cause no league was selected. Please select a league.</div>
+  <br>
+  <button mat-raised-button color="warn" routerLink="./home">Choose League</button>
+</div>
+
+<div class="center-text margin-top-50" *ngIf="sleeperService.selectedLeague?.status === 'pre_draft' || sleeperService.selectedLeague?.status === 'drafting'">
+  <div class="warning__alert">Cannot generate league analytics because season hasn't started yet. Please select a different league or year.</div>
+  <br>
+  <button mat-raised-button color="warn" routerLink="./home">Choose League</button>
+</div>

@@ -30,7 +30,7 @@
     </ng-container>
 
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{'accent__color__background': sleeperService.sleeperUser.userData.username === getOwnerName(row.rosterId)}"></mat-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{'accent__color__background': sleeperService.sleeperUser?.userData.username === getOwnerName(row.rosterId)}"></mat-row>
   </mat-table>
   <mat-paginator [pageSizeOptions]="[pageLength, 2 * pageLength, 4 * pageLength]" showFirstLastButtons></mat-paginator>
 </div>

@@ -1,46 +1,74 @@
-<div class="center-text margin-top-10 large-bold-header-text">Welcome to the website!</div>
+<div class="center-text margin-top-10 large-bold-header-text">Welcome to Dynasty Daddy!</div>
 
 <div class="flex-start-container margin-top-50">
   <div class="flex-item-home grid-75 center-text margin-top-25">
     <div class="mid-bold-text">Let's get started!</div>
     <br>
-    <mat-form-field class="mat-dropdown-wide-200">
-      <mat-label>Sleeper Username</mat-label>
-      <input matInput type="text" [(ngModel)]="userName">
-      <button mat-button *ngIf="userName" matSuffix mat-icon-button aria-label="Clear" (click)="userName=''">
-        <mat-icon>close</mat-icon>
-      </button>
-    </mat-form-field>
     <div>
-      <mat-form-field appearance="standard">
-        <mat-label>Select a year</mat-label>
-        <mat-select [(ngModel)]="selectedYear">
-          <mat-option *ngFor="let year of supportedYears" [value]="year">{{year}}</mat-option>
-        </mat-select>
-      </mat-form-field>
+      <mat-radio-group [(ngModel)]="loginMethod" class="mat-dropdown-wide-200">
+        <mat-radio-button value="sleeper_username" style="padding-right: 10px">Username</mat-radio-button>
+        <mat-radio-button value="sleeper_league_id">League Id</mat-radio-button>
+      </mat-radio-group>
     </div>
-    <div>
-      <button mat-raised-button [disabled]="!userName || (userName == sleeperService.sleeperUser?.userData?.username && selectedYear == sleeperService.selectedYear)"
-              color="primary" (click)="fetchSleeperInfo()">Sign In
+    <div *ngIf="loginMethod === 'sleeper_username'">
+      <mat-form-field class="mat-dropdown-wide-200 margin-top-25">
+        <mat-label>Sleeper Username</mat-label>
+        <input matInput type="text" [(ngModel)]="usernameInput">
+        <button mat-button *ngIf="usernameInput" matSuffix mat-icon-button aria-label="Clear" (click)="usernameInput=''">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+      <div>
+        <mat-form-field appearance="standard">
+          <mat-label>Select a year</mat-label>
+          <mat-select [(ngModel)]="selectedYear">
+            <mat-option *ngFor="let year of supportedYears" [value]="year">{{year}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div>
+        <button mat-raised-button [disabled]="!usernameInput || (usernameInput == sleeperService.sleeperUser?.userData?.username && selectedYear == sleeperService.selectedYear)"
+                color="primary" (click)="fetchSleeperInfo()">Sign In
+        </button>
+      </div>
+      <div class="margin-top-25" *ngIf="sleeperService.sleeperUser">
+        <div>Hello <span class="warning__alert">{{sleeperService.sleeperUser?.userData.username}}</span>! We found <span
+          class="warning__alert">{{sleeperService.sleeperUser?.leagues.length}}</span> leagues linked to this account in <span class="warning__alert">{{sleeperService.selectedYear}}</span>!</div>
+        <br>
+        <mat-form-field appearance="standard" *ngIf="sleeperService.sleeperUser?.leagues.length > 0">
+          <mat-label>Select a league</mat-label>
+          <mat-select [(ngModel)]="selectedLeague" (selectionChange)="loadLeague($event.value)">
+            <mat-option *ngFor="let league of sleeperService.sleeperUser?.leagues"
+                        [value]="league">{{league.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <div *ngIf="loginMethod === 'sleeper_league_id'">
+      <mat-form-field class="mat-dropdown-wide-200 margin-top-25">
+        <mat-label>Sleeper League Id</mat-label>
+        <input matInput type="text" [(ngModel)]="leagueIdInput">
+        <button mat-button *ngIf="leagueIdInput" matSuffix mat-icon-button aria-label="Clear" (click)="leagueIdInput=''">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+      <div>
+        <button mat-raised-button [disabled]="!leagueIdInput || usernameInput === sleeperService.selectedLeague?.leagueId"
+                color="primary" (click)="loginWithLeagueId()">Sign In
+        </button>
+      </div>
+    </div>
+    <div *ngIf="(loginMethod === 'sleeper_league_id' && !sleeperService.selectedLeague) || (loginMethod === 'sleeper_username' && !sleeperService.sleeperUser && !sleeperService.selectedLeague)">
+      <div class="mid-bold-text margin-top-25 margin-bot-25">OR</div>
+      <button mat-raised-button
+              color="accent" (click)="loginWithDemo()">Try a Demo
       </button>
-    </div>
-    <div class="margin-top-25" *ngIf="sleeperService.sleeperUser">
-      <div>Hello <span class="warning__alert">{{sleeperService.sleeperUser.userData.username}}</span>! We found <span
-        class="warning__alert">{{sleeperService.sleeperUser.leagues.length}}</span> leagues linked to this account in <span class="warning__alert">{{sleeperService.selectedYear}}</span>!</div>
-      <br>
-      <mat-form-field appearance="standard" *ngIf="sleeperService.sleeperUser.leagues.length > 0">
-        <mat-label>Select a league</mat-label>
-        <mat-select [(ngModel)]="selectedLeague" (selectionChange)="loadLeague($event.value)">
-          <mat-option *ngFor="let league of sleeperService.sleeperUser.leagues"
-                      [value]="league">{{league.name}}</mat-option>
-        </mat-select>
-      </mat-form-field>
     </div>
     <div class="margin-top-25" *ngIf="sleeperService.sleeperTeamDetails && sleeperService.sleeperTeamDetails.length > 0">
-      Congratulations <span class="warning__alert">{{sleeperService.sleeperUser.userData.username}}</span>! <span
-      class="warning__alert">{{selectedLeague.name}}</span> was loaded successfully!
+      Congratulations<span class="warning__alert" *ngIf="sleeperService.sleeperUser"> {{sleeperService.sleeperUser?.userData.username}}</span>! The
+      <span class="warning__alert">{{selectedLeague.season}}</span> season of
+      <span class="warning__alert">{{selectedLeague.name}}</span> was loaded successfully!
     </div>
-
   </div>
 
   <div class="grid-25 flex-item-home">

@@ -95,7 +95,7 @@ export class SleeperService {
           }
         );
         // fetch rosters and drafts picks
-        return this.sleeperApiService.getSleeperRostersbyLeagueId(selectedLeague.leagueId).pipe(mergeMap((rosters: SleeperRosterData[]) => {
+        return this.sleeperApiService.getSleeperRostersByLeagueId(selectedLeague.leagueId).pipe(mergeMap((rosters: SleeperRosterData[]) => {
             console.log('Fetching Roster Ids...');
             this.sleeperTeamDetails = [];
             rosters.map(roster => {

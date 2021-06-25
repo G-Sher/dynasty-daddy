@@ -8,6 +8,7 @@ import {StandingsComponent} from './components/standings/standings.component';
 import {PlayerComparisonsComponent} from './components/player-comparisons/player-comparisons.component';
 import {PlayerDetailsComponent} from './components/player-details/player-details.component';
 import {FantasyTeamDetailsComponent} from './components/fantasy-team-details/fantasy-team-details.component';
+import {PlayoffCalculatorComponent} from './components/playoff-calculator/playoff-calculator.component';
 
 const routes: Routes = [
   {
@@ -29,6 +30,10 @@ const routes: Routes = [
   {
     path: 'league/rankings',
     component: PowerRankingsComponent
+  },
+  {
+    path: 'league/probability',
+    component: PlayoffCalculatorComponent
   },
   {
     path: 'league/standings',
