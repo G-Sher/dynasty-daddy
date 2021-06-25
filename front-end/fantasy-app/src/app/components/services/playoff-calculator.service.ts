@@ -67,11 +67,10 @@ export class PlayoffCalculatorService {
    * calculates projected record based on points
    */
   getProjectedRecord(startWeek?: number): void {
-    console.log(startWeek)
     for (let rosterId = 1; rosterId <= this.sleeperService.selectedLeague.totalRosters; rosterId++) {
       let totalWins = 0;
       for (let week = startWeek || 1; week < this.sleeperService.selectedLeague.playoffStartWeek; week++) {
-        this.matchUpsWithProb[week]?.map(matchUp => {
+        this.matchUpsWithProb[week - 1]?.map(matchUp => {
           if (matchUp.matchUpDetails.team1RosterId === rosterId) {
             totalWins += matchUp.team1Prob;
             return;
@@ -193,7 +192,6 @@ export class PlayoffCalculatorService {
     for (const division of this.divisions) {
       for (const team of division.teams) {
         if (Number(team.roster.rosterId) === rosterId) {
-          console.log(division);
           return division;
         }
       }
