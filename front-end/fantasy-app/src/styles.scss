@@ -348,6 +348,13 @@ tr.table-detail-row {
   justify-content:flex-end;
 }
 
+.table-dropdown-right {
+  display:flex;
+  justify-content:flex-end;
+  padding-right: 24px;
+}
+
+
 .mat-table-center-text {
   justify-content: center;
 }

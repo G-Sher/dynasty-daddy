@@ -4,10 +4,19 @@
 </div>
 <div *ngIf="sleeperService.leagueLoaded && playoffCalculatorService.divisions.length > 0 && (sleeperService.selectedLeague?.status !== 'pre_draft' && sleeperService.selectedLeague?.status !== 'drafting')" class="margin-top-10">
   <mat-tab-group mat-align-tabs="center" class="margin-top-25">
-    <mat-tab label="Season">
+    <mat-tab label="Season" class="table-container">
       <div class="mid-bold-text margin-top-10 center-text">Season</div>
-      <div class="margin-top-10 center-text table-container">Season probability of a team reaching certain goals and record projection.</div>
-      <app-playoff-calculator-season-table></app-playoff-calculator-season-table>
+      <div class="margin-top-10 center-text">Season probability of a team reaching certain goals and record projection.</div>
+      <div class="table-dropdown-right">
+          <mat-form-field appearance="standard">
+            <mat-label>Forcast from</mat-label>
+            <mat-select [value]="selectedWeek" (selectionChange)="updateProbability($event.value)">
+              <mat-option *ngFor="let week of selectableWeeks"
+                        [value]="week.week">{{week.value}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <app-playoff-calculator-season-table [forcastWeek]="selectedWeek"></app-playoff-calculator-season-table>
     </mat-tab>
     <mat-tab label="Games">
       <div class="mid-bold-text margin-top-10 center-text">Games</div>

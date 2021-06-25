@@ -17,13 +17,13 @@
 
     <ng-container matColumnDef="teamDivision">
       <mat-header-cell *matHeaderCellDef>Team Division</mat-header-cell>
-      <mat-cell *matCellDef="let team">East</mat-cell>
+      <mat-cell *matCellDef="let team">{{sleeperService.selectedLeague.divisionNames[playoffCalculatorService.getDivisionByRosterId(team.roster.rosterId)?.divisionId - 1] || '---'}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="record">
       <mat-header-cell *matHeaderCellDef>Projected Record</mat-header-cell>
-      <mat-cell *matCellDef="let team">{{team.roster.teamMetrics.wins}}
-        - {{team.roster.teamMetrics.losses}}{{team.roster.teamMetrics.ties > 0 ? ' - ' + team.roster.teamMetrics.ties : ''}}</mat-cell>
+      <mat-cell *matCellDef="let team">{{playoffCalculatorService.teamsOdds[team.roster.rosterId]?.projWins}}
+        - {{playoffCalculatorService.teamsOdds[team.roster.rosterId]?.projLoss}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="makePlayoffs">
@@ -32,7 +32,7 @@
     </ng-container>
 
     <ng-container matColumnDef="winDivision">
-      <mat-header-cell *matHeaderCellDef>Win Division</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef>First Round Bye</mat-header-cell>
       <mat-cell *matCellDef="let team"><span>0</span></mat-cell>
     </ng-container>
 

@@ -18,16 +18,20 @@ export class PlayoffCalculatorService {
   /** array of arrays of match ups with prob */
   matchUpsWithProb: MatchUpProbability[][] = [];
 
+  /** team odds dict of object with proj wins and proj losses based on roster id key */
+  teamsOdds = {};
+
   constructor(
     private sleeperService: SleeperService,
     private powerRankingsService: PowerRankingsService,
     private matchUpService: MatchupService
-  ) {}
+  ) {
+  }
 
   /**
    * calculate games with probability
    */
-  calculateGamesWithProbability(): void {
+  calculateGamesWithProbability(week: number): void {
     this.matchUpsWithProb = [];
     this.matchUpService.leagueMatchUpUI.map(weekMatchups => {
       const games: MatchUpProbability[] = [];
@@ -36,8 +40,7 @@ export class PlayoffCalculatorService {
       });
       this.matchUpsWithProb.push(games);
     });
-    console.log(this.matchUpsWithProb, this.matchUpService.leagueMatchUpUI);
-    this.getProjectedRecord();
+    this.getProjectedRecord(week);
   }
 
   /**
@@ -47,7 +50,9 @@ export class PlayoffCalculatorService {
   getProbabilityForGame(matchup: MatchUpUI): MatchUpProbability {
     const team1Value = this.powerRankingsService.findTeamFromRankingsByRosterId(matchup.team1RosterId);
     const team2Value = this.powerRankingsService.findTeamFromRankingsByRosterId(matchup.team2RosterId);
-    if (!team1Value || !team2Value) { return null; }
+    if (!team1Value || !team2Value) {
+      return null;
+    }
     const valProperty = this.sleeperService.selectedLeague.isSuperflex ? 'sfTradeValueStarter' : 'tradeValueStarter';
     const team1Prob = team1Value[valProperty] / team2Value[valProperty];
     const team2Prob = team2Value[valProperty] / team1Value[valProperty];
@@ -58,8 +63,62 @@ export class PlayoffCalculatorService {
     );
   }
 
-  getProjectedRecord(): void {
+  /**
+   * calculates projected record based on points
+   */
+  getProjectedRecord(startWeek?: number): void {
+    console.log(startWeek)
+    for (let rosterId = 1; rosterId <= this.sleeperService.selectedLeague.totalRosters; rosterId++) {
+      let totalWins = 0;
+      for (let week = startWeek || 1; week < this.sleeperService.selectedLeague.playoffStartWeek; week++) {
+        this.matchUpsWithProb[week]?.map(matchUp => {
+          if (matchUp.matchUpDetails.team1RosterId === rosterId) {
+            totalWins += matchUp.team1Prob;
+            return;
+          } else if (matchUp.matchUpDetails.team2RosterId === rosterId) {
+            totalWins += matchUp.team2Prob;
+            return;
+          }
+        });
+      }
+      const winsAtDate = this.getWinsAtWeek(rosterId, startWeek - 1);
+      this.teamsOdds[rosterId] = {
+        projWins: winsAtDate + Math.round(totalWins / 100),
+        projLoss: this.getProjectedLosses(startWeek, Math.round(totalWins / 100), winsAtDate)
+      };
+    }
+  }
 
+  /**
+   * helper to calculate losses cause it's complicated
+   * @param startWeek
+   * @private
+   */
+  private getProjectedLosses(startWeek: number, projWins: number, winsAtDate: number): number {
+    const lossesAtDate = startWeek - 1 - winsAtDate;
+    const projLosses = this.sleeperService.selectedLeague.playoffStartWeek - startWeek - projWins;
+    return  projLosses + lossesAtDate;
+  }
+
+  /**
+   * get number of wins at a current week in the past
+   * TODO maybe move to seperate service?
+   * @param rosterId
+   * @param endWeek
+   */
+  getWinsAtWeek(rosterId: number, endWeek: number): number {
+    let wins = 0;
+    for (let i = 0; i < endWeek; i++) {
+      this.matchUpsWithProb[i]?.map(matchUp => {
+        if (matchUp.matchUpDetails.team1RosterId === rosterId && matchUp.matchUpDetails.team1Points > matchUp.matchUpDetails.team2Points) {
+          wins++;
+        } else if (matchUp.matchUpDetails.team2RosterId === rosterId
+          && matchUp.matchUpDetails.team2Points > matchUp.matchUpDetails.team1Points) {
+          wins++;
+        }
+      });
+    }
+    return wins;
   }
 
   /**
@@ -94,10 +153,10 @@ export class PlayoffCalculatorService {
       } else {
         const allTeams = teams.slice();
         allTeams.sort((a, b) => {
-          if (a.roster.teamMetrics.rank !== 0){
+          if (a.roster.teamMetrics.rank !== 0) {
             return a.roster.teamMetrics.rank - b.roster.teamMetrics.rank;
           } else {
-            return b.roster.teamMetrics.wins - a.roster.teamMetrics.wins ||  b.roster.teamMetrics.fpts - a.roster.teamMetrics.fpts;
+            return b.roster.teamMetrics.wins - a.roster.teamMetrics.wins || b.roster.teamMetrics.fpts - a.roster.teamMetrics.fpts;
           }
         });
         if (allTeams[0].roster.teamMetrics.rank === 0) {
@@ -116,5 +175,29 @@ export class PlayoffCalculatorService {
    */
   reset(): void {
     this.divisions = [];
+  }
+
+  /**
+   * update season odds handler may remove later if unnecessary
+   * @param value
+   */
+  updateSeasonOdds(value: any): void {
+    this.getProjectedRecord(value);
+  }
+
+  /**
+   * get Division by Roster id
+   * @param rosterId
+   */
+  getDivisionByRosterId(rosterId: number): Division {
+    for (const division of this.divisions) {
+      for (const team of division.teams) {
+        if (Number(team.roster.rosterId) === rosterId) {
+          console.log(division);
+          return division;
+        }
+      }
+    }
+    return null;
   }
 }
