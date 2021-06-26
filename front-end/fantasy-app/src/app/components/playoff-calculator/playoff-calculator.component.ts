@@ -35,35 +35,38 @@ export class PlayoffCalculatorComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.sleeperService.selectedLeague) {
-      this.generateSelectableWeeks();
-
+      console.log(this.sleeperService.selectedLeague)
       // TODO fix this
-      if (this.matchupService.leagueMatchUpUI.length === 0) {
+      if (this.matchupService.leagueMatchUpUI.length === 0 || this.playoffCalculatorService.matchUpsWithProb.length === 0) {
         console.warn('Warning: Match Data was not loaded correctly. Recalculating Data...');
         this.matchupService.initMatchUpCharts(this.sleeperService.selectedLeague);
       }
       this.refreshGames();
+      this.generateSelectableWeeks();
     }
   }
 
   /**
-   * generate valid weeks to select probabilty
+   * generate valid weeks to select probability
+   * TODO refactor redundant code
    * @private
    */
   private generateSelectableWeeks(): void {
-    const totalWeeks = Number(this.sleeperService.selectedLeague.season) < 2021 ? 17 : 18;
-    this.selectableWeeks.push({week: 1, value: 'Preseason'});
+    this.selectableWeeks.push({week: this.sleeperService.selectedLeague.startWeek, value: 'Preseason'});
     if (this.sleeperService.selectedLeague.status !== 'complete') {
-      for (let i = 2; i <= this.nflService.stateOfNFL.week; i++) {
-        const disclaimer = this.sleeperService.selectedLeague.playoffStartWeek === i ? ' (End of regular season)' : '';
-        this.selectableWeeks.push({week: i, value: 'Before Week ' + i + disclaimer});
+      for (let i = 1; i <= this.nflService.stateOfNFL.week; i++) {
+        const disclaimer = this.sleeperService.selectedLeague.playoffStartWeek === this.sleeperService.selectedLeague.startWeek + i ? ' (End of regular season)' : '';
+        this.selectableWeeks.push({week: this.sleeperService.selectedLeague.startWeek + i, value: 'Before Week '
+            + (this.sleeperService.selectedLeague.startWeek + i) + disclaimer});
       }
     } else {
-      for (let i = 2; i <= totalWeeks; i++) {
-        const disclaimer = this.sleeperService.selectedLeague.playoffStartWeek === i ? ' (End of regular season)' : '';
-        this.selectableWeeks.push({week: i, value: 'Before Week ' + i + disclaimer});
+      for (let i = 1; i <= this.playoffCalculatorService.matchUpsWithProb.length; i++) {
+        const disclaimer = this.sleeperService.selectedLeague.playoffStartWeek === this.sleeperService.selectedLeague.startWeek + i ? ' (End of regular season)' : '';
+        this.selectableWeeks.push({week: this.sleeperService.selectedLeague.startWeek + i, value: 'Before Week '
+            + (this.sleeperService.selectedLeague.startWeek + i) + disclaimer});
       }
-      this.selectableWeeks.push({week: totalWeeks + 1, value: 'Today'});
+      this.selectableWeeks.push({week: this.sleeperService.selectedLeague.startWeek
+          + this.playoffCalculatorService.matchUpsWithProb.length + 1, value: 'Today'});
     }
     this.selectedWeek = this.selectableWeeks.reverse()[0].week;
   }

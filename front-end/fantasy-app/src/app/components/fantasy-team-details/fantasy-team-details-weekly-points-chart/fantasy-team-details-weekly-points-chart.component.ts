@@ -93,30 +93,31 @@ export class FantasyTeamDetailsWeeklyPointsChartComponent implements OnInit {
     const weeklyPoints = [];
     const oppPoints = [];
     for (const weekMatchups of this.matchupService.leagueMatchUpUI) {
-      weeklyPoints[weekMatchups[0]?.week - 1] = 0;
-      oppPoints[weekMatchups[0]?.week - 1] = 0;
+      const weekNumber = weekMatchups[0]?.week - this.sleeperService.selectedLeague.startWeek;
+      weeklyPoints[weekNumber] = 0;
+      oppPoints[weekNumber] = 0;
       for (const matchUp of weekMatchups) {
         if (matchUp.team1RosterId === Number(this.selectedTeam.roster.rosterId)) {
-          weeklyPoints[matchUp.week - 1] = matchUp.team1Points;
-          oppPoints[matchUp.week - 1] = matchUp.team2Points;
-          this.lineChartLabels.push('Week ' + matchUp.week + ' vs. ' +
-                        this.sleeperService.getTeamByRosterId(matchUp.team2RosterId).owner.teamName);
+          weeklyPoints[weekNumber] = matchUp.team1Points;
+          oppPoints[weekNumber] = matchUp.team2Points;
+          this.lineChartLabels[matchUp.week - this.sleeperService.selectedLeague.startWeek] = ('Week ' + matchUp.week + ' vs. ' +
+                        this.sleeperService.getTeamByRosterId(matchUp.team2RosterId).owner?.teamName);
           break;
         } else if (matchUp.team2RosterId === Number(this.selectedTeam.roster.rosterId)) {
-          weeklyPoints[matchUp.week - 1] = matchUp.team2Points;
-          oppPoints[matchUp.week - 1] = matchUp.team1Points;
-          this.lineChartLabels.push('Week ' + matchUp.week + ' vs. ' +
-            this.sleeperService.getTeamByRosterId(matchUp.team1RosterId).owner.teamName);
+          weeklyPoints[weekNumber] = matchUp.team2Points;
+          oppPoints[weekNumber] = matchUp.team1Points;
+          this.lineChartLabels[matchUp.week - this.sleeperService.selectedLeague.startWeek] = ('Week ' + matchUp.week + ' vs. ' +
+            this.sleeperService.getTeamByRosterId(matchUp.team1RosterId).owner?.teamName);
           break;
         }
       }
       // if no match up was scheduled this week add a BYE week label
-      if (this.lineChartLabels.length !== weekMatchups[0]?.week) {
-        this.lineChartLabels.push('Week ' + weekMatchups[0]?.week + ' BYE');
+      if (!this.lineChartLabels[weekNumber]) {
+        this.lineChartLabels[weekNumber] = ('Week ' + weekMatchups[0]?.week + ' BYE');
       }
     }
     this.lineChartData.push({
-      label: this.selectedTeam.owner.teamName,
+      label: this.selectedTeam.owner?.teamName,
       data: weeklyPoints
     });
     this.lineChartData.push({label: 'Opponent', data: oppPoints});

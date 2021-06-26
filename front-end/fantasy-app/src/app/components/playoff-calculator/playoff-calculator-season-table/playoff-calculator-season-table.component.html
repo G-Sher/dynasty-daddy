@@ -8,10 +8,11 @@
 
     <ng-container matColumnDef="teamName">
       <mat-header-cell *matHeaderCellDef>Team</mat-header-cell>
-      <mat-cell *matCellDef="let team" class="link--text__no__underline" [routerLink]="['../team', team.owner.ownerName]">
-        <img #image [src]="'https://sleepercdn.com/avatars/thumbs/' + team.owner.avatar"
+      <mat-cell *matCellDef="let team" class="link--text__no__underline" [routerLink]="['../team', team.owner?.ownerName]">
+        <img #image [src]="'https://sleepercdn.com/avatars/thumbs/' + team.owner?.avatar"
              onerror="style.display = 'none'" class="table-image">
-        {{team.owner.teamName}}
+        {{team.owner?.teamName}}
+        <span *ngIf="forecastWeek > 1" class="small-text__light" style="padding-left: 5px">{{playoffCalculatorService.getWinsAtWeek(team.roster.rosterId, forecastWeek - 1)}} - {{playoffCalculatorService.getLossesAtWeek(team.roster.rosterId, forecastWeek - 1)}}</span>
       </mat-cell>
     </ng-container>
 
@@ -21,7 +22,7 @@
     </ng-container>
 
     <ng-container matColumnDef="record">
-      <mat-header-cell *matHeaderCellDef>Projected Record</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Projected Record</mat-header-cell>
       <mat-cell *matCellDef="let team">{{playoffCalculatorService.teamsOdds[team.roster.rosterId]?.projWins}}
         - {{playoffCalculatorService.teamsOdds[team.roster.rosterId]?.projLoss}}</mat-cell>
     </ng-container>

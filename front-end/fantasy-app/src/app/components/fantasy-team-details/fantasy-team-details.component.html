@@ -2,7 +2,7 @@
   <div class="margin-top-10">
     <span class="link--text__no__underline mid-bold-text" style="padding-right: 3px" [routerLink]="['../../rankings']">Power Rankings</span>
     <mat-icon class="arrow-icon__nav">chevron_right</mat-icon>
-    <span class="mid-bold-text">{{selectedTeam.owner.ownerName}}</span>
+    <span class="mid-bold-text">{{selectedTeam.owner?.ownerName}}</span>
     <div class="link--text__no__underline mid-bold-text button-right" [routerLink]="['../../standings']">
       View in Standings
       <mat-icon class="arrow-icon__nav">chevron_right</mat-icon>
@@ -11,16 +11,16 @@
   <div class="flex-start-container margin-top-50">
     <div class="flex-item-home grid-15">
       <div class="profile--pic">
-        <img #image [src]="'https://sleepercdn.com/avatars/thumbs/' + selectedTeam.owner.avatar"
+        <img #image [src]="'https://sleepercdn.com/avatars/thumbs/' + selectedTeam.owner?.avatar"
              (error)="image.hidden = true" [hidden]="image.hidden" class="responsive">
       </div>
     </div>
     <div class="flex-item-home grid-70">
-      <div class="large-bold-header-text">Team {{selectedTeam.owner.teamName}}</div>
+      <div class="large-bold-header-text">Team {{selectedTeam.owner?.teamName}}</div>
       <br>
       <div>
         <span
-          style="padding-right: 15px">Managed by {{selectedTeam.owner.ownerName}}</span>
+          style="padding-right: 15px">Managed by {{selectedTeam.owner?.ownerName}}</span>
       </div>
       <br>
       <div class="standings-row">
@@ -95,7 +95,7 @@
     </mat-tab>
     <mat-tab label="Activity Feed">
       <div class="mid-bold-text margin-top-10 center-text">Activity Feed</div>
-      <div class="margin-top-10 center-text">Recent moves by {{selectedTeam.owner.teamName}} by week.</div>
+      <div class="margin-top-10 center-text">Recent moves by {{selectedTeam.owner?.teamName}} by week.</div>
       <div class="margin-top-25">
         <div class="center-text">Activity Metrics</div>
         <div class="metrics--box">

@@ -18,7 +18,7 @@ export class PlayoffCalculatorSeasonTableComponent implements OnInit, AfterViewI
 
   /** which week is the data forecasted on */
   @Input()
-  forcastWeek: number;
+  forecastWeek: number;
 
   /** datasource for table */
   public dataSource: MatTableDataSource<any>;
@@ -36,6 +36,9 @@ export class PlayoffCalculatorSeasonTableComponent implements OnInit, AfterViewI
   /** combined properties to display */
   divisionTableCols = [];
 
+  /** wins at a current point in time */
+  realizedWins: number = 0;
+
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource(this.sleeperService.sleeperTeamDetails);
     if (this.playoffCalculatorService.divisions.length === 1) {
@@ -51,6 +54,7 @@ export class PlayoffCalculatorSeasonTableComponent implements OnInit, AfterViewI
     this.dataSource.sortingDataAccessor = (item, property) => {
       switch (property) {
         case 'teamRating': return this.powerRankingsService.findTeamFromRankingsByRosterId(item.roster.rosterId).sfTradeValueStarter;
+        case 'record': return this.playoffCalculatorService.teamsOdds[item.roster.rosterId]?.projWins;
         default: return item[property];
       }
     };
@@ -61,7 +65,7 @@ export class PlayoffCalculatorSeasonTableComponent implements OnInit, AfterViewI
    * handles on forcast date changes to hide projected record column if the data is after the reg season
    */
   ngOnChanges(): void {
-    if (this.forcastWeek > this.sleeperService.selectedLeague.playoffStartWeek) {
+    if (this.forecastWeek > this.sleeperService.selectedLeague.playoffStartWeek) {
       this.probabilityCols = ['makePlayoffs', 'winDivision', 'winChampionship'];
     } else {
       this.probabilityCols = ['record', 'makePlayoffs', 'winDivision', 'winChampionship'];

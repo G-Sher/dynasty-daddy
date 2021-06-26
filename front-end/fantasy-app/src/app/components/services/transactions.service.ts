@@ -134,7 +134,7 @@ export class TransactionsService {
         for (const rosterId of transaction.rosterIds) {
           for (const team of this.sleeperService.sleeperTeamDetails) {
             if (Number(team.roster.rosterId) === rosterId && selectedRosterId !== team.roster.rosterId) {
-              teams.push(team.owner.teamName);
+              teams.push(team.owner?.teamName);
               break;
             }
           }

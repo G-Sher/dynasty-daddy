@@ -11,8 +11,8 @@
 
         <ng-container matColumnDef="teamName">
           <mat-header-cell *matHeaderCellDef>Team Name</mat-header-cell>
-          <mat-cell *matCellDef="let team" class="link--text__no__underline" [routerLink]="['../team', team.owner.ownerName]">
-            {{team.owner.teamName}} </mat-cell>
+          <mat-cell *matCellDef="let team" class="link--text__no__underline" [routerLink]="['../team', team.owner?.ownerName]">
+            {{team.owner?.teamName}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="record">

@@ -56,9 +56,9 @@ export class PowerRankingsTableComponent implements OnInit {
     // sorting algorithm
     this.dataSource.sortingDataAccessor = (item, property) => {
       if (property === 'team') {
-        return item.team.owner.teamName;
+        return item.team.owner?.teamName;
       } else if (property === 'owner') {
-        return item.team.owner.ownerName;
+        return item.team.owner?.ownerName;
       } else if (property === 'qbRank') {
         return item.roster[0].rank;
       } else if (property === 'rbRank') {

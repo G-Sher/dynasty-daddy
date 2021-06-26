@@ -6,6 +6,8 @@ import {PowerRankingsService} from './power-rankings.service';
 import {MatchupService} from './matchup.service';
 import {MatchUpUI} from '../model/matchup';
 import {SleeperService} from '../../services/sleeper.service';
+import {NflService} from '../../services/utilities/nfl.service';
+import {cumulativeStdNormalProbability, errorFunction, mean, standardDeviation, zScore} from 'simple-statistics';
 
 @Injectable({
   providedIn: 'root'
@@ -21,10 +23,13 @@ export class PlayoffCalculatorService {
   /** team odds dict of object with proj wins and proj losses based on roster id key */
   teamsOdds = {};
 
+  teamRatingsPValues = {};
+
   constructor(
     private sleeperService: SleeperService,
     private powerRankingsService: PowerRankingsService,
-    private matchUpService: MatchupService
+    private matchUpService: MatchupService,
+    private nflService: NflService
   ) {
   }
 
@@ -32,6 +37,23 @@ export class PlayoffCalculatorService {
    * calculate games with probability
    */
   calculateGamesWithProbability(week: number): void {
+    // get mean of team ratings
+    const ratings = this.powerRankingsService.powerRankings.map(team => {
+      return this.sleeperService.selectedLeague.isSuperflex ? team.sfTradeValueStarter : team.tradeValueStarter;
+    });
+    const meanRating = mean(ratings);
+
+    // get standard deviation of team ratings
+    const stdRating = standardDeviation(ratings);
+
+    // get z scores and p values for each team
+    for (const team of this.powerRankingsService.powerRankings) {
+      const teamZ = zScore(this.sleeperService.selectedLeague.isSuperflex
+        ? team.sfTradeValueStarter : team.tradeValueStarter, meanRating, stdRating);
+      const teamP = cumulativeStdNormalProbability(teamZ);
+      this.teamRatingsPValues[team.team.roster.rosterId] = teamP;
+    }
+
     this.matchUpsWithProb = [];
     this.matchUpService.leagueMatchUpUI.map(weekMatchups => {
       const games: MatchUpProbability[] = [];
@@ -48,28 +70,26 @@ export class PlayoffCalculatorService {
    * @param matchup array of arrays of match up prob
    */
   getProbabilityForGame(matchup: MatchUpUI): MatchUpProbability {
-    const team1Value = this.powerRankingsService.findTeamFromRankingsByRosterId(matchup.team1RosterId);
-    const team2Value = this.powerRankingsService.findTeamFromRankingsByRosterId(matchup.team2RosterId);
-    if (!team1Value || !team2Value) {
-      return null;
-    }
-    const valProperty = this.sleeperService.selectedLeague.isSuperflex ? 'sfTradeValueStarter' : 'tradeValueStarter';
-    const team1Prob = team1Value[valProperty] / team2Value[valProperty];
-    const team2Prob = team2Value[valProperty] / team1Value[valProperty];
+    const team1Prob = 0.5 + (this.teamRatingsPValues[matchup.team1RosterId] - this.teamRatingsPValues[matchup.team2RosterId]) / 2;
+    const team2Prob = 0.5 + (this.teamRatingsPValues[matchup.team2RosterId] - this.teamRatingsPValues[matchup.team1RosterId]) / 2;
     return new MatchUpProbability(
       matchup,
-      this.getPercent(team1Prob / (team1Prob + team2Prob)),
-      this.getPercent(team2Prob / (team1Prob + team2Prob))
+      this.getPercent(team1Prob),
+      this.getPercent(team2Prob)
     );
   }
 
   /**
    * calculates projected record based on points
    */
-  getProjectedRecord(startWeek?: number): void {
+  getProjectedRecord(startWeek: number = this.nflService.stateOfNFL.week): void {
+    // if preseason set to 1
+    if (startWeek === 0) { startWeek = 1; }
     for (let rosterId = 1; rosterId <= this.sleeperService.selectedLeague.totalRosters; rosterId++) {
       let totalWins = 0;
-      for (let week = startWeek || 1; week < this.sleeperService.selectedLeague.playoffStartWeek; week++) {
+      let projectedWeeks = 0;
+      for (let week = startWeek; week < this.sleeperService.selectedLeague.playoffStartWeek; week++) {
+        projectedWeeks++;
         this.matchUpsWithProb[week - 1]?.map(matchUp => {
           if (matchUp.matchUpDetails.team1RosterId === rosterId) {
             totalWins += matchUp.team1Prob;
@@ -81,33 +101,23 @@ export class PlayoffCalculatorService {
         });
       }
       const winsAtDate = this.getWinsAtWeek(rosterId, startWeek - 1);
+      const lossesAtDate = this.getLossesAtWeek(rosterId, startWeek - 1);
       this.teamsOdds[rosterId] = {
         projWins: winsAtDate + Math.round(totalWins / 100),
-        projLoss: this.getProjectedLosses(startWeek, Math.round(totalWins / 100), winsAtDate)
+        projLoss: lossesAtDate + projectedWeeks - Math.round(totalWins / 100)
       };
     }
   }
 
   /**
-   * helper to calculate losses cause it's complicated
-   * @param startWeek
-   * @private
-   */
-  private getProjectedLosses(startWeek: number, projWins: number, winsAtDate: number): number {
-    const lossesAtDate = startWeek - 1 - winsAtDate;
-    const projLosses = this.sleeperService.selectedLeague.playoffStartWeek - startWeek - projWins;
-    return  projLosses + lossesAtDate;
-  }
-
-  /**
    * get number of wins at a current week in the past
-   * TODO maybe move to seperate service?
+   * TODO maybe move to separate service?
    * @param rosterId
    * @param endWeek
    */
   getWinsAtWeek(rosterId: number, endWeek: number): number {
     let wins = 0;
-    for (let i = 0; i < endWeek; i++) {
+    for (let i = 0; i <= endWeek - this.sleeperService.selectedLeague.startWeek; i++) {
       this.matchUpsWithProb[i]?.map(matchUp => {
         if (matchUp.matchUpDetails.team1RosterId === rosterId && matchUp.matchUpDetails.team1Points > matchUp.matchUpDetails.team2Points) {
           wins++;
@@ -118,6 +128,27 @@ export class PlayoffCalculatorService {
       });
     }
     return wins;
+  }
+
+  /**
+   * get number of losses at a current week in the past
+   * TODO maybe move to seperate service?
+   * @param rosterId
+   * @param endWeek
+   */
+  getLossesAtWeek(rosterId: number, endWeek: number): number {
+    let losses = 0;
+    for (let i = 0; i <= endWeek - this.sleeperService.selectedLeague.startWeek; i++) {
+      this.matchUpsWithProb[i]?.map(matchUp => {
+        if (matchUp.matchUpDetails.team1RosterId === rosterId && matchUp.matchUpDetails.team1Points < matchUp.matchUpDetails.team2Points) {
+          losses++;
+        } else if (matchUp.matchUpDetails.team2RosterId === rosterId
+          && matchUp.matchUpDetails.team2Points < matchUp.matchUpDetails.team1Points) {
+          losses++;
+        }
+      });
+    }
+    return losses;
   }
 
   /**

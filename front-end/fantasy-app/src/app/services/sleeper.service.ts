@@ -100,7 +100,7 @@ export class SleeperService {
             this.sleeperTeamDetails = [];
             rosters.map(roster => {
               for (const owner of owners) {
-                if (roster.ownerId === owner.userId) {
+                if (roster.ownerId === owner?.userId) {
                   this.sleeperTeamDetails.push(new SleeperTeam(owner, roster));
                   break;
                 }
@@ -192,7 +192,7 @@ export class SleeperService {
           .pipe(mergeMap((tradedPicks: SleeperRawTradePicksData[]) => {
             this.sleeperTeamDetails.map((team: SleeperTeam) => {
               const draftPicks: DraftCapital[] = [];
-              const slot = draft.draftOrder[team.owner.userId];
+              const slot = draft.draftOrder[team.owner?.userId];
               for (let i = 0; i < draft.rounds; i++) {
                 let slotPick = slot;
                 if (draft.type === 'snake' && i + 1 % 2 === 0) {

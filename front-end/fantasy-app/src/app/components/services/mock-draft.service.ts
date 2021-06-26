@@ -67,8 +67,8 @@ export class MockDraftService {
           if (pick.year === this.sleeperService.selectedLeague.season) {
             this.teamPicks.push(new TeamMockDraftPick(((pick.round - 1) * 12) + pick.pick,
               this.createPickString(pick),
-              team.owner.ownerName,
-              team.owner.teamName));
+              team.owner?.ownerName,
+              team.owner?.teamName));
           }
         }
       });

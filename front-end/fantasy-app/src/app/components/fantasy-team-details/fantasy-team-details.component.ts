@@ -50,7 +50,7 @@ export class FantasyTeamDetailsComponent implements OnInit {
 
     if (this.sleeperService.leagueLoaded) {
       // get selected team from sleeper data
-      const teamIndex = this.sleeperService.sleeperTeamDetails.map(e => e.owner.ownerName).indexOf(ownerName);
+      const teamIndex = this.sleeperService.sleeperTeamDetails.map(e => e.owner?.ownerName).indexOf(ownerName);
       this.selectedTeam = this.sleeperService.sleeperTeamDetails[teamIndex];
       // generate roster and sort
       for (const sleeperId of this.selectedTeam.roster.players) {
