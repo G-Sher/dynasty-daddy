@@ -7,7 +7,7 @@ import {SleeperApiConfigService} from './sleeper-api-config.service';
 import {SleeperLeagueData, SleeperUserData} from '../../../model/SleeperUser';
 import {
   SleeperCompletedPickData,
-  SleeperOwnerData,
+  SleeperOwnerData, SleeperPlayoffMatchUp,
   SleeperRawDraftOrderData,
   SleeperRawTradePicksData,
   SleeperRosterData, SleeperStateOfNFL,
@@ -123,6 +123,19 @@ export class SleeperApiService {
       return pickList;
     }));
   }
+
+  /**
+   * get playoffs
+   * @param leagueId league id
+   */
+  getSleeperPlayoffsByLeagueId(leagueId: string): Observable<SleeperPlayoffMatchUp[]> {
+    return this.http.get<SleeperPlayoffMatchUp[]>(this.sleeperApiConfigService.getSleeperLeagueEndpoint + leagueId + '/winners_bracket').pipe(map((playoffs: any[]) => {
+      const matchups: SleeperPlayoffMatchUp[] = [];
+      playoffs.map(game => matchups.push(new SleeperPlayoffMatchUp(game)));
+      return matchups;
+    }));
+  }
+
 
   /**
    * get sleeper matchups for week by league id

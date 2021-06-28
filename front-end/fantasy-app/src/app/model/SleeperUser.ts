@@ -44,6 +44,7 @@ export class SleeperLeagueData {
     this.playoffStartWeek = settings.playoff_week_start;
     this.draftRounds = settings.draft_rounds;
     this.season = season;
+    this.playoffRoundType = settings.playoff_round_type;
   }
 
   isSuperflex: boolean = true;
@@ -62,6 +63,7 @@ export class SleeperLeagueData {
   leagueTransactions: {};
   draftRounds: number;
   season: string;
+  playoffRoundType: number;
 }
 
 export class SleeperData {

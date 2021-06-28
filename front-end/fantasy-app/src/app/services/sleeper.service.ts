@@ -3,7 +3,7 @@ import {CompletedDraft, DraftCapital, SleeperData, SleeperLeagueData, SleeperUse
 import {SleeperApiService} from './api/sleeper/sleeper-api.service';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {
-  SleeperOwnerData,
+  SleeperOwnerData, SleeperPlayoffMatchUp,
   SleeperRawDraftOrderData,
   SleeperRawTradePicksData,
   SleeperRosterData,
@@ -40,6 +40,8 @@ export class SleeperService {
 
   /** dict of sleeper player ids */
   sleeperPlayers = {};
+
+  playoffMatchUps: SleeperPlayoffMatchUp[] = [];
 
   constructor(private sleeperApiService: SleeperApiService, private spinner: NgxSpinnerService) {
   }
@@ -86,6 +88,11 @@ export class SleeperService {
         observe.push(this.sleeperApiService.fetchAllSleeperPlayers().pipe(map((players) => {
             this.sleeperPlayers = players;
             return of(this.sleeperPlayers);
+          }))
+        );
+        observe.push(this.sleeperApiService.getSleeperPlayoffsByLeagueId(this.selectedLeague.leagueId).pipe(map((playoffs) => {
+          this.playoffMatchUps = playoffs;
+          return of(this.playoffMatchUps);
           }))
         );
         forkJoin(observe).subscribe(() => {
@@ -163,8 +170,8 @@ export class SleeperService {
           }
           tradedPicks.map((tradedPick: SleeperRawTradePicksData) => {
             if (Number(tradedPick.season) > Number(this.selectedLeague.season)
-              && tradedPick.ownerId === Number(team.roster.rosterId)
-              && tradedPick.rosterId !== Number(team.roster.rosterId)
+              && tradedPick.ownerId === team.roster.rosterId
+              && tradedPick.rosterId !== team.roster.rosterId
             ) {
               draftPicks.push(new DraftCapital(false, tradedPick.round,
                 this.selectedLeague.totalRosters / 2, tradedPick.season));
@@ -172,8 +179,8 @@ export class SleeperService {
           });
           tradedPicks.map((tradedPick: SleeperRawTradePicksData) => {
             if (Number(tradedPick.season) > Number(this.selectedLeague.season)
-              && tradedPick.ownerId !== Number(team.roster.rosterId)
-              && tradedPick.rosterId === Number(team.roster.rosterId)
+              && tradedPick.ownerId !== team.roster.rosterId
+              && tradedPick.rosterId === team.roster.rosterId
             ) {
               draftPicks = this.removeDraftPick(draftPicks.slice(), tradedPick);
             }
@@ -251,6 +258,7 @@ export class SleeperService {
     this.sleeperTeamDetails = [];
     this.completedDrafts = [];
     this.upcomingDrafts = [];
+    this.playoffMatchUps = [];
   }
 
   /**

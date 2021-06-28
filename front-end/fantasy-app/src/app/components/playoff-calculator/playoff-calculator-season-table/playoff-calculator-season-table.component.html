@@ -23,23 +23,38 @@
 
     <ng-container matColumnDef="record">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Projected Record</mat-header-cell>
-      <mat-cell *matCellDef="let team">{{playoffCalculatorService.teamsOdds[team.roster.rosterId]?.projWins}}
-        - {{playoffCalculatorService.teamsOdds[team.roster.rosterId]?.projLoss}}</mat-cell>
+      <mat-cell *matCellDef="let team">{{playoffCalculatorService.teamsProjectedRecord[team.roster.rosterId]?.projWins}}
+        - {{playoffCalculatorService.teamsProjectedRecord[team.roster.rosterId]?.projLoss}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="makePlayoffs">
-      <mat-header-cell *matHeaderCellDef>Make Playoffs</mat-header-cell>
-      <mat-cell *matCellDef="let team">0</mat-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Make Playoffs</mat-header-cell>
+      <mat-cell *matCellDef="let team">{{playoffCalculatorService.teamPlayoffOdds[team.roster.rosterId]?.timesMakingPlayoffs}}%</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="winDivision">
-      <mat-header-cell *matHeaderCellDef>First Round Bye</mat-header-cell>
-      <mat-cell *matCellDef="let team"><span>0</span></mat-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Win Division</mat-header-cell>
+      <mat-cell *matCellDef="let team"><span>{{playoffCalculatorService.teamPlayoffOdds[team.roster.rosterId]?.timesWinningDivision}}%</span></mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="getBye">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>1st-Round Bye</mat-header-cell>
+      <mat-cell *matCellDef="let team"><span>{{playoffCalculatorService.teamPlayoffOdds[team.roster.rosterId]?.timesWithBye}}%</span></mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="makeConfChamp">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Make Semi-Finals</mat-header-cell>
+      <mat-cell *matCellDef="let team"><span>{{playoffCalculatorService.teamPlayoffOdds[team.roster.rosterId]?.timesMakeConfRd}}%</span></mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="makeChampionship">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Make Finals</mat-header-cell>
+      <mat-cell *matCellDef="let team"><span>{{playoffCalculatorService.teamPlayoffOdds[team.roster.rosterId]?.timesMakeChampionship}}%</span></mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="winChampionship">
-      <mat-header-cell *matHeaderCellDef>Win Finals</mat-header-cell>
-      <mat-cell *matCellDef="let team"><span>0</span></mat-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Win Finals</mat-header-cell>
+      <mat-cell *matCellDef="let team"><span>{{playoffCalculatorService.teamPlayoffOdds[team.roster.rosterId]?.timesWinChampionship}}%</span></mat-cell>
     </ng-container>
 
     <mat-header-row *matHeaderRowDef="divisionTableCols"></mat-header-row>

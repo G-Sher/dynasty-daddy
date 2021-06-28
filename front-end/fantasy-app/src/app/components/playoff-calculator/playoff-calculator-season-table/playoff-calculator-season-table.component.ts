@@ -5,6 +5,7 @@ import {PowerRankingsService} from '../../services/power-rankings.service';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import {PlayoffCalculatorService} from '../../services/playoff-calculator.service';
+import {ColorService} from '../../services/color.service';
 
 @Component({
   selector: 'app-playoff-calculator-season-table',
@@ -25,19 +26,22 @@ export class PlayoffCalculatorSeasonTableComponent implements OnInit, AfterViewI
 
   constructor(public sleeperService: SleeperService,
               public powerRankingsService: PowerRankingsService,
-              public playoffCalculatorService: PlayoffCalculatorService) { }
+              public playoffCalculatorService: PlayoffCalculatorService,
+              private colorService: ColorService) { }
 
   /** team properties like name division value */
   teamDetails = [];
 
   /** probability properties */
-  probabilityCols = ['record', 'makePlayoffs', 'winDivision', 'winChampionship'];
+  probabilityCols = ['record', 'makePlayoffs', 'winDivision', 'getBye', 'winChampionship'];
 
   /** combined properties to display */
   divisionTableCols = [];
 
   /** wins at a current point in time */
   realizedWins: number = 0;
+
+  probGradient: string[] = [];
 
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource(this.sleeperService.sleeperTeamDetails);
@@ -47,6 +51,7 @@ export class PlayoffCalculatorSeasonTableComponent implements OnInit, AfterViewI
       this.teamDetails = ['teamRating', 'teamName', 'teamDivision'];
     }
     this.divisionTableCols = this.teamDetails.concat(this.probabilityCols);
+    this.probGradient = this.colorService.getColorGradientArray(100, '#00FFFFFF', '#e74c3c');
   }
 
   /** sorting function */
@@ -54,7 +59,14 @@ export class PlayoffCalculatorSeasonTableComponent implements OnInit, AfterViewI
     this.dataSource.sortingDataAccessor = (item, property) => {
       switch (property) {
         case 'teamRating': return this.powerRankingsService.findTeamFromRankingsByRosterId(item.roster.rosterId).sfTradeValueStarter;
-        case 'record': return this.playoffCalculatorService.teamsOdds[item.roster.rosterId]?.projWins;
+        case 'record': return this.playoffCalculatorService.teamsProjectedRecord[item.roster.rosterId]?.projWins;
+        case 'makePlayoffs': return this.playoffCalculatorService.teamPlayoffOdds[item.roster.rosterId]?.timesMakingPlayoffs;
+        case 'winDivision': return this.playoffCalculatorService.teamPlayoffOdds[item.roster.rosterId]?.timesWinningDivision;
+        case 'getBye': return this.playoffCalculatorService.teamPlayoffOdds[item.roster.rosterId]?.timesWithBye;
+        case 'makeConfChamp': return this.playoffCalculatorService.teamPlayoffOdds[item.roster.rosterId]?.timesMakeConfRd;
+        case 'makeChampionship': return this.playoffCalculatorService.teamPlayoffOdds[item.roster.rosterId]?.timesMakeChampionship;
+        case 'winChampionship': return this.playoffCalculatorService.teamPlayoffOdds[item.roster.rosterId]?.timesWinChampionship
+          || this.playoffCalculatorService.teamPlayoffOdds[item.roster.rosterId]?.timesMakeChampionship;
         default: return item[property];
       }
     };
@@ -62,14 +74,22 @@ export class PlayoffCalculatorSeasonTableComponent implements OnInit, AfterViewI
   }
 
   /**
-   * handles on forcast date changes to hide projected record column if the data is after the reg season
+   * handles on forecast date changes to hide projected record column if the data is after the reg season
    */
   ngOnChanges(): void {
-    if (this.forecastWeek > this.sleeperService.selectedLeague.playoffStartWeek) {
-      this.probabilityCols = ['makePlayoffs', 'winDivision', 'winChampionship'];
+    if (this.forecastWeek >= this.sleeperService.selectedLeague.playoffStartWeek) {
+      this.probabilityCols = ['makePlayoffs', 'makeConfChamp', 'makeChampionship', 'winChampionship'];
     } else {
-      this.probabilityCols = ['record', 'makePlayoffs', 'winDivision', 'winChampionship'];
+      this.probabilityCols = ['record', 'makePlayoffs', 'winDivision', 'getBye', 'winChampionship'];
+      if (this.playoffCalculatorService.divisions.length < 2) {
+        this.probabilityCols.splice(2, 1);
+      }
     }
     this.divisionTableCols = this.teamDetails.concat(this.probabilityCols);
+    if (this.dataSource) { this.dataSource.data = this.sleeperService.sleeperTeamDetails; }
+  }
+
+  getProbColor(prob: number): string {
+    return this.probGradient[prob];
   }
 }

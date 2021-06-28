@@ -29,14 +29,14 @@ export class TeamMetrics {
 }
 
 export class SleeperRosterData {
-  constructor(roster_id: string, owner_id: string, players: string[], settings: TeamMetrics) {
+  constructor(roster_id: number, owner_id: string, players: string[], settings: TeamMetrics) {
     this.rosterId = roster_id;
     this.ownerId = owner_id;
     this.players = players;
     this.teamMetrics = settings;
   }
 
-  rosterId: string;
+  rosterId: number;
   ownerId: string;
   players: string[];
   teamMetrics: TeamMetrics;
@@ -198,4 +198,22 @@ export class SleeperStateOfNFL {
   season: string;
   previousSeason: string;
   seasonType: string;
+}
+
+export class SleeperPlayoffMatchUp {
+  constructor(game: any) {
+    this.round = game.r;
+    this.matchUpId = game.m;
+    this.team1 = game.t1;
+    this.team2 = game.t2;
+    this.win = game.w;
+    this.loss = game.l;
+  }
+
+  round: number;
+  matchUpId: number;
+  team1: number;
+  team2: number;
+  win: number;
+  loss: number;
 }

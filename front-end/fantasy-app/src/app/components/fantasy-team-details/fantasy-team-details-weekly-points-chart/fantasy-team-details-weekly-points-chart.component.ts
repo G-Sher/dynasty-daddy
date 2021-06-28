@@ -97,13 +97,13 @@ export class FantasyTeamDetailsWeeklyPointsChartComponent implements OnInit {
       weeklyPoints[weekNumber] = 0;
       oppPoints[weekNumber] = 0;
       for (const matchUp of weekMatchups) {
-        if (matchUp.team1RosterId === Number(this.selectedTeam.roster.rosterId)) {
+        if (matchUp.team1RosterId === this.selectedTeam.roster.rosterId) {
           weeklyPoints[weekNumber] = matchUp.team1Points;
           oppPoints[weekNumber] = matchUp.team2Points;
           this.lineChartLabels[matchUp.week - this.sleeperService.selectedLeague.startWeek] = ('Week ' + matchUp.week + ' vs. ' +
                         this.sleeperService.getTeamByRosterId(matchUp.team2RosterId).owner?.teamName);
           break;
-        } else if (matchUp.team2RosterId === Number(this.selectedTeam.roster.rosterId)) {
+        } else if (matchUp.team2RosterId === this.selectedTeam.roster.rosterId) {
           weeklyPoints[weekNumber] = matchUp.team2Points;
           oppPoints[weekNumber] = matchUp.team1Points;
           this.lineChartLabels[matchUp.week - this.sleeperService.selectedLeague.startWeek] = ('Week ' + matchUp.week + ' vs. ' +

@@ -303,7 +303,7 @@ export class PowerRankingsService {
    */
   findTeamFromRankingsByRosterId(rosterId: number): TeamPowerRanking {
     for (const team of this.powerRankings) {
-      if (Number(team.team.roster.rosterId) === Number(rosterId)) {
+      if (team.team.roster.rosterId === rosterId) {
         return team;
       }
     }

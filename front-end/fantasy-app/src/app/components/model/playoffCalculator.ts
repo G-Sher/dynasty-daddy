@@ -23,3 +23,8 @@ export class MatchUpProbability {
   team1Prob: number;
   team2Prob: number;
 }
+
+export class SimulatedTeamInfo {
+  team: SleeperTeam;
+  projWins: number;
+}

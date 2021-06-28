@@ -2,6 +2,10 @@
 .mat-column-record,
 .mat-column-winChampionship,
 .mat-column-winDivision,
+.mat-column-getBye,
+.mat-column-makeDivRd,
+.mat-column-makeConfChamp,
+.mat-column-makeChampionship,
 .mat-column-makePlayoffs {
   max-width: 90px;
 }
@@ -9,6 +13,10 @@
 .mat-column-record,
 .mat-column-winChampionship,
 .mat-column-winDivision,
+.mat-column-getBye,
+.mat-column-makeDivRd,
+.mat-column-makeConfChamp,
+.mat-column-makeChampionship,
 .mat-column-makePlayoffs {
   text-align: right;
   justify-content: flex-end ;

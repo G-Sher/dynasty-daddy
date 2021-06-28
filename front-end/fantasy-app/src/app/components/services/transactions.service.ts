@@ -22,7 +22,7 @@ export class TransactionsService {
     for (let i = this.sleeperService.selectedLeague.startWeek; i < this.sleeperService.selectedLeague.playoffStartWeek
     || this.nflService.stateOfNFL.week; i++) {
       for (const transaction of this.sleeperService.selectedLeague.leagueTransactions[i] as SleeperTeamTransactionData[]) {
-        if (transaction.rosterIds.includes(Number(selectedTeam.roster.rosterId)) && transaction.status === 'complete') {
+        if (transaction.rosterIds.includes(selectedTeam.roster.rosterId) && transaction.status === 'complete') {
           teamActivity.push(this.formatTransactionUI(transaction, selectedTeam));
         }
       }
@@ -46,21 +46,21 @@ export class TransactionsService {
   private formatTransactionUI(transaction: SleeperTeamTransactionData, selectedTeam: SleeperTeam): TransactionUI {
     const adds = [];
     for (const sleeperId in transaction.adds) {
-      if (transaction.adds[sleeperId] === Number(selectedTeam.roster.rosterId)) {
-        adds.push(this.getPlayerDetails(sleeperId, Number(selectedTeam.roster.rosterId)));
+      if (transaction.adds[sleeperId] === selectedTeam.roster.rosterId) {
+        adds.push(this.getPlayerDetails(sleeperId, selectedTeam.roster.rosterId));
       }
     }
     const drops = [];
     for (const sleeperId in transaction.drops) {
-      if (transaction.drops[sleeperId] === Number(selectedTeam.roster.rosterId)) {
-        drops.push(this.getPlayerDetails(sleeperId, Number(selectedTeam.roster.rosterId)));
+      if (transaction.drops[sleeperId] === selectedTeam.roster.rosterId) {
+        drops.push(this.getPlayerDetails(sleeperId, selectedTeam.roster.rosterId));
       }
     }
     for (const draftPick of transaction.draftpicks) {
-      if (draftPick.ownerId === Number(selectedTeam.roster.rosterId)) {
-        adds.push(this.processTransactionPicks(draftPick, Number(selectedTeam.roster.rosterId)));
-      } else if (draftPick.previousOwnerId === Number(selectedTeam.roster.rosterId)) {
-        drops.push(this.processTransactionPicks(draftPick, Number(selectedTeam.roster.rosterId)));
+      if (draftPick.ownerId === selectedTeam.roster.rosterId) {
+        adds.push(this.processTransactionPicks(draftPick, selectedTeam.roster.rosterId));
+      } else if (draftPick.previousOwnerId === selectedTeam.roster.rosterId) {
+        drops.push(this.processTransactionPicks(draftPick, selectedTeam.roster.rosterId));
       }
     }
     return new TransactionUI(transaction, adds, drops);
@@ -127,13 +127,13 @@ export class TransactionsService {
    * @param selectedRosterId
    * @private
    */
-  private getTransactionHeaderDisplay(transaction: TransactionUI, selectedRosterId: string): string {
+  private getTransactionHeaderDisplay(transaction: TransactionUI, selectedRosterId: number): string {
     switch (transaction.type) {
       case 'trade': {
         const teams = [];
         for (const rosterId of transaction.rosterIds) {
           for (const team of this.sleeperService.sleeperTeamDetails) {
-            if (Number(team.roster.rosterId) === rosterId && selectedRosterId !== team.roster.rosterId) {
+            if (team.roster.rosterId === rosterId && selectedRosterId !== team.roster.rosterId) {
               teams.push(team.owner?.teamName);
               break;
             }
