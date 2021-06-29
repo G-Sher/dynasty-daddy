@@ -1,0 +1,23 @@
+.mat-card {
+  width: 350px;
+  height: auto;
+  padding: 4px;
+}
+
+.td-game--metrics {
+  width: 15%;
+  text-align: center;
+}
+
+.td-game--team {
+  width: 70%;
+  overflow: hidden;
+}
+
+.game-prob__color {
+  background: #577380;
+}
+
+.game-score__color {
+  background: #7f7f7f;
+}

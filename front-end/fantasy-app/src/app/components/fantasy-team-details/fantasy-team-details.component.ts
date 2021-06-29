@@ -50,7 +50,7 @@ export class FantasyTeamDetailsComponent implements OnInit {
 
     if (this.sleeperService.leagueLoaded) {
       // get selected team from sleeper data
-      const teamIndex = this.sleeperService.sleeperTeamDetails.map(e => e.owner.ownerName).indexOf(ownerName);
+      const teamIndex = this.sleeperService.sleeperTeamDetails.map(e => e.owner?.ownerName).indexOf(ownerName);
       this.selectedTeam = this.sleeperService.sleeperTeamDetails[teamIndex];
       // generate roster and sort
       for (const sleeperId of this.selectedTeam.roster.players) {
@@ -69,7 +69,8 @@ export class FantasyTeamDetailsComponent implements OnInit {
 
       // generates team activities and cleans data for display
       this.teamActivity = this.transactionsService.generateTeamTransactionHistory(this.selectedTeam);
-      this.filterTeamActivity = this.teamActivity.slice(0, 5);
+      this.activityShowMore = this.teamActivity.length <= 20;
+      this.filterTeamActivity = this.teamActivity.slice(0, 20);
     }
   }
 
@@ -101,9 +102,10 @@ export class FantasyTeamDetailsComponent implements OnInit {
           || activity.type.toLowerCase().includes(this.activitySearchVal.toLowerCase())
           || activity.headerDisplay.toLowerCase().includes(this.activitySearchVal.toLowerCase()));
       });
-      this.activityShowMore ? this.filterTeamActivity = fullFilteredList.slice() : this.filterTeamActivity = fullFilteredList.slice(0, 5);
+      this.activityShowMore ? this.filterTeamActivity = fullFilteredList.slice() : this.filterTeamActivity = fullFilteredList.slice(0, 20);
     } else {
-      this.activityShowMore ? this.filterTeamActivity = this.teamActivity.slice() : this.filterTeamActivity = this.teamActivity.slice(0, 5);
+      this.activityShowMore ? this.filterTeamActivity =
+        this.teamActivity.slice() : this.filterTeamActivity = this.teamActivity.slice(0, 20);
     }
   }
 }

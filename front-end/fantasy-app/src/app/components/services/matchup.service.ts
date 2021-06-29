@@ -3,6 +3,7 @@ import {SleeperLeagueData} from '../../model/SleeperUser';
 import {ScheduleComp, WeeklyRecordComp} from '../model/matchup';
 import {SleeperTeam} from '../../model/SleeperLeague';
 import {ChartDataSets} from 'chart.js';
+import {MatchUpUI} from '../model/matchup';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,9 @@ export class MatchupService {
   /** chart data for stength of schedule */
   strengthOfSchedule: ChartDataSets[] = [];
 
+  /** array of array for each weeks matchups */
+  leagueMatchUpUI: MatchUpUI[][] = [];
+
   /**
    * initializes matchup data
    * @param selectedLeague selected League data
@@ -25,6 +29,7 @@ export class MatchupService {
   initMatchUpCharts(selectedLeague: SleeperLeagueData): void {
     this.generateWeeklyRecords(selectedLeague);
     this.generateScheduleComparison(selectedLeague);
+    this.leagueMatchUpUI = this.calculateLeagueMatchUps(selectedLeague);
   }
 
   /**
@@ -66,7 +71,7 @@ export class MatchupService {
         let matchUpId = 0;
         let teamPoints = 0;
         let totalPoints = 0;
-        if (selectedLeague.leagueMatchUps[week] !== undefined) {
+        if (selectedLeague.leagueMatchUps && selectedLeague.leagueMatchUps[week] !== undefined) {
           for (const matchup of selectedLeague.leagueMatchUps[week]) {
             totalPoints += matchup.points;
             if (matchup.rosterId === selectedRosterId) {
@@ -104,6 +109,34 @@ export class MatchupService {
   }
 
   /**
+   * creates league match ups objects for playoff calculator
+   * @param selectedLeague league data
+   */
+  private calculateLeagueMatchUps(selectedLeague: SleeperLeagueData): MatchUpUI[][] {
+    const allWeeksMatchUps = [];
+    const weekNumbers = Number(selectedLeague.season) < 2021 ? 17 : 18;
+    for (let week = selectedLeague.startWeek; week < weekNumbers; week++) {
+      if (selectedLeague.leagueMatchUps && selectedLeague.leagueMatchUps[week] !== undefined) {
+        const weekMatchUps: MatchUpUI[] = [];
+        for (let i = 1; i <= selectedLeague.leagueMatchUps[week].length / 2; i++) {
+          for (const team1 of selectedLeague.leagueMatchUps[week]) {
+            if (team1.matchupId === i) {
+              selectedLeague.leagueMatchUps[week].map(team2 => {
+                if (team2.matchupId === i && team2.rosterId !== team1.rosterId) {
+                  return weekMatchUps.push(new MatchUpUI(week, team1, team2));
+                }
+              });
+              break;
+            }
+          }
+        }
+        allWeeksMatchUps.push(weekMatchUps);
+      }
+    }
+    return allWeeksMatchUps;
+  }
+
+  /**
    * calculate Weekly records for team
    * @param selectedLeague league data
    * @param rosterId selected roster
@@ -130,7 +163,7 @@ export class MatchupService {
             } else if (matchup.points < teamPoints) {
               totalWins++;
               wins++;
-            } else if (matchup.points !== 0 && teamPoints !== 0)  {
+            } else if (matchup.points !== 0 && teamPoints !== 0) {
               totalTies++;
               ties++;
             }
@@ -150,7 +183,7 @@ export class MatchupService {
   getTeamName(col: string | number, teams: SleeperTeam[]): string {
     for (const team of teams) {
       if (team.roster.rosterId.toString() === col.toString()) {
-        return team.owner.teamName;
+        return team.owner?.teamName;
       }
     }
   }
@@ -161,5 +194,6 @@ export class MatchupService {
   reset(): void {
     this.weeklyComparison = [];
     this.scheduleComparison = [];
+    this.leagueMatchUpUI = [];
   }
 }

@@ -1,0 +1,35 @@
+<table style="width:100%" *ngIf="showHeader">
+  <tr>
+    <td class="td-game--team"></td>
+    <td class="td-game--metrics text__light">Win Prob.</td>
+    <td class="td-game--metrics text__light">Score</td>
+  </tr>
+</table>
+<mat-card class="mat-elevation-z4">
+  <table style="width:100%">
+    <tr>
+      <td class="td-game--team" *ngIf="team1 && team1.owner">
+        <img #image [src]="'https://sleepercdn.com/avatars/thumbs/' + team1.owner?.avatar"
+        onerror="style.display = 'none'" class="games-image">
+        <span class="link--text__no__underline" [routerLink]="['../team', team1.owner?.ownerName]">
+          {{team1.owner?.teamName}}
+        </span>
+        <span class="small-text__light">{{team1.roster.teamMetrics.wins}} - {{team1.roster.teamMetrics.losses}}</span>
+      </td>
+      <td class="td-game--metrics" style="background: {{getProbColor(game.team1Prob)}}">{{game.team1Prob}}%</td>
+      <td class="td-game--metrics" [ngClass]="(game.matchUpDetails.team1Points > game.matchUpDetails.team2Points) ? 'accent__color__background' : 'game-score__color'">{{game.matchUpDetails.team1Points === 0 ? '' : game.matchUpDetails.team1Points}}</td>
+    </tr>
+    <tr>
+      <td class="td-game--team" *ngIf="team2 && team2.owner">
+        <img #image [src]="'https://sleepercdn.com/avatars/thumbs/' + team2.owner?.avatar"
+             onerror="style.display = 'none'" class="games-image">
+        <span class="link--text__no__underline" [routerLink]="['../team', team2.owner?.ownerName]">
+          {{team2.owner?.teamName}}
+        </span>
+        <span class="small-text__light">{{team2.roster.teamMetrics.wins}} - {{team2.roster.teamMetrics.losses}}</span>
+      </td>
+      <td class="td-game--metrics" style="background: {{getProbColor(game.team2Prob)}}">{{game.team2Prob}}%</td>
+      <td class="td-game--metrics" [ngClass]="(game.matchUpDetails.team2Points > game.matchUpDetails.team1Points) ? 'accent__color__background' : 'game-score__color'">{{game.matchUpDetails.team2Points === 0 ? '' : game.matchUpDetails.team2Points}}</td>
+    </tr>
+  </table>
+</mat-card>

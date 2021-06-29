@@ -50,7 +50,7 @@ export class CompletedDraftTableComponent implements OnInit, OnChanges {
   getTeamName(rosterId: string): string {
     for (const team of this.sleeperService.sleeperTeamDetails) {
       if (team.roster.rosterId.toString() === rosterId.toString()) {
-        return team.owner.teamName;
+        return team.owner?.teamName;
       }
     }
     return 'none';
@@ -60,10 +60,10 @@ export class CompletedDraftTableComponent implements OnInit, OnChanges {
    * get owner name by roster id
    * @param rosterId roster id
    */
-  getOwnerName(rosterId: string): string {
+  getOwnerName(rosterId: number): string {
     for (const team of this.sleeperService.sleeperTeamDetails) {
       if (team.roster.rosterId === rosterId) {
-        return team.owner.ownerName;
+        return team.owner?.ownerName;
       }
     }
     return 'none';

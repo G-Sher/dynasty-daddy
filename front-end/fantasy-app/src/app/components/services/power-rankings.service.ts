@@ -298,15 +298,15 @@ export class PowerRankingsService {
   }
 
   /**
-   * gets Rank by team
-   * @param selectedTeam selected team
-   * @param property power ranking search property
+   * gets rankings by team
+   * @param rosterId selected roster id
    */
-  getRankByTeam(selectedTeam: SleeperTeam, property = 'overallRank'): TeamPowerRanking {
+  findTeamFromRankingsByRosterId(rosterId: number): TeamPowerRanking {
     for (const team of this.powerRankings) {
-      if (team.team.roster.rosterId === selectedTeam.roster.rosterId) {
-        return team[property];
+      if (team.team.roster.rosterId === rosterId) {
+        return team;
       }
     }
+    return null;
   }
 }

@@ -47,7 +47,7 @@ First, clone repo and open up in your preferred IDE.
 ## Future Improvements
 
 - Support other platforms like MFL, Fleaflicker, etc.
-- Machine learning on data to predict best players to buy and sell.
+- Machine learning on data to predict the best players to buy and sell.
 - Better draft predictor based on team needs
 - Player value calculation based on points and trade value
 - More team analytics
@@ -60,7 +60,8 @@ First, clone repo and open up in your preferred IDE.
 
 - ng2-charts - chart.js with angular 11
 - Angular mat - for tables, and other styling components
-- javascript-color-gradient - for bar chart color gradients
+- javascript-color-gradient - color gradients
+- simple-statistics - statistics and probability calculations
 
 
 ## Credits
