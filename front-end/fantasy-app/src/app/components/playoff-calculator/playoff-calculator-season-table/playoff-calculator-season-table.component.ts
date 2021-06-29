@@ -51,7 +51,7 @@ export class PlayoffCalculatorSeasonTableComponent implements OnInit, AfterViewI
       this.teamDetails = ['teamRating', 'teamName', 'teamDivision'];
     }
     this.divisionTableCols = this.teamDetails.concat(this.probabilityCols);
-    this.probGradient = this.colorService.getColorGradientArray(100, '#00FFFFFF', '#e74c3c');
+    this.probGradient = this.colorService.getColorGradientArray(101, '#434243', '#e74c3c');
   }
 
   /** sorting function */
@@ -91,5 +91,25 @@ export class PlayoffCalculatorSeasonTableComponent implements OnInit, AfterViewI
 
   getProbColor(prob: number): string {
     return this.probGradient[prob];
+  }
+
+  getDisplayValue(percent: number): string {
+    switch (percent) {
+      case 0: {
+        if (this.sleeperService.selectedLeague.playoffStartWeek > this.forecastWeek) {
+          return '<1%';
+        }
+        return '-';
+      }
+      case 100: {
+        if (this.sleeperService.selectedLeague.playoffStartWeek > this.forecastWeek) {
+          return '>99%';
+        }
+        return '100%';
+      }
+      default: {
+        return percent + '%';
+      }
+    }
   }
 }

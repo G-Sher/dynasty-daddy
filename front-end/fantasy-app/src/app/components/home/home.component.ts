@@ -91,7 +91,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
           console.timeEnd('Fetch Sleeper League Data');
         }
       ));
-
+      console.log(this.sleeperService.selectedLeague);
     }
   }
 
@@ -124,5 +124,9 @@ export class HomeComponent extends BaseComponent implements OnInit {
     this.sleeperApiService.getSleeperLeagueByLeagueId(demoId || this.leagueIdInput).subscribe(leagueData => {
       this.loadLeague(leagueData);
     });
+  }
+
+  loginWithPrevSeason(): void {
+    this.loginWithLeagueId(this.sleeperService.selectedLeague.prevLeagueId);
   }
 }

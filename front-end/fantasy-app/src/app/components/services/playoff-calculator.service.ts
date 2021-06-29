@@ -29,6 +29,9 @@ export class PlayoffCalculatorService {
   /** odds values by roster id */
   teamPlayoffOdds = {};
 
+  /** total number of simulations, if changed make sure to update percentage function */
+  NUMBER_OF_SIMULATIONS = 10000;
+
   constructor(
     private sleeperService: SleeperService,
     private powerRankingsService: PowerRankingsService,
@@ -432,25 +435,25 @@ export class PlayoffCalculatorService {
         if (matchup.round === 1) {
           teamsLeft.push(matchup.win);
           teamsEliminated.push(matchup.loss);
-          this.teamPlayoffOdds[matchup.team1].timesMakingPlayoffs = 100;
-          this.teamPlayoffOdds[matchup.team2].timesMakingPlayoffs = 100;
+          this.teamPlayoffOdds[matchup.team1].timesMakingPlayoffs = this.NUMBER_OF_SIMULATIONS;
+          this.teamPlayoffOdds[matchup.team2].timesMakingPlayoffs = this.NUMBER_OF_SIMULATIONS;
         } else if (matchup.round === 2 && (teamsLeft.includes(matchup.team1) || teamsLeft.includes(matchup.team2))) {
           this.processTeamsLeft(teamsLeft, matchup);
           teamsEliminated.push(matchup.loss);
-          this.teamPlayoffOdds[matchup.team1].timesMakingPlayoffs = 100;
-          this.teamPlayoffOdds[matchup.team2].timesMakingPlayoffs = 100;
-          this.teamPlayoffOdds[matchup.team1].timesMakeConfRd = 100;
-          this.teamPlayoffOdds[matchup.team2].timesMakeConfRd = 100;
+          this.teamPlayoffOdds[matchup.team1].timesMakingPlayoffs = this.NUMBER_OF_SIMULATIONS;
+          this.teamPlayoffOdds[matchup.team2].timesMakingPlayoffs = this.NUMBER_OF_SIMULATIONS;
+          this.teamPlayoffOdds[matchup.team1].timesMakeConfRd = this.NUMBER_OF_SIMULATIONS;
+          this.teamPlayoffOdds[matchup.team2].timesMakeConfRd = this.NUMBER_OF_SIMULATIONS;
         } else if (matchup.round === 3 && (teamsLeft.includes(matchup.team1) || teamsLeft.includes(matchup.team2))) {
           this.processTeamsLeft(teamsLeft, matchup);
           teamsEliminated.push(matchup.loss);
-          this.teamPlayoffOdds[matchup.team1].timesMakeChampionship = 100;
-          this.teamPlayoffOdds[matchup.team2].timesMakeChampionship = 100;
+          this.teamPlayoffOdds[matchup.team1].timesMakeChampionship = this.NUMBER_OF_SIMULATIONS;
+          this.teamPlayoffOdds[matchup.team2].timesMakeChampionship = this.NUMBER_OF_SIMULATIONS;
           if (weekDiff > 3) {
             if (!teamsEliminated.includes(matchup.team1)) {
-              this.teamPlayoffOdds[matchup.team1].timesWinChampionship = 100;
+              this.teamPlayoffOdds[matchup.team1].timesWinChampionship = this.NUMBER_OF_SIMULATIONS;
             } else {
-              this.teamPlayoffOdds[matchup.team2].timesWinChampionship = 100;
+              this.teamPlayoffOdds[matchup.team2].timesWinChampionship = this.NUMBER_OF_SIMULATIONS;
             }
           }
         }
@@ -459,14 +462,14 @@ export class PlayoffCalculatorService {
         if (!teamsLeft.includes(matchup.team1) && !teamsEliminated.includes(matchup.team1)) {
           teamsLeft.push(matchup.team1);
           byeWeekTeams.push({team: this.sleeperService.getTeamByRosterId(matchup.team1), projWins: 0});
-          this.teamPlayoffOdds[matchup.team1].timesMakingPlayoffs = 100;
-          this.teamPlayoffOdds[matchup.team1].timesMakeConfRd = 100;
+          this.teamPlayoffOdds[matchup.team1].timesMakingPlayoffs = this.NUMBER_OF_SIMULATIONS;
+          this.teamPlayoffOdds[matchup.team1].timesMakeConfRd = this.NUMBER_OF_SIMULATIONS;
         }
         if (!teamsLeft.includes(matchup.team2) && !teamsEliminated.includes(matchup.team2)) {
           teamsLeft.push(matchup.team2);
           byeWeekTeams.push({team: this.sleeperService.getTeamByRosterId(matchup.team2), projWins: 0});
-          this.teamPlayoffOdds[matchup.team2].timesMakingPlayoffs = 100;
-          this.teamPlayoffOdds[matchup.team2].timesMakeConfRd = 100;
+          this.teamPlayoffOdds[matchup.team2].timesMakingPlayoffs = this.NUMBER_OF_SIMULATIONS;
+          this.teamPlayoffOdds[matchup.team2].timesMakeConfRd = this.NUMBER_OF_SIMULATIONS;
         }
       }
     });
@@ -526,7 +529,7 @@ export class PlayoffCalculatorService {
     const divRdTeams = playoffTeams.slice(numOfBye);
 
     // simulate round and back bye week teams
-    const confRdTeams = playoffTeams.slice(0, numOfBye + 1).concat(this.simulateRoundOfPlayoffs(divRdTeams));
+    const confRdTeams = playoffTeams.slice(0, numOfBye).concat(this.simulateRoundOfPlayoffs(divRdTeams));
 
     // assign wins for conference
     for (const team of confRdTeams) {
@@ -553,6 +556,10 @@ export class PlayoffCalculatorService {
     }
   }
 
+  /**
+   * handles simulating one whole season including playoffs
+   * @param startWeek
+   */
   simulateOneSeason(startWeek: number = this.getStartWeek()): void {
 
     // get simulated regular season wins per team
@@ -565,7 +572,7 @@ export class PlayoffCalculatorService {
     let numOfPlayoffSpotsLeft = this.sleeperService.selectedLeague.playoffTeams;
 
     // division winners array
-    let divisionWinners: SimulatedTeamInfo[] = [];
+    let nonWildCardTeams: SimulatedTeamInfo[] = [];
 
     let simulatedPlayoffTeams: SimulatedTeamInfo[] = [];
 
@@ -573,7 +580,7 @@ export class PlayoffCalculatorService {
     // determine division winner and bye
     if (this.divisions.length > 1) {
       // get array of division winners
-      divisionWinners = this.simulateDivisionWinners(simulatedWins, numOfByeWeeks);
+      nonWildCardTeams = this.simulateDivisionWinners(simulatedWins, numOfByeWeeks);
       // subtract division winners to determine how many more wildcard spots there are
       numOfPlayoffSpotsLeft -= this.divisions.length;
     } else {
@@ -581,20 +588,23 @@ export class PlayoffCalculatorService {
       for (let i = 0; i < numOfByeWeeks; i++) {
         this.teamPlayoffOdds[simulatedWins[i].team.roster.rosterId].timesWithBye =
           (this.teamPlayoffOdds[simulatedWins[i].team.roster.rosterId]?.timesWithBye || 0) + 1;
-        simulatedPlayoffTeams.push(simulatedWins[i]);
+        this.teamPlayoffOdds[simulatedWins[i].team.roster.rosterId].timesMakingPlayoffs =
+          (this.teamPlayoffOdds[simulatedWins[i].team.roster.rosterId]?.timesMakingPlayoffs || 0) + 1;
+        nonWildCardTeams.push(simulatedWins[i]);
       }
+      numOfPlayoffSpotsLeft -= numOfByeWeeks;
     }
 
     // assign the last playoff spots
     for (const simulatedTeam of simulatedWins) {
-      if (numOfPlayoffSpotsLeft !== 0 && !divisionWinners.includes(simulatedTeam)) {
+      if (numOfPlayoffSpotsLeft !== 0 && !nonWildCardTeams.includes(simulatedTeam)) {
         this.teamPlayoffOdds[simulatedTeam.team.roster.rosterId].timesMakingPlayoffs =
           (this.teamPlayoffOdds[simulatedTeam.team.roster.rosterId]?.timesMakingPlayoffs || 0) + 1;
         numOfPlayoffSpotsLeft--;
         simulatedPlayoffTeams.push(simulatedTeam);
       }
     }
-    simulatedPlayoffTeams = divisionWinners.concat(simulatedPlayoffTeams);
+    simulatedPlayoffTeams = nonWildCardTeams.concat(simulatedPlayoffTeams);
 
     // simulate playoffs
     this.simulatePlayoffs(simulatedPlayoffTeams, numOfByeWeeks);
@@ -602,10 +612,10 @@ export class PlayoffCalculatorService {
 
   /**
    * generate playoffs odds
+   * simulate 10000 seasons
    * @param startWeek
    */
   generatePlayoffOdds(startWeek: number = this.getStartWeek()): void {
-    console.log(startWeek);
     // initialize odds values
     for (const team of this.sleeperService.sleeperTeamDetails) {
       this.teamPlayoffOdds[team.roster.rosterId] = {
@@ -617,12 +627,23 @@ export class PlayoffCalculatorService {
         timesWinChampionship: 0,
       };
     }
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < this.NUMBER_OF_SIMULATIONS; i++) {
       if (startWeek >= this.sleeperService.selectedLeague.playoffStartWeek) {
         this.updatePlayoffOdds(startWeek);
       } else {
         this.simulateOneSeason(startWeek);
       }
+    }
+
+    for (const team of this.sleeperService.sleeperTeamDetails) {
+      this.teamPlayoffOdds[team.roster.rosterId] = {
+        timesMakingPlayoffs: Math.round(this.teamPlayoffOdds[team.roster.rosterId].timesMakingPlayoffs / 100),
+        timesWinningDivision: Math.round(this.teamPlayoffOdds[team.roster.rosterId].timesWinningDivision / 100),
+        timesWithBye: Math.round(this.teamPlayoffOdds[team.roster.rosterId].timesWithBye / 100),
+        timesMakeConfRd: Math.round(this.teamPlayoffOdds[team.roster.rosterId].timesMakeConfRd / 100),
+        timesMakeChampionship: Math.round(this.teamPlayoffOdds[team.roster.rosterId].timesMakeChampionship / 100),
+        timesWinChampionship: Math.round(this.teamPlayoffOdds[team.roster.rosterId].timesWinChampionship / 100),
+      };
     }
     console.table(this.teamPlayoffOdds);
   }

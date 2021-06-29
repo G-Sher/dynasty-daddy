@@ -69,6 +69,12 @@
       <span class="warning__alert">{{selectedLeague.season}}</span> season of
       <span class="warning__alert">{{selectedLeague.name}}</span> was loaded successfully!
     </div>
+    <div *ngIf="sleeperService.selectedLeague && sleeperService.selectedLeague.prevLeagueId?.length > 5">
+      <div class="mid-bold-text margin-top-25 margin-bot-25">OR</div>
+      <button mat-raised-button
+              color="accent" (click)="loginWithPrevSeason()">View {{selectedLeague.season - 1}} Season
+      </button>
+    </div>
   </div>
 
   <div class="grid-25 flex-item-home">
