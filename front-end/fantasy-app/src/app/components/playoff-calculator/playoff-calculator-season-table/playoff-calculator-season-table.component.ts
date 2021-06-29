@@ -53,7 +53,7 @@ export class PlayoffCalculatorSeasonTableComponent implements OnInit, AfterViewI
       this.teamDetails = ['teamRating', 'teamName', 'teamDivision'];
     }
     this.divisionTableCols = this.teamDetails.concat(this.probabilityCols);
-    this.probGradient = this.colorService.getColorGradientArray(101, '#434243', '#e74c3c');
+    this.probGradient = this.colorService.getColorGradientArray(101, '#434243', '#0173aa');
   }
 
   /** sorting function */

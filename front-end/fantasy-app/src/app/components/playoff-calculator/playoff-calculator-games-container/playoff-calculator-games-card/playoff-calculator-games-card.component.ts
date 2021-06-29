@@ -28,7 +28,7 @@ export class PlayoffCalculatorGamesCardComponent implements OnInit {
   ngOnInit(): void {
     this.team1 = this.sleeperService.getTeamByRosterId(this.game?.matchUpDetails.team1RosterId);
     this.team2 = this.sleeperService.getTeamByRosterId(this.game?.matchUpDetails.team2RosterId);
-    this.probGradient = this.colorService.getColorGradientArray(100, '#7f7f7f', '#e74c3c');
+    this.probGradient = this.colorService.getColorGradientArray(100, '#7f7f7f', '#0173aa');
   }
 
   getProbColor(prob: number): string {

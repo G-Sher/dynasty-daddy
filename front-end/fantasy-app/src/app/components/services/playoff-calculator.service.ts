@@ -635,14 +635,17 @@ export class PlayoffCalculatorService {
       }
     }
 
+    // divisor for percent calculations
+    const divisor = (this.NUMBER_OF_SIMULATIONS / 100);
+
     for (const team of this.sleeperService.sleeperTeamDetails) {
       this.teamPlayoffOdds[team.roster.rosterId] = {
-        timesMakingPlayoffs: Math.round(this.teamPlayoffOdds[team.roster.rosterId].timesMakingPlayoffs / 100),
-        timesWinningDivision: Math.round(this.teamPlayoffOdds[team.roster.rosterId].timesWinningDivision / 100),
-        timesWithBye: Math.round(this.teamPlayoffOdds[team.roster.rosterId].timesWithBye / 100),
-        timesMakeConfRd: Math.round(this.teamPlayoffOdds[team.roster.rosterId].timesMakeConfRd / 100),
-        timesMakeChampionship: Math.round(this.teamPlayoffOdds[team.roster.rosterId].timesMakeChampionship / 100),
-        timesWinChampionship: Math.round(this.teamPlayoffOdds[team.roster.rosterId].timesWinChampionship / 100),
+        timesMakingPlayoffs: Math.round(this.teamPlayoffOdds[team.roster.rosterId].timesMakingPlayoffs / divisor),
+        timesWinningDivision: Math.round(this.teamPlayoffOdds[team.roster.rosterId].timesWinningDivision / divisor),
+        timesWithBye: Math.round(this.teamPlayoffOdds[team.roster.rosterId].timesWithBye / divisor),
+        timesMakeConfRd: Math.round(this.teamPlayoffOdds[team.roster.rosterId].timesMakeConfRd / divisor),
+        timesMakeChampionship: Math.round(this.teamPlayoffOdds[team.roster.rosterId].timesMakeChampionship / divisor),
+        timesWinChampionship: Math.round(this.teamPlayoffOdds[team.roster.rosterId].timesWinChampionship / divisor),
       };
     }
     console.table(this.teamPlayoffOdds);

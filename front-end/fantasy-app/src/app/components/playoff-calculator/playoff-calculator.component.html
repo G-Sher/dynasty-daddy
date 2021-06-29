@@ -8,7 +8,7 @@
       <div class="mid-bold-text margin-top-10 center-text">Season Predictions</div>
       <div class="margin-top-10 center-text">For the regular season and playoffs, updated after each week.</div>
       <div class="table-dropdown-right">
-          <mat-form-field appearance="standard">
+          <mat-form-field appearance="standard" color="accent">
             <mat-label>Forcast from</mat-label>
             <mat-select [value]="selectedWeek" (selectionChange)="updateProbability($event.value)">
               <mat-option *ngFor="let week of selectableWeeks"
@@ -47,7 +47,7 @@
       </div>
     </mat-tab>
   </mat-tab-group>
-  <div class="margin-top-25 margin-bot-20 center-text"><span class="mid-bold-text">How this works:</span> Our forecast uses 10,000 simulations of the season and updates after every week. Our traditional model uses team starter value determined by the current player values on <span class="info__alert">KeepTradeCut.com</span>.
+  <div class="margin-top-25 margin-bot-20 center-text"><span class="mid-bold-text">How this works:</span> Our forecast uses <span class="info__alert">{{playoffCalculatorService.NUMBER_OF_SIMULATIONS}}</span> simulations of the season and updates after every week. Our traditional model uses team starter value determined by the current player values on <span class="info__alert">KeepTradeCut.com</span>.
     Our forecast currently doesn't take in to considerations injuries or player bye weeks.
   </div>
 </div>

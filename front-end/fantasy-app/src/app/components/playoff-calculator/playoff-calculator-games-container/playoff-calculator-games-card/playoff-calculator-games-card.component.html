@@ -17,7 +17,7 @@
         <span class="small-text__light">{{team1.roster.teamMetrics.wins}} - {{team1.roster.teamMetrics.losses}}</span>
       </td>
       <td class="td-game--metrics" style="background: {{getProbColor(game.team1Prob)}}">{{game.team1Prob}}%</td>
-      <td class="td-game--metrics" [ngClass]="(game.matchUpDetails.team1Points > game.matchUpDetails.team2Points) ? 'accent__color__background' : 'game-score__color'">{{game.matchUpDetails.team1Points === 0 ? '' : game.matchUpDetails.team1Points}}</td>
+      <td class="td-game--metrics" [ngClass]="(game.matchUpDetails.team1Points > game.matchUpDetails.team2Points) ? 'game-win__color' : 'game-score__color'">{{game.matchUpDetails.team1Points === 0 ? '' : game.matchUpDetails.team1Points}}</td>
     </tr>
     <tr>
       <td class="td-game--team" *ngIf="team2 && team2.owner">
@@ -29,7 +29,7 @@
         <span class="small-text__light">{{team2.roster.teamMetrics.wins}} - {{team2.roster.teamMetrics.losses}}</span>
       </td>
       <td class="td-game--metrics" style="background: {{getProbColor(game.team2Prob)}}">{{game.team2Prob}}%</td>
-      <td class="td-game--metrics" [ngClass]="(game.matchUpDetails.team2Points > game.matchUpDetails.team1Points) ? 'accent__color__background' : 'game-score__color'">{{game.matchUpDetails.team2Points === 0 ? '' : game.matchUpDetails.team2Points}}</td>
+      <td class="td-game--metrics" [ngClass]="(game.matchUpDetails.team2Points > game.matchUpDetails.team1Points) ? 'game-win__color' : 'game-score__color'">{{game.matchUpDetails.team2Points === 0 ? '' : game.matchUpDetails.team2Points}}</td>
     </tr>
   </table>
 </mat-card>

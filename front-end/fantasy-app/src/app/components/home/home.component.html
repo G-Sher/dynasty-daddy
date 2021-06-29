@@ -19,7 +19,7 @@
         </button>
       </mat-form-field>
       <div>
-        <mat-form-field appearance="standard">
+        <mat-form-field appearance="standard" color="accent">
           <mat-label>Select a year</mat-label>
           <mat-select [(ngModel)]="selectedYear">
             <mat-option *ngFor="let year of supportedYears" [value]="year">{{year}}</mat-option>
@@ -35,7 +35,7 @@
         <div>Hello <span class="warning__alert">{{sleeperService.sleeperUser?.userData.username}}</span>! We found <span
           class="warning__alert">{{sleeperService.sleeperUser?.leagues.length}}</span> leagues linked to this account in <span class="warning__alert">{{sleeperService.selectedYear}}</span>!</div>
         <br>
-        <mat-form-field appearance="standard" *ngIf="sleeperService.sleeperUser?.leagues.length > 0">
+        <mat-form-field appearance="standard" color="accent" *ngIf="sleeperService.sleeperUser?.leagues.length > 0">
           <mat-label>Select a league</mat-label>
           <mat-select [(ngModel)]="selectedLeague" (selectionChange)="loadLeague($event.value)">
             <mat-option *ngFor="let league of sleeperService.sleeperUser?.leagues"
