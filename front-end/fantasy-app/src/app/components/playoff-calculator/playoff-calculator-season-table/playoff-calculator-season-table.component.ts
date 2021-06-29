@@ -27,7 +27,8 @@ export class PlayoffCalculatorSeasonTableComponent implements OnInit, AfterViewI
   constructor(public sleeperService: SleeperService,
               public powerRankingsService: PowerRankingsService,
               public playoffCalculatorService: PlayoffCalculatorService,
-              private colorService: ColorService) { }
+              private colorService: ColorService) {
+  }
 
   /** team properties like name division value */
   teamDetails = [];
@@ -41,6 +42,7 @@ export class PlayoffCalculatorSeasonTableComponent implements OnInit, AfterViewI
   /** wins at a current point in time */
   realizedWins: number = 0;
 
+  /** color gradient */
   probGradient: string[] = [];
 
   ngOnInit(): void {
@@ -58,16 +60,25 @@ export class PlayoffCalculatorSeasonTableComponent implements OnInit, AfterViewI
   ngAfterViewInit(): void {
     this.dataSource.sortingDataAccessor = (item, property) => {
       switch (property) {
-        case 'teamRating': return this.powerRankingsService.findTeamFromRankingsByRosterId(item.roster.rosterId).sfTradeValueStarter;
-        case 'record': return this.playoffCalculatorService.teamsProjectedRecord[item.roster.rosterId]?.projWins;
-        case 'makePlayoffs': return this.playoffCalculatorService.teamPlayoffOdds[item.roster.rosterId]?.timesMakingPlayoffs;
-        case 'winDivision': return this.playoffCalculatorService.teamPlayoffOdds[item.roster.rosterId]?.timesWinningDivision;
-        case 'getBye': return this.playoffCalculatorService.teamPlayoffOdds[item.roster.rosterId]?.timesWithBye;
-        case 'makeConfChamp': return this.playoffCalculatorService.teamPlayoffOdds[item.roster.rosterId]?.timesMakeConfRd;
-        case 'makeChampionship': return this.playoffCalculatorService.teamPlayoffOdds[item.roster.rosterId]?.timesMakeChampionship;
-        case 'winChampionship': return this.playoffCalculatorService.teamPlayoffOdds[item.roster.rosterId]?.timesWinChampionship
-          || this.playoffCalculatorService.teamPlayoffOdds[item.roster.rosterId]?.timesMakeChampionship;
-        default: return item[property];
+        case 'teamRating':
+          return this.powerRankingsService.findTeamFromRankingsByRosterId(item.roster.rosterId).sfTradeValueStarter;
+        case 'record':
+          return this.playoffCalculatorService.teamsProjectedRecord[item.roster.rosterId]?.projWins;
+        case 'makePlayoffs':
+          return this.playoffCalculatorService.teamPlayoffOdds[item.roster.rosterId]?.timesMakingPlayoffs;
+        case 'winDivision':
+          return this.playoffCalculatorService.teamPlayoffOdds[item.roster.rosterId]?.timesWinningDivision;
+        case 'getBye':
+          return this.playoffCalculatorService.teamPlayoffOdds[item.roster.rosterId]?.timesWithBye;
+        case 'makeConfChamp':
+          return this.playoffCalculatorService.teamPlayoffOdds[item.roster.rosterId]?.timesMakeConfRd;
+        case 'makeChampionship':
+          return this.playoffCalculatorService.teamPlayoffOdds[item.roster.rosterId]?.timesMakeChampionship;
+        case 'winChampionship':
+          return this.playoffCalculatorService.teamPlayoffOdds[item.roster.rosterId]?.timesWinChampionship
+            || this.playoffCalculatorService.teamPlayoffOdds[item.roster.rosterId]?.timesMakeChampionship;
+        default:
+          return item[property];
       }
     };
     this.dataSource.sort = this.sort;
@@ -81,18 +92,37 @@ export class PlayoffCalculatorSeasonTableComponent implements OnInit, AfterViewI
       this.probabilityCols = ['makePlayoffs', 'makeConfChamp', 'makeChampionship', 'winChampionship'];
     } else {
       this.probabilityCols = ['record', 'makePlayoffs', 'winDivision', 'getBye', 'winChampionship'];
-      if (this.playoffCalculatorService.divisions.length < 2) {
+      if (this.sleeperService.selectedLeague.playoffTeams % 4 === 0) {
+        this.probabilityCols.splice(3, 1);
+      }
+      if (this.sleeperService.selectedLeague.divisions < 2) {
         this.probabilityCols.splice(2, 1);
+      }
+      if (this.probabilityCols.length === 3) {
+        this.probabilityCols = ['record', 'makePlayoffs', 'makeConfChamp', 'makeChampionship', 'winChampionship'];
+      }
+      if (this.probabilityCols.length === 4) {
+        this.probabilityCols.splice(3, 0, 'makeChampionship');
       }
     }
     this.divisionTableCols = this.teamDetails.concat(this.probabilityCols);
-    if (this.dataSource) { this.dataSource.data = this.sleeperService.sleeperTeamDetails; }
+    if (this.dataSource) {
+      this.dataSource.data = this.sleeperService.sleeperTeamDetails;
+    }
   }
 
+  /**
+   * get color for probability
+   * @param prob percent
+   */
   getProbColor(prob: number): string {
     return this.probGradient[prob];
   }
 
+  /**
+   * get display value based on conditions
+   * @param percent percent
+   */
   getDisplayValue(percent: number): string {
     switch (percent) {
       case 0: {
