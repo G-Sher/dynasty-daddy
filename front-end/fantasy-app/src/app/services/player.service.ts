@@ -80,6 +80,7 @@ export class PlayerService {
    */
   loadPlayerValuesForToday(): void {
     this.spinner.show();
+    const apiCalls = [];
     this.ktcApiService.getPlayerValuesForToday().subscribe((response: KTCPlayer[]) => {
       this.playerValues = response.filter(player => {
         if (player.position === 'PI') {
@@ -92,7 +93,13 @@ export class PlayerService {
         this.playerStats = playerStatsResponse;
         this.spinner.hide();
         this.$currentPlayerValuesLoaded.next();
+      }, sleeperError => {
+        console.error(`Could Not Load Player Points from sleeper - ${sleeperError}`);
+        this.spinner.hide();
       });
+    }, error => {
+      console.error(`Could Not Load Player Values - ${error}`);
+      this.spinner.hide();
     });
   }
 
@@ -122,15 +129,15 @@ export class PlayerService {
         observe.push(this.sleeperApiService.getSleeperStatsForWeek(
           currentYearInd.toString(),
           currentWeekInd).pipe(map((weeklyStats) => {
-            this.pastSeasonWeeklyStats[weekNum] = weeklyStats;
-            return of(weeklyStats);
+          this.pastSeasonWeeklyStats[weekNum] = weeklyStats;
+          return of(weeklyStats);
         })));
 
         observe.push(this.sleeperApiService.getSleeperProjectionsForWeek(
           currentYearInd.toString(),
           currentWeekInd).pipe(map((weeklyStats) => {
-            this.pastSeasonWeeklyProjections[weekNum] = weeklyStats;
-            return of(weeklyStats);
+          this.pastSeasonWeeklyProjections[weekNum] = weeklyStats;
+          return of(weeklyStats);
         })));
         currentWeekInd--;
       }
@@ -148,7 +155,9 @@ export class PlayerService {
    */
   generateRoster(team: SleeperTeam): KTCPlayer[] {
     const roster = [];
-    if (!team.roster.players) { return []; }
+    if (!team.roster.players) {
+      return [];
+    }
     for (const sleeperId of team.roster?.players) {
       for (const player of this.playerValues) {
         if (sleeperId === player.sleeper_id) {
@@ -233,10 +242,15 @@ export class PlayerService {
   getEstimatePickValueBy(round: number, season: string): KTCPlayer {
     for (const player of this.playerValues) {
       if (player.first_name === season) {
-        if (round === 1 && player.full_name.includes('Mid 1st')) { return player; }
-        else if (round === 2 && player.full_name.includes('Mid 2nd')) { return player; }
-        else if (round === 3 && player.full_name.includes('Mid 3rd')) { return player; }
-        else if (round === 4 && player.full_name.includes('Mid 4th')) { return player; }
+        if (round === 1 && player.full_name.includes('Mid 1st')) {
+          return player;
+        } else if (round === 2 && player.full_name.includes('Mid 2nd')) {
+          return player;
+        } else if (round === 3 && player.full_name.includes('Mid 3rd')) {
+          return player;
+        } else if (round === 4 && player.full_name.includes('Mid 4th')) {
+          return player;
+        }
       }
     }
     return null;

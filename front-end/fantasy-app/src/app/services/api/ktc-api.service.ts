@@ -32,7 +32,9 @@ export class KTCApiService {
    */
   refreshPlayerValuesForToday(): Observable<KTCPlayer[]> {
     return this.http.get<KTCPlayer[]>(this.ktcApiConfigService.getPlayerValuesForTodayEndpoint)
-      .pipe(tap((players: KTCPlayer[]) => this.playersList = players
+      .pipe(tap((players: KTCPlayer[]) => this.playersList = players, err => {
+          throw new Error(err);
+        }
       ));
   }
 

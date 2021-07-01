@@ -51,6 +51,19 @@ html, body, app-root, .app-frame {
   color: #e0e0e0;
 }
 
+.content-wrapper {
+  display: flex;
+  flex: 1 1 auto;     /* 1 */
+  position: relative;
+  flex-direction: column;
+  min-width: 1px;
+  max-width: 1600px;
+  margin: 0 auto;
+  z-index: 1;
+  width: 100%;        /* 2 */
+  padding: 8px 24px 24px;
+}
+
 *, *:before, *:after {
   box-sizing: inherit;
 }
@@ -325,7 +338,7 @@ hr.dark {
 .table-container {
   display: flex;
   flex-direction: column;
-  padding: 8px 24px 24px;
+  //padding: 8px 24px 24px;
   min-width: 300px;
   justify-content: center;
 }
