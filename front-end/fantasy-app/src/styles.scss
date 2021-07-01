@@ -327,6 +327,15 @@ hr.dark {
   flex-direction: column;
   padding: 8px 24px 24px;
   min-width: 300px;
+  justify-content: center;
+}
+
+.playoff-calc-table-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align:center;
+  margin:0px auto;
 }
 
 .flex-start-container {
@@ -355,7 +364,12 @@ tr.table-detail-row {
 .table-dropdown-right {
   display:flex;
   justify-content:flex-end;
-  padding-right: 24px;
+  padding-right: 25%;
+}
+
+.table-dropdown-center {
+  display:flex;
+  justify-content:center;
 }
 
 
