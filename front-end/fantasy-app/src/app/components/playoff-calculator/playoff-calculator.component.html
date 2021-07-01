@@ -52,6 +52,9 @@
   <div class="margin-top-10 margin-bot-20 center-text"><span class="mid-bold-text">How this works:</span> Our forecast uses <span class="info__alert">{{playoffCalculatorService.NUMBER_OF_SIMULATIONS}}</span> simulations of the season and updates after every week. Our traditional model uses team starter value determined by the current player values on <span class="info__alert">KeepTradeCut.com</span>.
     Our forecast currently doesn't take in to consideration injuries or player bye weeks.
   </div>
+  <div class="center-text">
+    <button mat-stroked-button (click)="downloadPlayoffCalculatorData()">Download this Data</button>
+  </div>
 </div>
 
 <div class="center-text margin-top-50" *ngIf="!sleeperService.leagueLoaded && sleeperService.selectedLeague?.status !== 'pre_draft' && sleeperService.selectedLeague?.status !== 'drafting'">

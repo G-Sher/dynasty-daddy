@@ -17,8 +17,8 @@
 </mat-chip-list>
 
 <div class="margin-top-10">
-  <mat-form-field class="mat-dropdown-wide-100-percent">
-    <mat-label>Search Players by Name, Position, {{sleeperService.selectedLeague ? 'NFL Team, or Fantasy Owner' : 'or NFL Team'}}</mat-label>
+  <mat-form-field class="mat-dropdown-wide-100-percent" color="accent">
+    <mat-label >Search Players by Name, Position, {{sleeperService.selectedLeague ? 'NFL Team, or Fantasy Owner' : 'or NFL Team'}}</mat-label>
     <input matInput autocomplete="off" type="text" [(ngModel)]="playerSearch" (keyup)="updatePlayerFilters()">
     <button mat-button *ngIf="playerSearch" matSuffix mat-icon-button aria-label="Clear"
             (click)="playerSearch=''; updatePlayerFilters()">

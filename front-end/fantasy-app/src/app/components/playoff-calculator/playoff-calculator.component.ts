@@ -4,6 +4,7 @@ import {PlayoffCalculatorService} from '../services/playoff-calculator.service';
 import {NflService} from '../../services/utilities/nfl.service';
 import {MatchUpProbability} from '../model/playoffCalculator';
 import {MatchupService} from '../services/matchup.service';
+import {PowerRankingsService} from '../services/power-rankings.service';
 
 @Component({
   selector: 'app-playoff-calculator',
@@ -31,11 +32,12 @@ export class PlayoffCalculatorComponent implements OnInit {
     public sleeperService: SleeperService,
     public playoffCalculatorService: PlayoffCalculatorService,
     private nflService: NflService,
+    public powerRankingsService: PowerRankingsService,
     private matchupService: MatchupService) { }
 
   ngOnInit(): void {
     if (this.sleeperService.selectedLeague) {
-      console.log(this.sleeperService.selectedLeague)
+      console.log(this.sleeperService.selectedLeague);
       // TODO fix this
       if (this.matchupService.leagueMatchUpUI.length === 0 || this.playoffCalculatorService.matchUpsWithProb.length === 0) {
         console.warn('Warning: Match Data was not loaded correctly. Recalculating Data...');
@@ -99,5 +101,51 @@ export class PlayoffCalculatorComponent implements OnInit {
   updateProbability(value: any): void {
     this.selectedWeek = value;
     this.playoffCalculatorService.updateSeasonOdds(value);
+  }
+
+  /**
+   * handles downloading csv of season data
+   */
+  downloadPlayoffCalculatorData(): void {
+
+    const seasonData: any[][] = [
+      ['rosterId', 'teamName', 'teamOwner', 'week', 'starterValue', 'projWins', 'projLosses', 'makePlayoffOdds', 'winDivisionOdds', 'winByeOdds', 'makeConfOdds', 'makeChampOdds', 'winChampOdds'],
+    ];
+    for (const team of this.sleeperService.sleeperTeamDetails) {
+      const row = [team.roster.rosterId, team.owner.teamName, team.owner.ownerName, this.selectedWeek];
+      row.push(this.sleeperService.selectedLeague.isSuperflex
+        ? this.powerRankingsService.findTeamFromRankingsByRosterId(team.roster.rosterId).sfTradeValueStarter
+      : this.powerRankingsService.findTeamFromRankingsByRosterId(team.roster.rosterId).tradeValueStarter);
+      row.push(this.playoffCalculatorService.teamsProjectedRecord[team.roster.rosterId].projWins);
+      row.push(this.playoffCalculatorService.teamsProjectedRecord[team.roster.rosterId].projLoss);
+      row.push(this.playoffCalculatorService.teamPlayoffOdds[team.roster.rosterId].timesMakingPlayoffs);
+      row.push(this.playoffCalculatorService.teamPlayoffOdds[team.roster.rosterId].timesWinningDivision);
+      row.push(this.playoffCalculatorService.teamPlayoffOdds[team.roster.rosterId].timesWithBye);
+      row.push(this.playoffCalculatorService.teamPlayoffOdds[team.roster.rosterId].timesMakeConfRd);
+      row.push(this.playoffCalculatorService.teamPlayoffOdds[team.roster.rosterId].timesMakeChampionship);
+      row.push(this.playoffCalculatorService.teamPlayoffOdds[team.roster.rosterId].timesWinChampionship);
+      seasonData.push(row);
+    }
+
+    const seasonOddsCSV = seasonData.map(e => e.join(',')).join('\n');
+
+    const filename = `${this.sleeperService.selectedLeague.name.replace(/ /g,'_')}_Season_Projections_${this.sleeperService.selectedLeague.season}_${this.selectedWeek}.csv`;
+
+    const blob = new Blob([seasonOddsCSV], { type: 'text/csv;charset=utf-8;' });
+    if (navigator.msSaveBlob) { // IE 10+
+      navigator.msSaveBlob(blob, filename);
+    } else {
+      const link = document.createElement('a');
+      if (link.download !== undefined) { // feature detection
+        // Browsers that support HTML5 download attribute
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', filename);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    }
   }
 }
