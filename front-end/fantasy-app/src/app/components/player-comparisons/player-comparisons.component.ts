@@ -68,7 +68,7 @@ export class PlayerComparisonsComponent extends BaseComponent implements OnInit 
    */
   addNewPlayerModal(isGroup2: boolean = false): void {
     this.dialog.open(AddPlayerComparisonModalComponent, {
-      height: '600px',
+      height: '700px',
       width: '800px',
       data: {
         isGroup2,

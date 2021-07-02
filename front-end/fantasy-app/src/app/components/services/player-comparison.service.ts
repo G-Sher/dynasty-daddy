@@ -33,6 +33,20 @@ export class PlayerComparisonService {
   /** is player mode or group mode */
   isGroupMode = false;
 
+  /** query object with query configuration */
+  query = {
+    condition: 'and',
+    rules: [
+      {field: 'position', operator: '=', value: 'QB'},
+    ]
+  };
+
+  /** query return limit */
+  limit: number = 5;
+
+  /** query selected aggregate */
+  selectedAggregate: string = 'sf_trade_value';
+
   constructor(private ktcApiService: KTCApiService, private sleeperService: SleeperService) {
   }
 

@@ -30,14 +30,9 @@ export class AddPlayerComparisonModalComponent implements OnInit {
   /** toggle between search and query mode */
   toggleQueryMode: boolean = false;
 
-  query = {
-    condition: 'and',
-    rules: [
-      {field: 'position', operator: '=', value: 'QB'},
-      {field: 'sf_position_rank', operator: '<=', value: 5},
-    ]
-  };
-
+  /**
+   * query builder config fields
+   */
   config: QueryBuilderConfig = {
     fields: {
       position: {
@@ -94,6 +89,7 @@ export class AddPlayerComparisonModalComponent implements OnInit {
       },
       sf_trade_value: {name: 'Trade Value (SF)', type: 'number'},
       trade_value: {name: 'Trade Value (Standard)', type: 'number'},
+      fantasy_points: {name: 'Fantasy Points', type: 'number'},
       sf_position_rank: {name: 'Position Rank (SF)', type: 'number'},
       position_rank: {name: 'Position Rank (Standard)', type: 'number'},
       full_name: {name: 'Full Name', type: 'string'},
@@ -102,6 +98,9 @@ export class AddPlayerComparisonModalComponent implements OnInit {
     }
   };
 
+  /**
+   * override styles for query builder
+   */
   classNames: QueryBuilderClassNames = {
     row: 'query-row',
     rule: 'query-rule',
@@ -115,6 +114,20 @@ export class AddPlayerComparisonModalComponent implements OnInit {
 
   /** has the query been run since last change */
   dirtyQuery: boolean = true;
+
+  /** aggregate options */
+  aggOptions = [
+    {name: 'Trade Value (SF) Descending', value: 'sf_trade_value', property: 'sf_trade_value', order: 'desc'},
+    {name: 'Trade Value (Standard) Descending', value: 'trade_value', property: 'trade_value', order: 'desc'},
+    {name: 'Fantasy Points Descending', value: 'fantasy_points_desc', property: 'fantasy_points', order: 'desc'},
+    {name: 'Fantasy Points Ascending', value: 'fantasy_points_asc', property: 'fantasy_points', order: 'asc'},
+    {name: 'Experience Ascending', value: 'experience_asc', property: 'experience', order: 'asc'},
+    {name: 'Experience Descending', value: 'experience_desc',  property: 'experience', order: 'desc'},
+    {name: 'Age Ascending', value: 'experience_asc', property: 'experience', order: 'asc'},
+    {name: 'Age Descending', value: 'experience_desc', property: 'experience', order: 'desc'},
+    {name: 'Position Rank (SF)', value: 'sf_position_rank', property: 'sf_position_rank', order: 'asc'},
+    {name: 'Position Rank (Standard)', value: 'position_rank', property: 'position_rank', order: 'asc'}
+  ];
 
   constructor(private playerService: PlayerService,
               private ktcApiService: KTCApiService,
@@ -201,7 +214,7 @@ export class AddPlayerComparisonModalComponent implements OnInit {
       }
     }
     if (!this.playerSearch || this.playerSearch === '') {
-      this.filteredList = this.filteredList.slice(0, 7);
+      this.filteredList = this.filteredList.slice(0, 8);
     } else {
       this.filteredList = this.filteredList.filter((player) => {
         return player.full_name.toLowerCase().includes(this.playerSearch.toLowerCase())
@@ -216,7 +229,19 @@ export class AddPlayerComparisonModalComponent implements OnInit {
    * runs query and updates query list of players that meet criteria
    */
   runQuery(): void {
-    this.queryList = this.processRuleset(this.playerService.playerValues.slice(), this.query);
+    this.queryList = this.processRuleset(this.playerService.playerValues.slice(), this.playerComparisonService.query);
+    const agg = this.aggOptions.find(aggregate => aggregate.value === this.playerComparisonService.selectedAggregate);
+    this.queryList = this.queryList.sort((a, b) => {
+      if (agg.property === 'fantasy_points') {
+        if (agg.order === 'asc') { return this.playerService.playerStats[a.sleeper_id]?.pts_half_ppr
+          - this.playerService.playerStats[b.sleeper_id]?.pts_half_ppr; }
+        else { return this.playerService.playerStats[b.sleeper_id]?.pts_half_ppr
+          - this.playerService.playerStats[a.sleeper_id]?.pts_half_ppr; }
+      }
+      if (agg.order === 'asc') { return a[agg.property] - b[agg.property]; }
+        else { return b[agg.property] - a[agg.property]; }
+    });
+    this.queryList = this.queryList.slice(0, this.playerComparisonService.limit);
     this.dirtyQuery = false;
   }
 
@@ -275,22 +300,28 @@ export class AddPlayerComparisonModalComponent implements OnInit {
             return !rule.value.includes(player[rule.field]);
           }
           case '!=': {
-            return player[rule.field] !== rule.value;
+            return rule.field === 'fantasy_points' ? this.playerService.playerStats[player.sleeper_id]?.pts_half_ppr !== rule.value
+              : player[rule.field] !== rule.value;
           }
           case '<=': {
-            return player[rule.field] <= rule.value;
+            return rule.field === 'fantasy_points' ? this.playerService.playerStats[player.sleeper_id]?.pts_half_ppr <= rule.value
+              : player[rule.field] <= rule.value;
           }
           case '>=': {
-            return player[rule.field] >= rule.value;
+            return rule.field === 'fantasy_points' ? this.playerService.playerStats[player.sleeper_id]?.pts_half_ppr >= rule.value
+              : player[rule.field] >= rule.value;
           }
           case '<': {
-            return player[rule.field] < rule.value;
+            return rule.field === 'fantasy_points' ? this.playerService.playerStats[player.sleeper_id]?.pts_half_ppr < rule.value
+              : player[rule.field] < rule.value;
           }
           case '>': {
-            return player[rule.field] > rule.value;
+            return rule.field === 'fantasy_points' ? this.playerService.playerStats[player.sleeper_id]?.pts_half_ppr > rule.value
+              : player[rule.field] > rule.value;
           }
           default: {
-            return player[rule.field] === rule.value;
+            return rule.field === 'fantasy_points' ? this.playerService.playerStats[player.sleeper_id]?.pts_half_ppr === rule.value
+              : player[rule.field] === rule.value;
           }
         }
       });

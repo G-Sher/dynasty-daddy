@@ -1,11 +1,17 @@
 <div class="large-bold-header-text center-text margin-bot-20"> Add/Remove Players</div>
 <div class="margin-top-10 margin-bot-10 right-align-text">
-<!--  <mat-radio-group [(ngModel)]="togglePresets">-->
-<!--    <mat-radio-button [value]="false" style="padding-right: 5px">View Individual Players</mat-radio-button>-->
-<!--    <mat-radio-button [value]="true" style="padding-left: 5px">View Presets</mat-radio-button>-->
-<!--  </mat-radio-group>-->
-  <button mat-button *ngIf="toggleQueryMode === false" (click)="toggleQueryMode = true"><mat-icon class="player-comp-icon">build</mat-icon>Open Query</button>
-  <button mat-button *ngIf="toggleQueryMode === true" (click)="toggleQueryMode = false"><mat-icon class="player-comp-icon">search</mat-icon>Open Search</button>
+  <!--  <mat-radio-group [(ngModel)]="togglePresets">-->
+  <!--    <mat-radio-button [value]="false" style="padding-right: 5px">View Individual Players</mat-radio-button>-->
+  <!--    <mat-radio-button [value]="true" style="padding-left: 5px">View Presets</mat-radio-button>-->
+  <!--  </mat-radio-group>-->
+  <button mat-button *ngIf="toggleQueryMode === false" (click)="toggleQueryMode = true">
+    <mat-icon class="player-comp-icon">build</mat-icon>
+    Open Query
+  </button>
+  <button mat-button *ngIf="toggleQueryMode === true" (click)="toggleQueryMode = false">
+    <mat-icon class="player-comp-icon">search</mat-icon>
+    Open Search
+  </button>
 </div>
 
 <mat-chip-list
@@ -65,11 +71,19 @@
     <span class="warning__alert">{{queryList?.length || 0}}</span> players meet this search criteria.
   </div>
   <div class="margin-top-10">
-    <query-builder [(ngModel)]='query' [config]='config' [classNames]="classNames" [allowCollapse]="true" (change)="dirtyQuery = true">
-      <ng-container *queryButtonGroup="let ruleset; let addRule=addRule; let addRuleSet=addRuleSet; let removeRuleSet=removeRuleSet">
-        <button type="button" mat-icon-button (click)="addRule()"><mat-icon>add</mat-icon></button>
-        <button type="button" mat-icon-button (click)="addRuleSet()"><mat-icon>add_circle_outline</mat-icon></button>
-        <button type="button" mat-icon-button (click)="removeRuleSet()"><mat-icon>delete</mat-icon></button>
+    <query-builder [(ngModel)]='playerComparisonService.query' [config]='config' [classNames]="classNames" [allowCollapse]="true"
+                   (change)="dirtyQuery = true">
+      <ng-container
+        *queryButtonGroup="let ruleset; let addRule=addRule; let addRuleSet=addRuleSet; let removeRuleSet=removeRuleSet">
+        <button type="button" mat-icon-button (click)="addRule()">
+          <mat-icon>add</mat-icon>
+        </button>
+        <button type="button" mat-icon-button (click)="addRuleSet()">
+          <mat-icon>add_circle_outline</mat-icon>
+        </button>
+        <button type="button" mat-icon-button (click)="removeRuleSet()">
+          <mat-icon>delete</mat-icon>
+        </button>
       </ng-container>
       <ng-container *queryRemoveButton="let rule; let removeRule=removeRule">
         <button type="button" mat-icon-button color="accent" (click)="removeRule(rule)">
@@ -124,11 +138,35 @@
       </ng-container>
     </query-builder>
   </div>
-  <div class="center-text margin-top-25">
+  <div class="center-text margin-top-10">
+    <span style="padding-right: 5px">
+      <mat-form-field color="accent" style="width: 80px;">
+        <mat-label>Set Limit</mat-label>
+        <input matInput type="number" [(ngModel)]="playerComparisonService.limit" (keyup)="dirtyQuery = true">
+      </mat-form-field>
+    </span>
+    <span>
+      <mat-form-field color="accent">
+        <mat-label>Set Aggregate</mat-label>
+      <mat-select [(ngModel)]="playerComparisonService.selectedAggregate" (selectionChange)="dirtyQuery = true">
+        <mat-option *ngFor="let opt of aggOptions" [value]="opt.value">
+          {{ opt.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    </span>
+  </div>
+  <div class="center-text margin-top-10">
     <button mat-raised-button color="accent" (click)="runQuery()">Run Query</button>
   </div>
   <div class="button-right margin-top-25">
-    <mat-checkbox color="primary" [(ngModel)]="toggleOverwritePlayers" style="padding-right: 15px">Replace current selected players</mat-checkbox>
-    <button mat-raised-button color="warn" [disabled]="!queryList || queryList?.length === 0 || dirtyQuery" (click)="addQueryResults()"><mat-icon class="add-icon-button">add</mat-icon> {{queryList?.length || 0}} players</button>
+    <mat-checkbox color="primary" [(ngModel)]="toggleOverwritePlayers" style="padding-right: 15px">Replace current
+      selected players
+    </mat-checkbox>
+    <button mat-raised-button color="warn" [disabled]="!queryList || queryList?.length === 0 || dirtyQuery"
+            (click)="addQueryResults()">
+      <mat-icon class="add-icon-button">add</mat-icon>
+      {{queryList?.length || 0}} players
+    </button>
   </div>
 </div>
