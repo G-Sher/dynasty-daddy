@@ -47,7 +47,8 @@ export class AddPlayerComparisonModalComponent implements OnInit {
           {name: 'Quarterback', value: 'QB'},
           {name: 'Running back', value: 'RB'},
           {name: 'Wide Receiver', value: 'WR'},
-          {name: 'Tight End', value: 'TE'}
+          {name: 'Tight End', value: 'TE'},
+          {name: 'Draft Picks', value: 'PI'},
         ]
       },
       age: {name: 'Age', type: 'number'},
