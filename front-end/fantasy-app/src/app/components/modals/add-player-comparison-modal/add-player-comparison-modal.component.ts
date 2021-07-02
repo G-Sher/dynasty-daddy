@@ -117,16 +117,13 @@ export class AddPlayerComparisonModalComponent implements OnInit {
 
   /** aggregate options */
   aggOptions = [
-    {name: 'Trade Value (SF) Descending', value: 'sf_trade_value', property: 'sf_trade_value', order: 'desc'},
-    {name: 'Trade Value (Standard) Descending', value: 'trade_value', property: 'trade_value', order: 'desc'},
-    {name: 'Fantasy Points Descending', value: 'fantasy_points_desc', property: 'fantasy_points', order: 'desc'},
-    {name: 'Fantasy Points Ascending', value: 'fantasy_points_asc', property: 'fantasy_points', order: 'asc'},
-    {name: 'Experience Ascending', value: 'experience_asc', property: 'experience', order: 'asc'},
-    {name: 'Experience Descending', value: 'experience_desc',  property: 'experience', order: 'desc'},
-    {name: 'Age Ascending', value: 'experience_asc', property: 'experience', order: 'asc'},
-    {name: 'Age Descending', value: 'experience_desc', property: 'experience', order: 'desc'},
-    {name: 'Position Rank (SF)', value: 'sf_position_rank', property: 'sf_position_rank', order: 'asc'},
-    {name: 'Position Rank (Standard)', value: 'position_rank', property: 'position_rank', order: 'asc'}
+    {name: 'Trade Value (SF)', value: 'sf_trade_value', property: 'sf_trade_value'},
+    {name: 'Trade Value (Standard)', value: 'trade_value', property: 'trade_value'},
+    {name: 'Fantasy Points', value: 'fantasy_points_desc', property: 'fantasy_points'},
+    {name: 'Experience', value: 'experience_asc', property: 'experience'},
+    {name: 'Age', value: 'experience_asc', property: 'experience'},
+    {name: 'Position Rank (SF)', value: 'sf_position_rank', property: 'sf_position_rank'},
+    {name: 'Position Rank (Standard)', value: 'position_rank', property: 'position_rank'}
   ];
 
   constructor(private playerService: PlayerService,
@@ -139,7 +136,7 @@ export class AddPlayerComparisonModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.filterPosGroup = [true, true, true, true, true, false];
-    this.filteredList = this.playerService.playerValues.slice(0, 7);
+    this.filteredList = this.playerService.playerValues.slice(0, 11);
     // add fantasy owners if league is logged in
     if (this.sleeperService.leagueLoaded) {
       this.config.fields.owner = {
@@ -214,14 +211,14 @@ export class AddPlayerComparisonModalComponent implements OnInit {
       }
     }
     if (!this.playerSearch || this.playerSearch === '') {
-      this.filteredList = this.filteredList.slice(0, 8);
+      this.filteredList = this.filteredList.slice(0, 13);
     } else {
       this.filteredList = this.filteredList.filter((player) => {
         return player.full_name.toLowerCase().includes(this.playerSearch.toLowerCase())
           || player.position.toLowerCase().includes(this.playerSearch.toLowerCase())
           || player.team.toLowerCase().includes(this.playerSearch.toLowerCase())
           || (player.owner?.ownerName.toLowerCase().includes(this.playerSearch.toLowerCase()) && this.sleeperService.selectedLeague);
-      }).slice(0, 7);
+      }).slice(0, 13);
     }
   }
 
@@ -233,12 +230,12 @@ export class AddPlayerComparisonModalComponent implements OnInit {
     const agg = this.aggOptions.find(aggregate => aggregate.value === this.playerComparisonService.selectedAggregate);
     this.queryList = this.queryList.sort((a, b) => {
       if (agg.property === 'fantasy_points') {
-        if (agg.order === 'asc') { return this.playerService.playerStats[a.sleeper_id]?.pts_half_ppr
+        if (!this.playerComparisonService.isOrderByDesc) { return this.playerService.playerStats[a.sleeper_id]?.pts_half_ppr
           - this.playerService.playerStats[b.sleeper_id]?.pts_half_ppr; }
         else { return this.playerService.playerStats[b.sleeper_id]?.pts_half_ppr
           - this.playerService.playerStats[a.sleeper_id]?.pts_half_ppr; }
       }
-      if (agg.order === 'asc') { return a[agg.property] - b[agg.property]; }
+      if (!this.playerComparisonService.isOrderByDesc) { return a[agg.property] - b[agg.property]; }
         else { return b[agg.property] - a[agg.property]; }
     });
     this.queryList = this.queryList.slice(0, this.playerComparisonService.limit);

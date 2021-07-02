@@ -47,6 +47,9 @@ export class PlayerComparisonService {
   /** query selected aggregate */
   selectedAggregate: string = 'sf_trade_value';
 
+  /** is query desc or asc */
+  isOrderByDesc: boolean = true;
+
   constructor(private ktcApiService: KTCApiService, private sleeperService: SleeperService) {
   }
 

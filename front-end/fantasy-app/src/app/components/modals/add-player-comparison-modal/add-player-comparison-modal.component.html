@@ -1,4 +1,8 @@
-<div class="large-bold-header-text center-text margin-bot-20"> Add/Remove Players</div>
+<div class="large-bold-header-text center-text margin-bot-20"> Add/Remove Players
+  <span class="button-right">
+      <button mat-icon-button color="accent" class="button-right" (click)="finishAdding()"><mat-icon>close</mat-icon></button>
+    </span>
+</div>
 <div class="margin-top-10 margin-bot-10 right-align-text">
   <!--  <mat-radio-group [(ngModel)]="togglePresets">-->
   <!--    <mat-radio-button [value]="false" style="padding-right: 5px">View Individual Players</mat-radio-button>-->
@@ -154,6 +158,19 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
+    </span>
+    <span style="padding-left: 5px">
+      <mat-form-field color="accent" style="width: 80px;">
+        <mat-label>Order By</mat-label>
+      <mat-select [(ngModel)]="playerComparisonService.isOrderByDesc" (selectionChange)="dirtyQuery = true">
+        <mat-option [value]="false">
+          ASC
+        </mat-option>
+        <mat-option [value]="true">
+          DESC
+        </mat-option>
+      </mat-select>
+      </mat-form-field>
     </span>
   </div>
   <div class="center-text margin-top-10">
