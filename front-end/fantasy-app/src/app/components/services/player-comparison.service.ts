@@ -43,7 +43,7 @@ export class PlayerComparisonService {
    * TODO clean up redundant code
    */
   private addNewPlayer(player: KTCPlayer[], isGroup2: boolean = false): void {
-    if (this.lineChartData[0].data.length === 0) {
+    if (this.lineChartData[0]?.data.length === 0) {
       this.lineChartData.splice(0, 1);
     }
     if (!this.isGroupMode) {

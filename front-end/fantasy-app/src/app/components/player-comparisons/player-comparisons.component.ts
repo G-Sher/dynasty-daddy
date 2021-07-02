@@ -31,14 +31,15 @@ export class PlayerComparisonsComponent extends BaseComponent implements OnInit 
     this.addSubscriptions(this.playerService.$currentPlayerValuesLoaded.subscribe(() => {
       if (this.playerComparisonService.lineChartData.length === 1
         && this.playerComparisonService.selectedPlayers[0] === undefined) {
-        this.playerComparisonService.addPlayerToCharts(this.playerService.playerValues[this.getRandomPlayer(true)]);
-        this.playerComparisonService.addPlayerToCharts(this.playerService.playerValues[this.getRandomPlayer(true)]);
+        const playerNum = this.getRandomPlayer(true);
+        this.playerComparisonService.addPlayerToCharts(this.playerService.playerValues[playerNum]);
+        this.playerComparisonService.addPlayerToCharts(this.playerService.playerValues[playerNum + 1]);
       }
     }));
     if (this.playerComparisonService.selectedPlayers.length === 0 && this.playerService.playerValues.length > 0) {
-      this.playerComparisonService.addPlayerToCharts(this.playerService.playerValues[this.getRandomPlayer(true)]);
-      this.playerComparisonService.addPlayerToCharts(this.playerService.playerValues[this.getRandomPlayer(true)]);
-    }
+      const playerNum = this.getRandomPlayer(true);
+      this.playerComparisonService.addPlayerToCharts(this.playerService.playerValues[playerNum]);
+      this.playerComparisonService.addPlayerToCharts(this.playerService.playerValues[playerNum + 1]);    }
   }
 
   /**
@@ -67,8 +68,8 @@ export class PlayerComparisonsComponent extends BaseComponent implements OnInit 
    */
   addNewPlayerModal(isGroup2: boolean = false): void {
     this.dialog.open(AddPlayerComparisonModalComponent, {
-      height: '550px',
-      width: '600px',
+      height: '600px',
+      width: '800px',
       data: {
         isGroup2,
       }
@@ -86,4 +87,15 @@ export class PlayerComparisonsComponent extends BaseComponent implements OnInit 
     }
   }
 
+  /**
+   * resets data in play comp table
+   */
+  resetPlayerComp(): void {
+    this.playerComparisonService.selectedPlayers = [];
+    this.playerComparisonService.group2SelectedPlayers = [];
+    this.playerComparisonService.refreshTable();
+    const playerNum = this.getRandomPlayer(true);
+    this.playerComparisonService.addPlayerToCharts(this.playerService.playerValues[playerNum]);
+    this.playerComparisonService.addPlayerToCharts(this.playerService.playerValues[playerNum + 1]);
+  }
 }

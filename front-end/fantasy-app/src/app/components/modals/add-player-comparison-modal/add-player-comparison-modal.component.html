@@ -1,4 +1,12 @@
 <div class="large-bold-header-text center-text margin-bot-20"> Add/Remove Players</div>
+<div class="margin-top-10 margin-bot-10 right-align-text">
+<!--  <mat-radio-group [(ngModel)]="togglePresets">-->
+<!--    <mat-radio-button [value]="false" style="padding-right: 5px">View Individual Players</mat-radio-button>-->
+<!--    <mat-radio-button [value]="true" style="padding-left: 5px">View Presets</mat-radio-button>-->
+<!--  </mat-radio-group>-->
+  <button mat-button *ngIf="toggleQueryMode === false" (click)="toggleQueryMode = true"><mat-icon class="player-comp-icon">build</mat-icon>Open Query</button>
+  <button mat-button *ngIf="toggleQueryMode === true" (click)="toggleQueryMode = false"><mat-icon class="player-comp-icon">search</mat-icon>Open Search</button>
+</div>
 
 <mat-chip-list
   *ngIf="playerComparisonService.selectedPlayers.length !== 0 && (!playerComparisonService.isGroupMode || (playerComparisonService.isGroupMode && !data.isGroup2))">
@@ -16,16 +24,19 @@
   </mat-chip>
 </mat-chip-list>
 
-<div class="margin-top-10">
-  <mat-form-field class="mat-dropdown-wide-100-percent" color="accent">
-    <mat-label >Search Players by Name, Position, {{sleeperService.selectedLeague ? 'NFL Team, or Fantasy Owner' : 'or NFL Team'}}</mat-label>
-    <input matInput autocomplete="off" type="text" [(ngModel)]="playerSearch" (keyup)="updatePlayerFilters()">
-    <button mat-button *ngIf="playerSearch" matSuffix mat-icon-button aria-label="Clear"
-            (click)="playerSearch=''; updatePlayerFilters()">
-      <mat-icon>close</mat-icon>
-    </button>
-  </mat-form-field>
-  <span>
+
+<div *ngIf="!toggleQueryMode">
+  <div class="margin-top-10">
+    <mat-form-field class="mat-dropdown-wide-100-percent" color="accent">
+      <mat-label>Search Players by Name,
+        Position, {{sleeperService.selectedLeague ? 'NFL Team, or Fantasy Owner' : 'or NFL Team'}}</mat-label>
+      <input matInput autocomplete="off" type="text" [(ngModel)]="playerSearch" (keyup)="updatePlayerFilters()">
+      <button mat-button *ngIf="playerSearch" matSuffix mat-icon-button aria-label="Clear"
+              (click)="playerSearch=''; updatePlayerFilters()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+    <span>
       <mat-checkbox class="player-value-checkbox-margin" color="primary" [(ngModel)]="filterPosGroup[0]"
                     (change)="updatePlayerFilters()">QB</mat-checkbox>
       <mat-checkbox class="player-value-checkbox-margin" color="primary" [(ngModel)]="filterPosGroup[1]"
@@ -39,13 +50,85 @@
       <mat-checkbox class="player-value-checkbox-margin" color="primary" [(ngModel)]="filterPosGroup[5]"
                     (change)="updatePlayerFilters()">Only Rookies</mat-checkbox>
     </span>
+  </div>
   <div class="margin-top-10">
     <div *ngFor="let player of filteredList" (click)="addPlayer(player)"
          class="modal-players-list__item">{{player.position}} - {{player.full_name}}
       <span class="disabled__color"> {{player.team}}  {{player.position}}{{player.sf_position_rank}}</span></div>
   </div>
+  <br>
+  <button mat-raised-button color="accent" class="button-right" (click)="finishAdding()">Finish</button>
 </div>
-<br>
 
-
-<button mat-raised-button color="accent" class="button-right" (click)="finishAdding()">Finish</button>
+<div *ngIf="toggleQueryMode" class="margin-top-10 margin-bot-20">
+  <div class="center-text">
+    <span class="warning__alert">{{queryList?.length || 0}}</span> players meet this search criteria.
+  </div>
+  <div class="margin-top-10">
+    <query-builder [(ngModel)]='query' [config]='config' [classNames]="classNames" [allowCollapse]="true" (change)="dirtyQuery = true">
+      <ng-container *queryButtonGroup="let ruleset; let addRule=addRule; let addRuleSet=addRuleSet; let removeRuleSet=removeRuleSet">
+        <button type="button" mat-icon-button (click)="addRule()"><mat-icon>add</mat-icon></button>
+        <button type="button" mat-icon-button (click)="addRuleSet()"><mat-icon>add_circle_outline</mat-icon></button>
+        <button type="button" mat-icon-button (click)="removeRuleSet()"><mat-icon>delete</mat-icon></button>
+      </ng-container>
+      <ng-container *queryRemoveButton="let rule; let removeRule=removeRule">
+        <button type="button" mat-icon-button color="accent" (click)="removeRule(rule)">
+          <mat-icon>remove</mat-icon>
+        </button>
+      </ng-container>
+      <ng-container *querySwitchGroup="let ruleset">
+        <mat-radio-group *ngIf="ruleset" [(ngModel)]="ruleset.condition" color="accent">
+          <mat-radio-button value="and" style="padding-right: 5px">And</mat-radio-button>
+          <mat-radio-button value="or" style="padding-left: 5px">Or</mat-radio-button>
+        </mat-radio-group>
+      </ng-container>
+      <ng-container *queryField="let rule; let fields=fields; let onChange=onChange">
+        <mat-form-field color="accent">
+          <mat-select [(ngModel)]="rule.field" (ngModelChange)="onChange($event, rule)">
+            <mat-option *ngFor="let field of fields" [value]="field.value">{{field.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </ng-container>
+      <ng-container *queryOperator="let rule; let operators=operators">
+        <mat-form-field color="accent" class="operators">
+          <mat-select [(ngModel)]="rule.operator">
+            <mat-option *ngFor="let value of operators" [value]="value">{{value}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </ng-container>
+      <!-- Override input component for 'boolean' type -->
+      <ng-container *queryInput="let rule; type: 'boolean'">
+        <mat-checkbox [(ngModel)]="rule.value" color="accent"></mat-checkbox>
+      </ng-container>
+      <!-- Override input component for 'number' type -->
+      <ng-container *queryInput="let rule; type: 'number'">
+        <mat-form-field color="accent">
+          <input matInput type="number" [(ngModel)]="rule.value">
+        </mat-form-field>
+      </ng-container>
+      <!-- Override input component for 'text' type -->
+      <ng-container *queryInput="let rule; type: 'string'">
+        <mat-form-field color="accent">
+          <input matInput type="text" [(ngModel)]="rule.value">
+        </mat-form-field>
+      </ng-container>
+      <!-- Override input component for 'category' type -->
+      <ng-container *queryInput="let rule; let field=field; let options=options; type: 'category'">
+        <mat-form-field color="accent">
+          <mat-select [(ngModel)]="rule.value" [placeholder]="field.name" (selectionChange)="dirtyQuery = true">
+            <mat-option *ngFor="let opt of options" [value]="opt.value">
+              {{ opt.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </ng-container>
+    </query-builder>
+  </div>
+  <div class="center-text margin-top-25">
+    <button mat-raised-button color="accent" (click)="runQuery()">Run Query</button>
+  </div>
+  <div class="button-right margin-top-25">
+    <mat-checkbox color="primary" [(ngModel)]="toggleOverwritePlayers" style="padding-right: 15px">Replace current selected players</mat-checkbox>
+    <button mat-raised-button color="warn" [disabled]="!queryList || queryList?.length === 0 || dirtyQuery" (click)="addQueryResults()"><mat-icon class="add-icon-button">add</mat-icon> {{queryList?.length || 0}} players</button>
+  </div>
+</div>

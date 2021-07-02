@@ -24,7 +24,10 @@
                         (change)="playerComparisonService.refreshTable()" class="player-value-checkbox-margin">
       SuperFlex
       </mat-slide-toggle>
-      <button mat-raised-button (click)="addRandomPlayer()" class="player-value-checkbox-margin"><mat-icon class="add-icon-button">add</mat-icon> Random Player</button>
+      <span style="padding-right: 5px">
+        <button mat-stroked-button (click)="addRandomPlayer()" class="player-value-checkbox-margin"><mat-icon class="add-icon-button">add</mat-icon> Random Player</button>
+      </span>
+      <button mat-raised-button (click)="resetPlayerComp()" class="player-value-checkbox-margin"><mat-icon class="add-icon-button">refresh</mat-icon> Reset</button>
     </span>
   </div>
 

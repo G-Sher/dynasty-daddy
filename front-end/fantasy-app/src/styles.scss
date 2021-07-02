@@ -166,7 +166,7 @@ html, body, app-root, .app-frame {
  * margins
  */
 
-.margin-bot-20 {
+.margin-bot-10 {
   margin-bottom: 10px;
 }
 
@@ -228,6 +228,10 @@ html, body, app-root, .app-frame {
   text-align: center;
 }
 
+.right-align-text {
+  text-align: right;
+}
+
 .link--text__no__underline:hover {
   color: #fdca40;
   cursor: pointer;
@@ -272,6 +276,12 @@ hr.dark {
 .add-icon-button {
   font-size: 22px;
   vertical-align: middle
+}
+
+.player-comp-icon {
+  font-size: 20px;
+  vertical-align: middle;
+  padding-right: 10px;
 }
 
 /**
@@ -442,3 +452,47 @@ tr.table-detail-row {
   max-width: 25px;
   padding-right: 5px;
 }
+
+
+/**/
+/* query builder style overrides*/
+/**/
+.query-row {
+  position: relative;
+  margin-top: 12px;
+  margin-left: 24px;
+  padding: 14px;
+  border-radius: 5px;
+  border: 1px solid #577380;
+}
+.query-row::after {
+  content: '';
+  position: absolute;
+  top: 50% !important;
+  bottom: -13px !important;
+  left: -16px !important;
+  width: 10px !important;
+  height: auto !important;
+  border-color: #577380 !important;
+  border-width: 0 0 0 1px !important;
+}
+.query-row::before {
+  content: '';
+  position: absolute;
+  top: -13px !important;
+  bottom: 50% !important;
+  left: -16px !important;
+  width: 10px !important;
+  height: auto !important;
+  border-color: #577380 !important;
+  border-width: 0 0 1px 1px !important;
+}
+.query-error {
+  border-color: #fdca40;
+}
+.query-warning {
+  margin-top: 4px;
+  text-align: center;
+  color: #fdca40;
+}
+
