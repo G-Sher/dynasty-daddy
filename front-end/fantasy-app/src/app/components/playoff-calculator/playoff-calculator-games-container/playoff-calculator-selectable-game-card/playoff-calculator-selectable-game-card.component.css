@@ -1,0 +1,35 @@
+.mat-card {
+  width: 350px;
+  height: auto;
+  padding: 4px;
+}
+
+.td-game--metrics {
+  width: 15%;
+  text-align: center;
+}
+
+.td-game--metrics:hover {
+  filter: brightness(150%);
+}
+
+.td-game--team {
+  width: 70%;
+  overflow: hidden;
+}
+
+.game-win__color {
+  background: darkgreen;
+}
+
+.game-loss__color {
+  background: #e74c3c;
+}
+
+.game-tie__color {
+  background: #bf9a32;
+}
+
+.game-score__color {
+  background: #6d6d6d;
+}

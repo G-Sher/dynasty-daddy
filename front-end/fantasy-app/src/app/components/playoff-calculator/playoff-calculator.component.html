@@ -4,7 +4,7 @@
 </div>
 <div *ngIf="sleeperService.leagueLoaded && playoffCalculatorService.divisions.length > 0 && (sleeperService.selectedLeague?.status !== 'pre_draft' && sleeperService.selectedLeague?.status !== 'drafting')" class="margin-top-10 table-container">
   <mat-tab-group mat-align-tabs="center" class="margin-top-25">
-    <mat-tab label="Season">
+    <mat-tab label="Season" style="overflow: hidden">
       <div class="mid-bold-text margin-top-10 center-text">Season Predictions</div>
       <div class="margin-top-10 center-text">For the regular season and playoffs, updated after each week.</div>
       <div class="margin-top-25">
@@ -12,12 +12,25 @@
       </div>
       <div class="table-dropdown-center margin-top-25">
         <mat-form-field appearance="standard" color="accent">
-          <mat-label>Forcast from</mat-label>
+          <mat-label>Forecast from</mat-label>
           <mat-select [value]="selectedWeek" (selectionChange)="updateProbability($event.value)">
             <mat-option *ngFor="let week of selectableWeeks"
                         [value]="week.week">{{week.value}}</mat-option>
           </mat-select>
         </mat-form-field>
+      </div>
+      <div class="mid-bold-text margin-top-25" *ngIf="upcomingMatchUps.length > 0">
+        <div *ngIf="!showPlayoffMachine" class="center-text margin-bot-20">
+          <button mat-stroked-button (click)="showPlayoffMachine = true">Select Future Game Results</button>
+        </div>
+        <div *ngIf="showPlayoffMachine" class="margin-bot-20">
+          <div class="center-text">
+            <button mat-icon-button [disabled]="playoffMachineWeek === this.sleeperService.selectedLeague.startWeek" (click)="updatePlayoffMachineWeek(-1)"><mat-icon>chevron_left</mat-icon></button>
+            <span class="mid-bold-text">Week {{playoffMachineWeek}}</span>
+            <button mat-icon-button [disabled]="playoffMachineWeek === this.sleeperService.selectedLeague.playoffStartWeek - 1" (click)="updatePlayoffMachineWeek(1)"><mat-icon >chevron_right</mat-icon></button>
+          </div>
+          <app-playoff-calculator-games-container [weekMatchUps]="upcomingMatchUps[playoffMachineWeek - 1]" [selectable]="true"></app-playoff-calculator-games-container>
+        </div>
       </div>
     </mat-tab>
     <mat-tab label="Games">

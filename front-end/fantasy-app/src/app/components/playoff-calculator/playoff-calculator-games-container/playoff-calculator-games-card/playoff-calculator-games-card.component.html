@@ -14,7 +14,7 @@
         <span class="link--text__no__underline" [routerLink]="['../team', team1.owner?.ownerName]">
           {{team1.owner?.teamName}}
         </span>
-        <span class="small-text__light">{{team1.roster.teamMetrics.wins}} - {{team1.roster.teamMetrics.losses}}</span>
+        <span class="small-text__light">{{team1.roster.teamMetrics.wins}} - {{team1.roster.teamMetrics.losses}} {{team1.roster.teamMetrics.ties > 0 ? ' - ' + team1.roster.teamMetrics.ties : ''}}</span>
       </td>
       <td class="td-game--metrics" style="background: {{getProbColor(game.team1Prob)}}">{{game.team1Prob}}%</td>
       <td class="td-game--metrics" [ngClass]="(game.matchUpDetails.team1Points > game.matchUpDetails.team2Points) ? 'game-win__color' : 'game-score__color'">{{game.matchUpDetails.team1Points === 0 ? '' : game.matchUpDetails.team1Points}}</td>
@@ -26,7 +26,7 @@
         <span class="link--text__no__underline" [routerLink]="['../team', team2.owner?.ownerName]">
           {{team2.owner?.teamName}}
         </span>
-        <span class="small-text__light">{{team2.roster.teamMetrics.wins}} - {{team2.roster.teamMetrics.losses}}</span>
+        <span class="small-text__light">{{team2.roster.teamMetrics.wins}} - {{team2.roster.teamMetrics.losses}} {{team2.roster.teamMetrics.ties > 0 ? ' - ' + team2.roster.teamMetrics.ties : ''}}</span>
       </td>
       <td class="td-game--metrics" style="background: {{getProbColor(game.team2Prob)}}">{{game.team2Prob}}%</td>
       <td class="td-game--metrics" [ngClass]="(game.matchUpDetails.team2Points > game.matchUpDetails.team1Points) ? 'game-win__color' : 'game-score__color'">{{game.matchUpDetails.team2Points === 0 ? '' : game.matchUpDetails.team2Points}}</td>

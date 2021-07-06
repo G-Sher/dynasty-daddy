@@ -29,12 +29,17 @@ export class CompletedDraftTableComponent implements OnInit, OnChanges {
 
   /** mat datasource */
   dataSource: MatTableDataSource<SleeperCompletedPickData> = new MatTableDataSource<SleeperCompletedPickData>();
+  searchVal: string = '';
+  filterPosGroup: boolean[] = [true, true, true, true];
+  isSuperFlex: boolean = true;
+  filteredDraftPicks: SleeperCompletedPickData[] = [];
 
   constructor(private sleeperService: SleeperService,
               public playerService: PlayerService) { }
 
   ngOnInit(): void {
     this.pageLength = this.sleeperService.selectedLeague.totalRosters;
+    this.isSuperFlex = this.sleeperService.selectedLeague.isSuperflex;
   }
 
   ngOnChanges(): void {
@@ -75,5 +80,28 @@ export class CompletedDraftTableComponent implements OnInit, OnChanges {
    */
   getPlayerBySleeperId(sleeperId: string): KTCPlayer {
     return this.playerService.getPlayerBySleeperId(sleeperId);
+  }
+
+  updateDraftFilters(): void {
+    this.filteredDraftPicks = this.selectedDraft.picks.slice();
+    const filterOptions = ['QB', 'RB', 'WR', 'TE'];
+    for (let i = 0; i < this.filterPosGroup.length; i++) {
+      if (!this.filterPosGroup[i]) {
+        this.filteredDraftPicks = this.filteredDraftPicks.filter(pick => {
+          if (pick.position !== filterOptions[i] && filterOptions.includes(pick.position)) {
+            return pick;
+          }
+        });
+      }
+    }
+    if (this.searchVal && this.searchVal.length > 0){
+      this.filteredDraftPicks = this.filteredDraftPicks.filter(player => {
+        return ((player.firstName + ' ' + player.lastName).toLowerCase().indexOf(this.searchVal.toLowerCase()) >= 0
+          || (player.round.toString().toLowerCase().indexOf(this.searchVal.toLowerCase()) >= 0)
+          || (this.getOwnerName(player.rosterId).toLowerCase().indexOf(this.searchVal.toLowerCase()) >= 0));
+      });
+    }
+    this.dataSource = new MatTableDataSource(this.filteredDraftPicks);
+    this.dataSource.paginator = this.paginator;
   }
 }

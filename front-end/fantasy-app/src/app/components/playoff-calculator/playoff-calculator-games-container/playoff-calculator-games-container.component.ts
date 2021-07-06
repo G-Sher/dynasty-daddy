@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {MatchUpProbability} from '../../model/playoffCalculator';
 import {SleeperService} from '../../../services/sleeper.service';
+import {PlayoffCalculatorService} from "../../services/playoff-calculator.service";
 
 @Component({
   selector: 'app-playoff-calculator-games-container',
@@ -9,12 +10,18 @@ import {SleeperService} from '../../../services/sleeper.service';
 })
 export class PlayoffCalculatorGamesContainerComponent implements OnInit {
 
+  /** week match ups */
   @Input()
   weekMatchUps: MatchUpProbability[];
 
+  /** is card group probability or selecting game winners */
+  @Input()
+  selectable?: boolean = false;
+
+  /** record string */
   recordString: string = '';
 
-  constructor(public sleeperService: SleeperService) { }
+  constructor(public sleeperService: SleeperService, private playoffCalculatorService: PlayoffCalculatorService) { }
 
   ngOnInit(): void {
     let correct = 0;
@@ -33,4 +40,13 @@ export class PlayoffCalculatorGamesContainerComponent implements OnInit {
     }
   }
 
+  /**
+   * reset selected week of games
+   */
+  resetSelectableGames(): void {
+    this.weekMatchUps.map(matchups => {
+      matchups.matchUpDetails.selectedWinner = 0;
+    });
+    this.playoffCalculatorService.updateSeasonOdds();
+  }
 }

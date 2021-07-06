@@ -11,7 +11,7 @@
       </mat-radio-group>
     </div>
     <div *ngIf="loginMethod === 'sleeper_username'">
-      <mat-form-field class="mat-dropdown-wide-200 margin-top-25">
+      <mat-form-field class="mat-dropdown-wide-200 margin-top-25" color="accent">
         <mat-label>Sleeper Username</mat-label>
         <input matInput type="text" [(ngModel)]="usernameInput">
         <button mat-button *ngIf="usernameInput" matSuffix mat-icon-button aria-label="Clear" (click)="usernameInput=''">
@@ -71,7 +71,7 @@
     </div>
     <div *ngIf="sleeperService.selectedLeague && sleeperService.selectedLeague.prevLeagueId?.length > 5">
       <div class="mid-bold-text margin-top-25 margin-bot-25">OR</div>
-      <button mat-raised-button
+      <button mat-stroked-button
               color="accent" (click)="loginWithPrevSeason()">View {{selectedLeague.season - 1}} Season
       </button>
     </div>

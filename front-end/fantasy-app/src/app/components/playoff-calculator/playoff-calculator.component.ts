@@ -25,8 +25,14 @@ export class PlayoffCalculatorComponent implements OnInit {
   /** list of selectable weeks to choose from */
   selectableWeeks: {week: number; value: string}[] = [];
 
-  /** currently selected forcast week */
+  /** currently selected forecast week */
   selectedWeek: number;
+
+  /** show playoff machine game selections */
+  showPlayoffMachine: boolean = false;
+
+  /** playoff machine start week */
+  playoffMachineWeek: number;
 
   constructor(
     public sleeperService: SleeperService,
@@ -43,6 +49,7 @@ export class PlayoffCalculatorComponent implements OnInit {
         console.warn('Warning: Match Data was not loaded correctly. Recalculating Data...');
         this.matchupService.initMatchUpCharts(this.sleeperService.selectedLeague);
       }
+      this.playoffMachineWeek = this.nflService.stateOfNFL.week !== 0 ? this.nflService.stateOfNFL.week : 1;
       this.refreshGames();
       this.generateSelectableWeeks();
     }
@@ -129,7 +136,7 @@ export class PlayoffCalculatorComponent implements OnInit {
 
     const seasonOddsCSV = seasonData.map(e => e.join(',')).join('\n');
 
-    const filename = `${this.sleeperService.selectedLeague.name.replace(/ /g,'_')}_Season_Projections_${this.sleeperService.selectedLeague.season}_${this.selectedWeek}.csv`;
+    const filename = `${this.sleeperService.selectedLeague.name.replace(/ /g, '_')}_Season_Projections_${this.sleeperService.selectedLeague.season}_${this.selectedWeek}.csv`;
 
     const blob = new Blob([seasonOddsCSV], { type: 'text/csv;charset=utf-8;' });
     if (navigator.msSaveBlob) { // IE 10+
@@ -147,5 +154,13 @@ export class PlayoffCalculatorComponent implements OnInit {
         document.body.removeChild(link);
       }
     }
+  }
+
+  /**
+   * handles page select for playoff machine
+   * @param change
+   */
+  updatePlayoffMachineWeek(change: number): void {
+    this.playoffMachineWeek += change;
   }
 }

@@ -58,7 +58,6 @@ export class TradeValueLineChartComponent extends BaseComponent implements OnIni
         fontColor: '#d3d3d3'
       }
     },
-
     plugins: {
       colorschemes: {
         scheme: Classic10,
@@ -66,7 +65,7 @@ export class TradeValueLineChartComponent extends BaseComponent implements OnIni
       },
       legend: {
         position: 'top'
-      }
+      },
     }
   };
   public lineChartLegend = true;
@@ -136,4 +135,4 @@ export class TradeValueLineChartComponent extends BaseComponent implements OnIni
     const diffDays = Math.round(Math.abs((firstDate.getTime() - secondDate.getTime()) / (oneDay)));
     return diffDays;
   }
-}
+};

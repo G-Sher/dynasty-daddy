@@ -65,6 +65,8 @@ import {PlayoffCalculatorGamesContainerComponent} from './components/playoff-cal
 import {PlayoffCalculatorGamesCardComponent} from './components/playoff-calculator/playoff-calculator-games-container/playoff-calculator-games-card/playoff-calculator-games-card.component';
 import {MatRadioModule} from '@angular/material/radio';
 import {QueryBuilderModule} from 'angular2-query-builder';
+import { PlayoffCalculatorSelectableGameCardComponent } from './components/playoff-calculator/playoff-calculator-games-container/playoff-calculator-selectable-game-card/playoff-calculator-selectable-game-card.component';
+
 
 export function initialize(startupService: StartupService): any {
   return (): Promise<any> => {
@@ -101,6 +103,7 @@ export function initialize(startupService: StartupService): any {
     PlayoffCalculatorSeasonTableComponent,
     PlayoffCalculatorGamesContainerComponent,
     PlayoffCalculatorGamesCardComponent,
+    PlayoffCalculatorSelectableGameCardComponent,
   ],
   imports: [
     BrowserModule,

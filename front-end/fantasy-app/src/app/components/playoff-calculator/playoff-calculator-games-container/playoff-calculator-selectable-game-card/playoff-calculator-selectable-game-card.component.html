@@ -1,0 +1,40 @@
+<table style="width:100%">
+  <tr>
+    <td class="td-game--team"></td>
+    <td class="text__light"></td>
+  </tr>
+</table>
+<mat-card class="mat-elevation-z4">
+  <table style="width:100%">
+    <tr>
+      <td class="td-game--team" *ngIf="team1 && team1.owner">
+        <img #image [src]="'https://sleepercdn.com/avatars/thumbs/' + team1.owner?.avatar"
+             onerror="style.display = 'none'" class="games-image">
+        <span>
+          {{team1.owner?.teamName}}
+        </span>
+      </td>
+      <td class="td-game--metrics game-score__color" (click)="updateGameResultOption(1)" [ngClass]="{'game-score__color': game.matchUpDetails.selectedWinner === 0, 'game-win__color': game.matchUpDetails.selectedWinner === 1, 'game-loss__color': game.matchUpDetails.selectedWinner === 2, 'game-tie__color': game.matchUpDetails.selectedWinner === 3}">
+        <button mat-icon-button *ngIf="game.matchUpDetails.selectedWinner === 0" class="mid-bold-text">Pick</button>
+        <button mat-icon-button *ngIf="game.matchUpDetails.selectedWinner === 1" class="mid-bold-text">Win</button>
+        <button mat-icon-button *ngIf="game.matchUpDetails.selectedWinner === 2" class="mid-bold-text">Loss</button>
+        <button mat-icon-button *ngIf="game.matchUpDetails.selectedWinner === 3" class="mid-bold-text">Tie</button>
+      </td>
+    </tr>
+    <tr>
+      <td class="td-game--team" *ngIf="team2 && team2.owner">
+        <img #image [src]="'https://sleepercdn.com/avatars/thumbs/' + team2.owner?.avatar"
+             onerror="style.display = 'none'" class="games-image">
+        <span>
+          {{team2.owner?.teamName}}
+        </span>
+      </td>
+      <td class="td-game--metrics" (click)="updateGameResultOption(2)" [ngClass]="{'game-score__color': game.matchUpDetails.selectedWinner === 0, 'game-win__color': game.matchUpDetails.selectedWinner === 2, 'game-loss__color': game.matchUpDetails.selectedWinner === 1, 'game-tie__color': game.matchUpDetails.selectedWinner === 3}" >
+        <button mat-icon-button *ngIf="game.matchUpDetails.selectedWinner === 0" class="mid-bold-text">Pick</button>
+        <button mat-icon-button *ngIf="game.matchUpDetails.selectedWinner === 2" class="mid-bold-text">Win</button>
+        <button mat-icon-button *ngIf="game.matchUpDetails.selectedWinner === 1" class="mid-bold-text">Loss</button>
+        <button mat-icon-button *ngIf="game.matchUpDetails.selectedWinner === 3" class="mid-bold-text">Tie</button>
+      </td>
+    </tr>
+  </table>
+</mat-card>
