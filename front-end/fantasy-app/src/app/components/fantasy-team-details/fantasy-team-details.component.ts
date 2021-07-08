@@ -10,6 +10,7 @@ import {KTCPlayer} from '../../model/KTCPlayer';
 import {PlayerComparisonService} from '../services/player-comparison.service';
 import {TransactionsService} from '../services/transactions.service';
 import {TransactionUI} from '../model/transaction';
+import {ConfigService} from "../../services/init/config.service";
 
 @Component({
   selector: 'app-fantasy-team-details',
@@ -42,7 +43,8 @@ export class FantasyTeamDetailsComponent implements OnInit {
               public playerService: PlayerService,
               private playerComparisonService: PlayerComparisonService,
               private router: Router,
-              public transactionsService: TransactionsService) {
+              public transactionsService: TransactionsService,
+              public configService: ConfigService) {
   }
 
   ngOnInit(): void {

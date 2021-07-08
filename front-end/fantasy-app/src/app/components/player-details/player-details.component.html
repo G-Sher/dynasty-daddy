@@ -4,7 +4,7 @@
     <span class="link--text__no__underline mid-bold-text" style="padding-right: 3px" [routerLink]="['../../values']">Players</span>
     <mat-icon class="arrow-icon__nav">chevron_right</mat-icon>
     <span class="mid-bold-text">{{selectedPlayer.full_name}}</span>
-    <div class="link--text__no__underline mid-bold-text button-right" (click)="openPlayerComparison(selectedPlayer)">
+    <div class="link--text__no__underline mid-bold-text button-right" (click)="openPlayerComparison(selectedPlayer)" *ngIf="!configService.isMobile">
       View in Player Comparison<mat-icon class="arrow-icon__nav">chevron_right</mat-icon>
     </div>
   </div>
@@ -61,7 +61,7 @@
           <div class="text__light">Trade Value</div>
           <div *ngIf="sleeperService.selectedLeague" class="large-bold-header-text">{{sleeperService.selectedLeague.isSuperflex ? selectedPlayer.sf_trade_value : selectedPlayer.trade_value}}</div>
           <div *ngIf="!sleeperService.selectedLeague" class="large-bold-header-text"><span class="small-text__light">Superflex: </span>  {{selectedPlayer.sf_trade_value}}
-            <div><span class="small-text__light">Standard: </span> {{selectedPlayer.trade_value}}</div>
+            <div *ngIf="!configService.isMobile"><span class="small-text__light">Standard: </span> {{selectedPlayer.trade_value}}</div>
           </div>
         </mat-card>
       </div>

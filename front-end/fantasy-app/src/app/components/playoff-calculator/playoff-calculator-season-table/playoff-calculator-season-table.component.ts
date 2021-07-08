@@ -6,6 +6,7 @@ import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import {PlayoffCalculatorService} from '../../services/playoff-calculator.service';
 import {ColorService} from '../../services/color.service';
+import {ConfigService} from "../../../services/init/config.service";
 
 @Component({
   selector: 'app-playoff-calculator-season-table',
@@ -27,7 +28,8 @@ export class PlayoffCalculatorSeasonTableComponent implements OnInit, AfterViewI
   constructor(public sleeperService: SleeperService,
               public powerRankingsService: PowerRankingsService,
               public playoffCalculatorService: PlayoffCalculatorService,
-              private colorService: ColorService) {
+              private colorService: ColorService,
+              public configService: ConfigService) {
   }
 
   /** team properties like name division value */
@@ -47,7 +49,7 @@ export class PlayoffCalculatorSeasonTableComponent implements OnInit, AfterViewI
 
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource(this.sleeperService.sleeperTeamDetails);
-    if (this.playoffCalculatorService.divisions.length === 1) {
+    if (this.playoffCalculatorService.divisions.length === 1 || this.configService.isMobile) {
       this.teamDetails = ['teamRating', 'teamName'];
     } else {
       this.teamDetails = ['teamRating', 'teamName', 'teamDivision'];

@@ -63,6 +63,7 @@ First, clone repo and open up in your preferred IDE.
 - javascript-color-gradient - color gradients
 - simple-statistics - statistics and probability calculations
 - angular2-query-builder - query builder for player comparison advanced search
+- ngx-device-detector - detects if using mobile device, tablet, or desktop
 
 ## Credits
 

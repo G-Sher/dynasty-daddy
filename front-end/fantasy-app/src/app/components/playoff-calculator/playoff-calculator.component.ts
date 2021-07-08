@@ -5,6 +5,7 @@ import {NflService} from '../../services/utilities/nfl.service';
 import {MatchUpProbability} from '../model/playoffCalculator';
 import {MatchupService} from '../services/matchup.service';
 import {PowerRankingsService} from '../services/power-rankings.service';
+import {ConfigService} from "../../services/init/config.service";
 
 @Component({
   selector: 'app-playoff-calculator',
@@ -39,7 +40,8 @@ export class PlayoffCalculatorComponent implements OnInit {
     public playoffCalculatorService: PlayoffCalculatorService,
     private nflService: NflService,
     public powerRankingsService: PowerRankingsService,
-    private matchupService: MatchupService) { }
+    private matchupService: MatchupService,
+    public configService: ConfigService) { }
 
   ngOnInit(): void {
     if (this.sleeperService.selectedLeague) {

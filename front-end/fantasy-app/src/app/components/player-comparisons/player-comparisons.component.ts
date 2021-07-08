@@ -7,6 +7,7 @@ import {AddPlayerComparisonModalComponent} from '../modals/add-player-comparison
 import {PlayerComparisonService} from '../services/player-comparison.service';
 import {SleeperService} from '../../services/sleeper.service';
 import {moveItemInArray} from '@angular/cdk/drag-drop';
+import {ConfigService} from '../../services/init/config.service';
 
 @Component({
   selector: 'app-player-comparisons',
@@ -19,7 +20,8 @@ export class PlayerComparisonsComponent extends BaseComponent implements OnInit 
               private playerService: PlayerService,
               private sleeperService: SleeperService,
               private dialog: MatDialog,
-              public playerComparisonService: PlayerComparisonService) {
+              public playerComparisonService: PlayerComparisonService,
+              public configService: ConfigService) {
     super();
   }
 

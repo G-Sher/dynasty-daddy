@@ -1,7 +1,7 @@
 <div class="center-text margin-top-10 large-bold-header-text">Welcome to Dynasty Daddy!</div>
 
-<div class="flex-start-container margin-top-50">
-  <div class="flex-item-home grid-75 center-text margin-top-25">
+<div class=" margin-top-50" [ngClass]="{'flex-start-container__mobile': configService.isMobile, 'flex-start-container': !configService.isMobile}">
+  <div [ngClass]="{'flex-item-home grid-75': !configService.isMobile, 'flex-item-home': configService.isMobile}" class="center-text margin-top-25">
     <div class="mid-bold-text">Let's get started!</div>
     <br>
     <div>
@@ -77,8 +77,8 @@
     </div>
   </div>
 
-  <div class="grid-25 flex-item-home">
-    <div class="community-box center-text">
+  <div [ngClass]="{'grid-25 flex-item-home': !configService.isMobile, 'margin-top-25': configService.isMobile}">
+    <div [ngClass]="{'community-box': !configService.isMobile}" class="center-text">
       <div class="mid-bold-text margin-top-10">Join Our Community</div>
       <br>
       <iframe src="https://discord.com/widget?id=837372928005767220&theme=dark" width="350" height="500"

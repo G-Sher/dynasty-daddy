@@ -71,6 +71,7 @@ export class PlayoffCalculatorService {
     this.matchUpService.leagueMatchUpUI.map(weekMatchups => {
       const games: MatchUpProbability[] = [];
       weekMatchups.map(matchup => {
+        matchup.selectedWinner = 0;
         games.push(this.getProbabilityForGame(matchup));
       });
       this.matchUpsWithProb.push(games);

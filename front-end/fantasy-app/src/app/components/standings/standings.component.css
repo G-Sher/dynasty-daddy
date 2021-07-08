@@ -3,6 +3,7 @@
   width: 100%; /*Optional*/
   /*table-layout: fixed; !*Optional*!*/
   border-spacing: 10px; /*Optional*/
+  overflow-x: auto;
 }
 .standings-col {
   display: table-cell;

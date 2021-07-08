@@ -7,6 +7,7 @@ import {MAT_DIALOG_DATA, MatDialog} from '@angular/material/dialog';
 import {SleeperService} from '../../../services/sleeper.service';
 import {QueryBuilderClassNames, QueryBuilderConfig} from 'angular2-query-builder';
 import {SleeperOwnerData} from '../../../model/SleeperLeague';
+import {ConfigService} from "../../../services/init/config.service";
 
 @Component({
   selector: 'app-add-player-comparison-modal',
@@ -131,7 +132,8 @@ export class AddPlayerComparisonModalComponent implements OnInit {
               public playerComparisonService: PlayerComparisonService,
               private dialog: MatDialog,
               @Inject(MAT_DIALOG_DATA) public data: { isGroup2: boolean },
-              public sleeperService: SleeperService) {
+              public sleeperService: SleeperService,
+              public configService: ConfigService) {
   }
 
   ngOnInit(): void {

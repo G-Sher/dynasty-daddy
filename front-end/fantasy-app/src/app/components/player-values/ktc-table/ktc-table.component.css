@@ -1,19 +1,32 @@
-.ktc-table-container {
-  display: flex;
-  flex-direction: column;
-  padding: 8px 24px 24px;
-  min-width: 300px;
-}
-
-.ktc-table-header {
-  min-height: 64px;
-  padding: 8px 24px 0;
-}
-
 .mat-column-position,
 .mat-column-age,
 .mat-column-actions {
   max-width: 82px;
+}
+
+.mat-column-full_name {
+  min-width: 120px;
+}
+
+.mat-column-full_name,
+.mat-column-owner {
+  text-overflow: clip;
+}
+
+.mat-column-full_name,
+.mat-column-position,
+.mat-column-age,
+.mat-column-owner {
+  text-align: right;
+  justify-content: flex-start;
+}
+
+.mat-column-halfppr,
+.mat-column-trade_value,
+.mat-column-sf_trade_value,
+.mat-column-actions {
+  text-align: right;
+  justify-content: flex-end;
 }
 
 .ktc-table-element-row:hover {

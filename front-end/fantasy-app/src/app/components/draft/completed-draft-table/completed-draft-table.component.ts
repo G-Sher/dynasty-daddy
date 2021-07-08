@@ -6,6 +6,7 @@ import {MatPaginator} from '@angular/material/paginator';
 import {SleeperService} from '../../../services/sleeper.service';
 import {PlayerService} from '../../../services/player.service';
 import {KTCPlayer} from '../../../model/KTCPlayer';
+import {ConfigService} from '../../../services/init/config.service';
 
 @Component({
   selector: 'app-completed-draft-table',
@@ -19,7 +20,7 @@ export class CompletedDraftTableComponent implements OnInit, OnChanges {
   selectedDraft: CompletedDraft;
 
   /** columns */
-  displayedColumns = ['pickNumber', 'team', 'owner', 'selectedPlayer'];
+  displayedColumns = this.configService.isMobile ? ['pickNumber', 'owner', 'selectedPlayer'] : ['pickNumber', 'team', 'owner', 'selectedPlayer'];
 
   /** mat paginator */
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
@@ -35,7 +36,8 @@ export class CompletedDraftTableComponent implements OnInit, OnChanges {
   filteredDraftPicks: SleeperCompletedPickData[] = [];
 
   constructor(private sleeperService: SleeperService,
-              public playerService: PlayerService) { }
+              public playerService: PlayerService,
+              public configService: ConfigService) { }
 
   ngOnInit(): void {
     this.pageLength = this.sleeperService.selectedLeague.totalRosters;

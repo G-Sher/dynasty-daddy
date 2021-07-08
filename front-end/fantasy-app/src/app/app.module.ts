@@ -66,6 +66,9 @@ import {PlayoffCalculatorGamesCardComponent} from './components/playoff-calculat
 import {MatRadioModule} from '@angular/material/radio';
 import {QueryBuilderModule} from 'angular2-query-builder';
 import { PlayoffCalculatorSelectableGameCardComponent } from './components/playoff-calculator/playoff-calculator-games-container/playoff-calculator-selectable-game-card/playoff-calculator-selectable-game-card.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { AboutComponent } from './components/about/about.component';
+import {DeviceDetectorService} from 'ngx-device-detector';
 
 
 export function initialize(startupService: StartupService): any {
@@ -73,6 +76,9 @@ export function initialize(startupService: StartupService): any {
     return startupService.startupApplication();
   };
 }
+
+// tslint:disable-next-line:prefer-const
+let UniversalDeviceDetectorService;
 
 @NgModule({
   declarations: [
@@ -104,6 +110,8 @@ export function initialize(startupService: StartupService): any {
     PlayoffCalculatorGamesContainerComponent,
     PlayoffCalculatorGamesCardComponent,
     PlayoffCalculatorSelectableGameCardComponent,
+    FooterComponent,
+    AboutComponent,
   ],
   imports: [
     BrowserModule,
@@ -146,6 +154,10 @@ export function initialize(startupService: StartupService): any {
       useFactory: initialize,
       deps: [StartupService],
       multi: true,
+    },
+    {
+      provide: DeviceDetectorService,
+      useClass: UniversalDeviceDetectorService
     },
   ],
   bootstrap: [AppComponent]

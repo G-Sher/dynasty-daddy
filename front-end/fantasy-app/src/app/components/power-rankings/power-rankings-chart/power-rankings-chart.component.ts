@@ -3,6 +3,7 @@ import {BaseChartDirective, Label} from 'ng2-charts';
 import {ChartDataSets, ChartOptions} from 'chart.js';
 import {PowerRankingsService} from '../../services/power-rankings.service';
 import {SleeperService} from '../../../services/sleeper.service';
+import {ConfigService} from "../../../services/init/config.service";
 
 @Component({
   selector: 'app-power-rankings-chart',
@@ -36,7 +37,7 @@ export class PowerRankingsChartComponent implements OnInit {
           display: true
         },
         scaleLabel: {
-          display: true,
+          display: this.configService.isMobile ? false : true,
           labelString: 'Team',
           fontColor: '#d3d3d3'
         }
@@ -55,7 +56,7 @@ export class PowerRankingsChartComponent implements OnInit {
       }]
     },
     legend: {
-      position: 'left',
+      position: this.configService.isMobile ? 'bottom' : 'left',
       labels: {
         fontColor: '#d3d3d3'
       },
@@ -70,7 +71,9 @@ export class PowerRankingsChartComponent implements OnInit {
   data: ChartDataSets[] = [];
   dataLabels: Label[] = [];
 
-  constructor(private powerRankingService: PowerRankingsService, private sleeperService: SleeperService) {
+  constructor(private powerRankingService: PowerRankingsService,
+              private sleeperService: SleeperService,
+              public configService: ConfigService) {
   }
 
   ngOnInit(): void {

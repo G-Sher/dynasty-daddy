@@ -1,9 +1,9 @@
-<div class="large-bold-header-text center-text margin-bot-20"> Add/Remove Players
+<div class="center-text margin-bot-20" [ngClass]="{'large-bold-header-text': !configService.isMobile, 'mid-bold-text': configService.isMobile}"> Add/Remove Players
   <span class="button-right">
       <button mat-icon-button color="accent" class="button-right" (click)="finishAdding()"><mat-icon>close</mat-icon></button>
     </span>
 </div>
-<div class="margin-top-10 margin-bot-10 right-align-text">
+<div class="margin-top-10 margin-bot-10" [ngClass]="{'center-text': configService.isMobile, 'right-align-text': !configService.isMobile}">
   <!--  <mat-radio-group [(ngModel)]="togglePresets">-->
   <!--    <mat-radio-button [value]="false" style="padding-right: 5px">View Individual Players</mat-radio-button>-->
   <!--    <mat-radio-button [value]="true" style="padding-left: 5px">View Presets</mat-radio-button>-->
@@ -58,7 +58,7 @@
       <mat-checkbox class="player-value-checkbox-margin" color="primary" [(ngModel)]="filterPosGroup[4]"
                     (change)="updatePlayerFilters()">Picks</mat-checkbox>
       <mat-checkbox class="player-value-checkbox-margin" color="primary" [(ngModel)]="filterPosGroup[5]"
-                    (change)="updatePlayerFilters()">Only Rookies</mat-checkbox>
+                    (change)="updatePlayerFilters()">{{configService.isMobile ? 'Rookies': 'Only Rookies'}}</mat-checkbox>
     </span>
   </div>
   <div class="margin-top-10">
@@ -176,9 +176,9 @@
   <div class="center-text margin-top-10">
     <button mat-raised-button color="accent" (click)="runQuery()">Run Query</button>
   </div>
-  <div class="button-right margin-top-25">
-    <mat-checkbox color="primary" [(ngModel)]="toggleOverwritePlayers" style="padding-right: 15px">Replace current
-      selected players
+  <div class="margin-top-25" [ngClass]="{'button-right': !configService.isMobile}">
+    <mat-checkbox color="primary" [(ngModel)]="toggleOverwritePlayers" style="padding-right: 15px">
+      {{configService.isMobile ? 'Replace' : 'Replace current selected players'}}
     </mat-checkbox>
     <button mat-raised-button color="warn" [disabled]="!queryList || queryList?.length === 0 || dirtyQuery"
             (click)="addQueryResults()">

@@ -46,8 +46,9 @@ html, body, app-root, .app-frame {
   font-size: 14px;
   margin: 0;
   height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
   box-sizing: border-box;
-  overflow: auto;
   color: #e0e0e0;
 }
 
@@ -64,8 +65,45 @@ html, body, app-root, .app-frame {
   padding: 8px 24px 24px;
 }
 
+.content-wrapper__mobile {
+  display: flex;
+  flex: 1 1 auto;     /* 1 */
+  position: relative;
+  flex-direction: column;
+  min-width: 1px;
+  max-width: 1600px;
+  margin: 0 auto;
+  z-index: 1;
+  width: 100%; /* 2 */
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+.main {
+  min-height: 100%;
+  margin-bottom: -50px;
+}
+.main:after {
+  content: "";
+  display: block;
+  height: 100px;
+}
+
 *, *:before, *:after {
   box-sizing: inherit;
+}
+
+.footer {
+    display: flex;
+    flex: 1 1 auto;     /* 1 */
+    position: relative;
+    flex-direction: column;
+    min-width: 1px;
+    max-width: 1400px;
+    margin: auto;
+    z-index: 1;
+    width: 100%;        /* 2 */
+    text-align: left;
 }
 
 .games-container {
@@ -200,6 +238,10 @@ html, body, app-root, .app-frame {
 
 .player-value-checkbox-margin {
   margin: 0 12px;
+}
+
+.player-value-checkbox-margin__mobile {
+  margin: 0 3px;
 }
 
 /**
@@ -353,6 +395,42 @@ hr.dark {
   justify-content: center;
 }
 
+.standings-table-container {
+  display: flex;
+  flex-direction: column;
+  //padding: 8px 24px 24px;
+  min-width: 800px;
+  justify-content: center;
+}
+
+.box-score-table-container {
+  display: flex;
+  flex-direction: column;
+  padding: 3px 8px 8px;
+  min-width: 1000px;
+  justify-content: center;
+}
+
+.player-comp-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  white-space: nowrap;
+  justify-content: center;
+}
+
+
+.ktc-table-container {
+  display: flex;
+  flex-direction: column;
+  min-width: 300px;
+  justify-content: center;
+  margin:0px auto;
+  max-width: 1000px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
 .playoff-calc-table-container {
   display: flex;
   flex-direction: column;
@@ -364,6 +442,11 @@ hr.dark {
 .flex-start-container {
   display: flex;
   flex-flow: row wrap;
+}
+
+.flex-start-container__mobile {
+  display: flex;
+  flex-flow: column;
 }
 
 .flex-item-home {

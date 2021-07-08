@@ -5,6 +5,7 @@ import {PlayerComparisonService} from '../../services/player-comparison.service'
 import {BaseComponent} from '../../base-component.abstract';
 import 'chartjs-plugin-colorschemes/src/plugins/plugin.colorschemes';
 import {Classic10} from 'chartjs-plugin-colorschemes/src/colorschemes/colorschemes.tableau';
+import {ConfigService} from "../../../services/init/config.service";
 
 
 @Component({
@@ -72,7 +73,8 @@ export class TradeValueLineChartComponent extends BaseComponent implements OnIni
   public lineChartType = 'line';
   public lineChartPlugins = [];
 
-  constructor(public playerComparisonService: PlayerComparisonService) {
+  constructor(public playerComparisonService: PlayerComparisonService,
+              public configService: ConfigService) {
     super();
   }
 

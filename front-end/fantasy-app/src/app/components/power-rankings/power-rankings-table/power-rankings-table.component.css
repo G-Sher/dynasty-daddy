@@ -1,5 +1,6 @@
 table {
   width: 100%;
+  min-width: 500px;
 }
 
 tr.power-ranking-detail-row {
@@ -28,4 +29,5 @@ tr.power-ranking-element-row:not(.power-ranking-expanded-row):active {
   flex-direction: column;
   padding: 8px 24px 24px;
   min-width: 300px;
+  overflow-x: auto;
 }

@@ -1,4 +1,4 @@
-<div class="table-container">
+<div class="player-comp-container">
   <div>
     <mat-button-toggle-group [(ngModel)]="selectedDateFilter" (change)="updateTable()" class="margin-bot-20"
                              style="overflow: auto">
@@ -10,14 +10,16 @@
   </div>
 
 
-  <div style="display: block;">
-    <canvas baseChart width="600" height="400"
-            [datasets]="playerComparisonService.lineChartData"
-            [labels]="playerComparisonService.lineChartLabels"
-            [options]="lineChartOptions"
-            [legend]="lineChartLegend"
-            [chartType]="lineChartType"
-            [plugins]="lineChartPlugins">
-    </canvas>
+  <div style="display: block;" [ngClass]="{'player-comp-chart-wrapper': configService.isMobile}">
+    <div class="player-comp-chart">
+      <canvas baseChart
+              [datasets]="playerComparisonService.lineChartData"
+              [labels]="playerComparisonService.lineChartLabels"
+              [options]="lineChartOptions"
+              [legend]="lineChartLegend"
+              [chartType]="lineChartType"
+              [plugins]="lineChartPlugins">
+      </canvas>
+    </div>
   </div>
 </div>
