@@ -232,14 +232,16 @@ export class AddPlayerComparisonModalComponent implements OnInit {
     const agg = this.aggOptions.find(aggregate => aggregate.value === this.playerComparisonService.selectedAggregate);
     this.queryList = this.queryList.sort((a, b) => {
       if (agg.property === 'fantasy_points') {
-        if (!this.playerComparisonService.isOrderByDesc) { return this.playerService.playerStats[a.sleeper_id]?.pts_half_ppr
-          - this.playerService.playerStats[b.sleeper_id]?.pts_half_ppr; }
-        else { return this.playerService.playerStats[b.sleeper_id]?.pts_half_ppr
-          - this.playerService.playerStats[a.sleeper_id]?.pts_half_ppr; }
+        if (!this.playerComparisonService.isOrderByDesc) {
+          return (this.playerService.playerStats[a.sleeper_id]?.pts_half_ppr || 0)
+          - (this.playerService.playerStats[b.sleeper_id]?.pts_half_ppr || 0); }
+        else { return (this.playerService.playerStats[b.sleeper_id]?.pts_half_ppr || 0)
+          - (this.playerService.playerStats[a.sleeper_id]?.pts_half_ppr || 0); }
       }
       if (!this.playerComparisonService.isOrderByDesc) { return a[agg.property] - b[agg.property]; }
         else { return b[agg.property] - a[agg.property]; }
     });
+    console.log(this.queryList)
     this.queryList = this.queryList.slice(0, this.playerComparisonService.limit);
     this.dirtyQuery = false;
   }
@@ -299,27 +301,27 @@ export class AddPlayerComparisonModalComponent implements OnInit {
             return !rule.value.includes(player[rule.field]);
           }
           case '!=': {
-            return rule.field === 'fantasy_points' ? this.playerService.playerStats[player.sleeper_id]?.pts_half_ppr !== rule.value
+            return rule.field === 'fantasy_points' ? (this.playerService.playerStats[player.sleeper_id]?.pts_half_ppr || 0) !== rule.value
               : player[rule.field] !== rule.value;
           }
           case '<=': {
-            return rule.field === 'fantasy_points' ? this.playerService.playerStats[player.sleeper_id]?.pts_half_ppr <= rule.value
+            return rule.field === 'fantasy_points' ? (this.playerService.playerStats[player.sleeper_id]?.pts_half_ppr || 0) <= rule.value
               : player[rule.field] <= rule.value;
           }
           case '>=': {
-            return rule.field === 'fantasy_points' ? this.playerService.playerStats[player.sleeper_id]?.pts_half_ppr >= rule.value
+            return rule.field === 'fantasy_points' ? (this.playerService.playerStats[player.sleeper_id]?.pts_half_ppr || 0) >= rule.value
               : player[rule.field] >= rule.value;
           }
           case '<': {
-            return rule.field === 'fantasy_points' ? this.playerService.playerStats[player.sleeper_id]?.pts_half_ppr < rule.value
+            return rule.field === 'fantasy_points' ? (this.playerService.playerStats[player.sleeper_id]?.pts_half_ppr || 0) < rule.value
               : player[rule.field] < rule.value;
           }
           case '>': {
-            return rule.field === 'fantasy_points' ? this.playerService.playerStats[player.sleeper_id]?.pts_half_ppr > rule.value
+            return rule.field === 'fantasy_points' ? (this.playerService.playerStats[player.sleeper_id]?.pts_half_ppr || 0) > rule.value
               : player[rule.field] > rule.value;
           }
           default: {
-            return rule.field === 'fantasy_points' ? this.playerService.playerStats[player.sleeper_id]?.pts_half_ppr === rule.value
+            return rule.field === 'fantasy_points' ? (this.playerService.playerStats[player.sleeper_id]?.pts_half_ppr || 0) === rule.value
               : player[rule.field] === rule.value;
           }
         }

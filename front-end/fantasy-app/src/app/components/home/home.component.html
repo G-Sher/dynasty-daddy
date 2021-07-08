@@ -45,7 +45,7 @@
       </div>
     </div>
     <div *ngIf="loginMethod === 'sleeper_league_id'">
-      <mat-form-field class="mat-dropdown-wide-200 margin-top-25">
+      <mat-form-field class="mat-dropdown-wide-200 margin-top-25" color="accent">
         <mat-label>Sleeper League Id</mat-label>
         <input matInput type="text" [(ngModel)]="leagueIdInput">
         <button mat-button *ngIf="leagueIdInput" matSuffix mat-icon-button aria-label="Clear" (click)="leagueIdInput=''">

@@ -20,7 +20,7 @@
       <br>
       <div>
         <span
-          style="padding-right: 15px">{{playerService.getFullTeamNameFromACC(selectedPlayer.team)}} {{selectedPlayer.position}}</span>
+          style="padding-right: 15px">{{configService.isMobile ? selectedPlayer.team : playerService.getFullTeamNameFromACC(selectedPlayer.team)}} {{selectedPlayer.position}}</span>
         <mat-icon class="icon--break">circle</mat-icon>
         <span>{{selectedPlayer.age != -1 ? selectedPlayer.age : '??'}} y.o.</span>
       </div>
@@ -58,9 +58,9 @@
     <div class="flex-item-home grid-15">
       <div class="button-right center-text">
         <mat-card>
-          <div class="text__light">Trade Value</div>
+          <div class="text__light">{{configService.isMobile ? 'Value' : 'Trade Value'}}</div>
           <div *ngIf="sleeperService.selectedLeague" class="large-bold-header-text">{{sleeperService.selectedLeague.isSuperflex ? selectedPlayer.sf_trade_value : selectedPlayer.trade_value}}</div>
-          <div *ngIf="!sleeperService.selectedLeague" class="large-bold-header-text"><span class="small-text__light">Superflex: </span>  {{selectedPlayer.sf_trade_value}}
+          <div *ngIf="!sleeperService.selectedLeague" [ngClass]="{'large-bold-header-text': !configService.isMobile}"><span class="small-text__light">Superflex: </span>  {{selectedPlayer.sf_trade_value}}
             <div *ngIf="!configService.isMobile"><span class="small-text__light">Standard: </span> {{selectedPlayer.trade_value}}</div>
           </div>
         </mat-card>
