@@ -10,7 +10,7 @@
       <mat-header-cell *matHeaderCellDef>Team</mat-header-cell>
       <mat-cell *matCellDef="let team" class="link--text__no__underline" [routerLink]="['../team', team.owner?.ownerName]">
         <img #image [src]="'https://sleepercdn.com/avatars/thumbs/' + team.owner?.avatar"
-             onerror="style.display = 'none'" class="table-image">
+             onerror="style.display = 'none'" class="table-image" *ngIf="!configService.isMobile">
         {{team.owner?.teamName}}
         <span *ngIf="(forecastWeek > 1 || playoffCalculatorService.forceShowRecord) && !configService.isMobile"
               class="small-text__light" style="padding-left: 5px">{{playoffCalculatorService.getWinsAtWeek(team.roster.rosterId, forecastWeek - 1) + playoffCalculatorService.selectedGameResults[team.roster.rosterId]?.selectedWins}} - {{playoffCalculatorService.getLossesAtWeek(team.roster.rosterId, forecastWeek - 1)  + playoffCalculatorService.selectedGameResults[team.roster.rosterId]?.selectedLosses}}</span>

@@ -88,6 +88,7 @@ export class PlayoffCalculatorSeasonTableComponent implements OnInit, AfterViewI
 
   /**
    * handles on forecast date changes to hide projected record column if the data is after the reg season
+   * TODO clean up this function
    */
   ngOnChanges(): void {
     if (this.forecastWeek >= this.sleeperService.selectedLeague.playoffStartWeek) {
@@ -105,6 +106,9 @@ export class PlayoffCalculatorSeasonTableComponent implements OnInit, AfterViewI
       }
       if (this.probabilityCols.length === 4) {
         this.probabilityCols.splice(3, 0, 'makeChampionship');
+      }
+      if (this.configService.isMobile) {
+        this.probabilityCols.splice(0, 1);
       }
     }
     this.divisionTableCols = this.teamDetails.concat(this.probabilityCols);

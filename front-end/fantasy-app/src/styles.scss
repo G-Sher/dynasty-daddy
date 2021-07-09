@@ -441,16 +441,14 @@ hr.dark {
 
 .flex-start-container {
   display: flex;
-  flex-flow: row wrap;
-}
-
-.flex-start-container__mobile {
-  display: flex;
   flex-flow: column;
 }
 
 .flex-item-home {
   align-self: auto;
+  padding-right: 5%;
+  padding-left: 5%;
+  padding-top: 15px;
 }
 
 

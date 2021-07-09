@@ -241,7 +241,6 @@ export class AddPlayerComparisonModalComponent implements OnInit {
       if (!this.playerComparisonService.isOrderByDesc) { return a[agg.property] - b[agg.property]; }
         else { return b[agg.property] - a[agg.property]; }
     });
-    console.log(this.queryList)
     this.queryList = this.queryList.slice(0, this.playerComparisonService.limit);
     this.dirtyQuery = false;
   }

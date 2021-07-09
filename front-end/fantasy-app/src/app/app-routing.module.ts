@@ -53,6 +53,10 @@ const routes: Routes = [
     component: AboutComponent
   },
   {
+    path: 'login',
+    component: HomeComponent
+  },
+  {
     path: '**',
     redirectTo: 'home'
   }

@@ -1,89 +1,163 @@
 <div class="center-text margin-top-10 large-bold-header-text">Welcome to Dynasty Daddy!</div>
 
-<div class=" margin-top-50" [ngClass]="{'flex-start-container__mobile': configService.isMobile, 'flex-start-container': !configService.isMobile}">
-  <div [ngClass]="{'flex-item-home grid-75': !configService.isMobile, 'flex-item-home': configService.isMobile}" class="center-text margin-top-25">
-    <div class="mid-bold-text">Let's get started!</div>
-    <br>
-    <div>
-      <mat-radio-group [(ngModel)]="loginMethod" class="mat-dropdown-wide-200">
-        <mat-radio-button value="sleeper_username" style="padding-right: 10px">Username</mat-radio-button>
-        <mat-radio-button value="sleeper_league_id">League Id</mat-radio-button>
-      </mat-radio-group>
-    </div>
-    <div *ngIf="loginMethod === 'sleeper_username'">
-      <mat-form-field class="mat-dropdown-wide-200 margin-top-25" color="accent">
-        <mat-label>Sleeper Username</mat-label>
-        <input matInput type="text" [(ngModel)]="usernameInput">
-        <button mat-button *ngIf="usernameInput" matSuffix mat-icon-button aria-label="Clear" (click)="usernameInput=''">
-          <mat-icon>close</mat-icon>
-        </button>
-      </mat-form-field>
+<div class=" margin-top-50" class="flex-start-container">
+  <div fxLayout="row wrap" fxLayoutAlign="center" class="margin-top-25">
+    <div class="flex-item-home center-text" style="min-width: 400px;">
+      <div class="mid-bold-text">Let's get started!</div>
+      <br>
       <div>
-        <mat-form-field appearance="standard" color="accent">
-          <mat-label>Select a year</mat-label>
-          <mat-select [(ngModel)]="selectedYear">
-            <mat-option *ngFor="let year of supportedYears" [value]="year">{{year}}</mat-option>
-          </mat-select>
+        <mat-radio-group [(ngModel)]="loginMethod" class="mat-dropdown-wide-200">
+          <mat-radio-button value="sleeper_username" style="padding-right: 10px">Username</mat-radio-button>
+          <mat-radio-button value="sleeper_league_id">League Id</mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <div *ngIf="loginMethod === 'sleeper_username'">
+        <mat-form-field class="mat-dropdown-wide-200 margin-top-25" color="accent">
+          <mat-label>Sleeper Username</mat-label>
+          <input matInput type="text" [(ngModel)]="usernameInput">
+          <button mat-button *ngIf="usernameInput" matSuffix mat-icon-button aria-label="Clear" (click)="usernameInput=''">
+            <mat-icon>close</mat-icon>
+          </button>
         </mat-form-field>
+        <div>
+          <mat-form-field appearance="standard" color="accent">
+            <mat-label>Select a year</mat-label>
+            <mat-select [(ngModel)]="selectedYear">
+              <mat-option *ngFor="let year of supportedYears" [value]="year">{{year}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div>
+          <button mat-raised-button [disabled]="!usernameInput || (usernameInput == sleeperService.sleeperUser?.userData?.username && selectedYear == sleeperService.selectedYear)"
+                  color="primary" (click)="fetchSleeperInfo()">Sign In
+          </button>
+        </div>
+        <div class="margin-top-25" *ngIf="sleeperService.sleeperUser">
+          <div>Hello <span class="warning__alert">{{sleeperService.sleeperUser?.userData.username}}</span>! We found <span
+            class="warning__alert">{{sleeperService.sleeperUser?.leagues.length}}</span> leagues linked to this account in <span class="warning__alert">{{sleeperService.selectedYear}}</span>!</div>
+          <br>
+          <mat-form-field appearance="standard" color="accent" *ngIf="sleeperService.sleeperUser?.leagues.length > 0">
+            <mat-label>Select a league</mat-label>
+            <mat-select [(ngModel)]="selectedLeague" (selectionChange)="loadLeague($event.value)">
+              <mat-option *ngFor="let league of sleeperService.sleeperUser?.leagues"
+                          [value]="league">{{league.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
       </div>
-      <div>
-        <button mat-raised-button [disabled]="!usernameInput || (usernameInput == sleeperService.sleeperUser?.userData?.username && selectedYear == sleeperService.selectedYear)"
-                color="primary" (click)="fetchSleeperInfo()">Sign In
+      <div *ngIf="loginMethod === 'sleeper_league_id'">
+        <mat-form-field class="mat-dropdown-wide-200 margin-top-25" color="accent">
+          <mat-label>Sleeper League Id</mat-label>
+          <input matInput type="text" [(ngModel)]="leagueIdInput">
+          <button mat-button *ngIf="leagueIdInput" matSuffix mat-icon-button aria-label="Clear" (click)="leagueIdInput=''">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+        <div>
+          <button mat-raised-button [disabled]="!leagueIdInput || usernameInput === sleeperService.selectedLeague?.leagueId"
+                  color="primary" (click)="loginWithLeagueId()">Sign In
+          </button>
+        </div>
+      </div>
+      <div *ngIf="(loginMethod === 'sleeper_league_id' && !sleeperService.selectedLeague) || (loginMethod === 'sleeper_username' && !sleeperService.sleeperUser && !sleeperService.selectedLeague)">
+        <div class="mid-bold-text margin-top-25 margin-bot-25">OR</div>
+        <button mat-raised-button
+                color="accent" (click)="loginWithDemo()">Try a Demo
         </button>
       </div>
-      <div class="margin-top-25" *ngIf="sleeperService.sleeperUser">
-        <div>Hello <span class="warning__alert">{{sleeperService.sleeperUser?.userData.username}}</span>! We found <span
-          class="warning__alert">{{sleeperService.sleeperUser?.leagues.length}}</span> leagues linked to this account in <span class="warning__alert">{{sleeperService.selectedYear}}</span>!</div>
+      <div class="margin-top-25" *ngIf="sleeperService.sleeperTeamDetails && sleeperService.sleeperTeamDetails.length > 0">
+        Congratulations<span class="warning__alert" *ngIf="sleeperService.sleeperUser"> {{sleeperService.sleeperUser?.userData.username}}</span>! The
+        <span class="warning__alert">{{selectedLeague.season}}</span> season of
+        <span class="warning__alert">{{selectedLeague.name}}</span> was loaded successfully!
+      </div>
+      <div *ngIf="sleeperService.selectedLeague && sleeperService.selectedLeague.prevLeagueId?.length > 5">
+        <div class="mid-bold-text margin-top-25 margin-bot-25">OR</div>
+        <button mat-stroked-button
+                color="accent" (click)="loginWithPrevSeason()">View {{selectedLeague.season - 1}} Season
+        </button>
+      </div>
+    </div>
+    <div [ngClass]="{'flex-item-home': !configService.isMobile, 'margin-top-25': configService.isMobile}">
+      <div class="center-text">
+          <div class="mid-bold-text margin-top-10">Join Our Community</div>
         <br>
-        <mat-form-field appearance="standard" color="accent" *ngIf="sleeperService.sleeperUser?.leagues.length > 0">
-          <mat-label>Select a league</mat-label>
-          <mat-select [(ngModel)]="selectedLeague" (selectionChange)="loadLeague($event.value)">
-            <mat-option *ngFor="let league of sleeperService.sleeperUser?.leagues"
-                        [value]="league">{{league.name}}</mat-option>
-          </mat-select>
-        </mat-form-field>
+        <iframe src="https://discord.com/widget?id=837372928005767220&theme=dark" width="350" height="500"
+                allowtransparency="true" frameborder="0"
+                sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts" class="discord-widget"></iframe>
       </div>
-    </div>
-    <div *ngIf="loginMethod === 'sleeper_league_id'">
-      <mat-form-field class="mat-dropdown-wide-200 margin-top-25" color="accent">
-        <mat-label>Sleeper League Id</mat-label>
-        <input matInput type="text" [(ngModel)]="leagueIdInput">
-        <button mat-button *ngIf="leagueIdInput" matSuffix mat-icon-button aria-label="Clear" (click)="leagueIdInput=''">
-          <mat-icon>close</mat-icon>
-        </button>
-      </mat-form-field>
-      <div>
-        <button mat-raised-button [disabled]="!leagueIdInput || usernameInput === sleeperService.selectedLeague?.leagueId"
-                color="primary" (click)="loginWithLeagueId()">Sign In
-        </button>
-      </div>
-    </div>
-    <div *ngIf="(loginMethod === 'sleeper_league_id' && !sleeperService.selectedLeague) || (loginMethod === 'sleeper_username' && !sleeperService.sleeperUser && !sleeperService.selectedLeague)">
-      <div class="mid-bold-text margin-top-25 margin-bot-25">OR</div>
-      <button mat-raised-button
-              color="accent" (click)="loginWithDemo()">Try a Demo
-      </button>
-    </div>
-    <div class="margin-top-25" *ngIf="sleeperService.sleeperTeamDetails && sleeperService.sleeperTeamDetails.length > 0">
-      Congratulations<span class="warning__alert" *ngIf="sleeperService.sleeperUser"> {{sleeperService.sleeperUser?.userData.username}}</span>! The
-      <span class="warning__alert">{{selectedLeague.season}}</span> season of
-      <span class="warning__alert">{{selectedLeague.name}}</span> was loaded successfully!
-    </div>
-    <div *ngIf="sleeperService.selectedLeague && sleeperService.selectedLeague.prevLeagueId?.length > 5">
-      <div class="mid-bold-text margin-top-25 margin-bot-25">OR</div>
-      <button mat-stroked-button
-              color="accent" (click)="loginWithPrevSeason()">View {{selectedLeague.season - 1}} Season
-      </button>
     </div>
   </div>
-
-  <div [ngClass]="{'grid-25 flex-item-home': !configService.isMobile, 'margin-top-25': configService.isMobile}">
-    <div [ngClass]="{'community-box': !configService.isMobile}" class="center-text">
-      <div class="mid-bold-text margin-top-10">Join Our Community</div>
-      <br>
-      <iframe src="https://discord.com/widget?id=837372928005767220&theme=dark" width="350" height="500"
-              allowtransparency="true" frameborder="0"
-              sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts" class="discord-widget"></iframe>
+  <div class="large-bold-header-text center-text margin-top-25">
+    How will Dynasty Daddy help you?
+  </div>
+  <div fxLayout="row wrap" fxLayoutAlign="center" class="margin-top-25">
+    <div class="flex-item-home">
+      <div><mat-icon>task_alt</mat-icon>Daily Player value updates from KeepTradeCut</div>
+      <div><mat-icon>task_alt</mat-icon>Query players based on many metrics to find value</div>
+      <div><mat-icon>task_alt</mat-icon>Advanced League Analysis</div>
+      <div><mat-icon>task_alt</mat-icon>Game Probability</div>
+      <div><mat-icon>task_alt</mat-icon>Season Simulations</div>
+    </div>
+    <div [ngClass]="{'flex-item-home': !configService.isMobile, 'margin-top-25': configService.isMobile}" style="min-width: 500px">
+      test data here
+    </div>
+  </div>
+  <div class="large-bold-header-text center-text margin-top-25">
+    Power Rankings
+  </div>
+  <div fxLayout="row wrap" fxLayoutAlign="center" class="margin-top-25">
+    <div class="flex-item-home" style="max-width: 500px">
+      <div>Using up to date player trade value metrics, we calculate and rank each team in your league. Including by position to help users quickly address weakness in their team and help find willing trade partners.</div>
+    </div>
+    <div [ngClass]="{'flex-item-home': !configService.isMobile, 'margin-top-25': configService.isMobile}" style="min-width: 500px">
+      <img #image [src]="'https://imgur.com/a/zsVTtAP'"
+           (error)="image.hidden = true" [hidden]="image.hidden" class="responsive">
+      <blockquote class="imgur-embed-pub" lang="en" data-id="a/zsVTtAP"  ><a href="//imgur.com/a/zsVTtAP">power rankings DD</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
+    </div>
+  </div>
+  <div class="large-bold-header-text center-text margin-top-25">
+    Standings
+  </div>
+  <div fxLayout="row wrap" fxLayoutAlign="center" class="margin-top-25">
+    <div class="flex-item-home">
+      <div><mat-icon>task_alt</mat-icon>Daily Player value updates from KeepTradeCut</div>
+      <div><mat-icon>task_alt</mat-icon>Query players based on many metrics to find value</div>
+      <div><mat-icon>task_alt</mat-icon>Advanced League Analysis</div>
+      <div><mat-icon>task_alt</mat-icon>Game Probability</div>
+      <div><mat-icon>task_alt</mat-icon>Season Simulations</div>
+    </div>
+    <div [ngClass]="{'flex-item-home': !configService.isMobile, 'margin-top-25': configService.isMobile}" style="min-width: 500px">
+      test data here
+    </div>
+  </div>
+  <div class="large-bold-header-text center-text margin-top-25">
+    Playoff Calculator
+  </div>
+  <div fxLayout="row wrap" fxLayoutAlign="center" class="margin-top-25">
+    <div class="flex-item-home">
+      <div><mat-icon>task_alt</mat-icon>Daily Player value updates from KeepTradeCut</div>
+      <div><mat-icon>task_alt</mat-icon>Query players based on many metrics to find value</div>
+      <div><mat-icon>task_alt</mat-icon>Advanced League Analysis</div>
+      <div><mat-icon>task_alt</mat-icon>Game Probability</div>
+      <div><mat-icon>task_alt</mat-icon>Season Simulations</div>
+    </div>
+    <div [ngClass]="{'flex-item-home': !configService.isMobile, 'margin-top-25': configService.isMobile}" style="min-width: 500px">
+      test data here
+    </div>
+  </div>
+  <div class="large-bold-header-text center-text margin-top-25">
+    Player Comparison
+  </div>
+  <div fxLayout="row wrap" fxLayoutAlign="center" class="margin-top-25">
+    <div class="flex-item-home">
+      <div><mat-icon>task_alt</mat-icon>Daily Player value updates from KeepTradeCut</div>
+      <div><mat-icon>task_alt</mat-icon>Query players based on many metrics to find value</div>
+      <div><mat-icon>task_alt</mat-icon>Advanced League Analysis</div>
+      <div><mat-icon>task_alt</mat-icon>Game Probability</div>
+      <div><mat-icon>task_alt</mat-icon>Season Simulations</div>
+    </div>
+    <div [ngClass]="{'flex-item-home': !configService.isMobile, 'margin-top-25': configService.isMobile}" style="min-width: 500px">
+      test data here
     </div>
   </div>
 </div>
