@@ -8,14 +8,14 @@
       View in Player Comparison<mat-icon class="arrow-icon__nav">chevron_right</mat-icon>
     </div>
   </div>
-  <div class="flex-start-container margin-top-50">
-    <div class="flex-item-home grid-25">
+  <div class="flex-details-container margin-top-50">
+    <div class="flex-item-details grid-25">
       <div class="profile--pic">
         <img #image [src]="'https://sleepercdn.com/content/nfl/players/thumb/' + selectedPlayer.sleeper_id + '.jpg'"
              (error)="image.hidden = true" [hidden]="image.hidden" class="responsive">
       </div>
     </div>
-    <div class="flex-item-home grid-60">
+    <div class="flex-item-details grid-60">
       <div class="large-bold-header-text">{{selectedPlayer.full_name}}</div>
       <br>
       <div>
@@ -55,7 +55,7 @@
         </div>
       </div>
     </div>
-    <div class="flex-item-home grid-15">
+    <div class="flex-item-details grid-15">
       <div class="button-right center-text">
         <mat-card>
           <div class="text__light">{{configService.isMobile ? 'Value' : 'Trade Value'}}</div>
