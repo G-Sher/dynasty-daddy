@@ -77,8 +77,6 @@
                                                   [selectedPlayer]="selectedPlayer"></app-player-details-weekly-stats-line-chart>
     </mat-tab>
     <mat-tab label="Past Box Scores">
-            <div class="mid-bold-text margin-top-10 center-text">Past 18 Box Scores</div>
-            <div class="margin-top-10 center-text">Below is the past 18 weeks of stats from Sleeper for the following player. The fantasy scoring is <span class="info__alert">0.5 PPR scoring</span>.</div>
       <app-player-details-weekly-box-scores-table *ngIf="isPlayerStatsGenerated()" [selectedPlayer]="selectedPlayer"></app-player-details-weekly-box-scores-table>
     </mat-tab>
   </mat-tab-group>

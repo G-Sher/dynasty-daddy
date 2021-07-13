@@ -10,3 +10,12 @@
   background: #577380;
 }
 
+.content {
+  width: 200px;
+}
+
+.item{
+  margin-bottom: 16px;
+  margin-right: 16px;
+  max-width: 200px;
+}

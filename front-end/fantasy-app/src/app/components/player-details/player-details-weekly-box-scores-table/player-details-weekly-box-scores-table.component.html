@@ -1,3 +1,23 @@
+<div *ngIf="doughnutChartLabels.length > 0">
+  <div class="mid-bold-text center-text margin-top-50">{{playerService.playerStatsYear}} Season Metrics</div>
+  <div class="margin-top-10 center-text">Below are the {{playerService.playerStatsYear}} season stats compared to the league leader in each category.</div>
+  <div fxLayout="row wrap" fxLayoutAlign="center" class="margin-top-25">
+    <div class="item" *ngFor="let chartName of doughnutChartLabels; let i = index">
+      <div class="center-text margin-bot-20">{{chartName[0]}}</div>
+      <canvas baseChart
+              [data]="doughnutChartData[i]"
+              [labels]="chartName"
+              [chartType]="doughnutChartType"
+              [options] = "doughnutChartOptions"
+              [plugins]="doughnutChartPlugins"
+              [colors]="chartColors"
+              [legend]="false">
+      </canvas>
+    </div>
+  </div>
+</div>
+<div class="mid-bold-text margin-top-50 center-text">Past 18 Box Scores</div>
+<div class="margin-top-10 center-text">Below is the past 18 weeks of stats from Sleeper for the following player. The fantasy scoring is <span class="info__alert">0.5 PPR scoring</span>.</div>
 <div class="margin-top-50 box-score-table-container">
   <mat-table [dataSource]="datasource" class="mat-elevation-z8">
 

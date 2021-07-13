@@ -6,7 +6,7 @@ import {KTCApiService} from '../../services/api/ktc-api.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SleeperService} from '../../services/sleeper.service';
 import {PlayerComparisonService} from '../services/player-comparison.service';
-import {ConfigService} from "../../services/init/config.service";
+import {ConfigService} from '../../services/init/config.service';
 
 @Component({
   selector: 'app-player-details',

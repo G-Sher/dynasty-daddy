@@ -66,6 +66,22 @@ export class PlayerService {
   /** player stats year */
   playerStatsYear: string = '';
 
+  /** league leaders for stat categories */
+  leagueLeaders = {
+    pts_half_ppr: {value: 0, sleeperId: ''},
+    rec: {value: 0, sleeperId: ''},
+    pass_yd: {value: 0, sleeperId: ''},
+    pass_td: {value: 0, sleeperId: ''},
+    rush_att: {value: 0, sleeperId: ''},
+    rush_td: {value: 0, sleeperId: ''},
+    rush_yd: {value: 0, sleeperId: ''},
+    rec_yd: {value: 0, sleeperId: ''},
+    pass_cmp: {value: 0, sleeperId: ''},
+    fum_lost: {value: 0, sleeperId: ''},
+    pass_int: {value: 0, sleeperId: ''},
+    rec_td: {value: 0, sleeperId: ''},
+  };
+
   /** subject for loading player values */
   $currentPlayerValuesLoaded: Subject<void> = new Subject<void>();
 
@@ -80,7 +96,6 @@ export class PlayerService {
    */
   loadPlayerValuesForToday(): void {
     this.spinner.show();
-    const apiCalls = [];
     this.ktcApiService.getPlayerValuesForToday().subscribe((response: KTCPlayer[]) => {
       this.playerValues = response.filter(player => {
         if (player.position === 'PI') {
@@ -90,7 +105,6 @@ export class PlayerService {
         }
       });
       this.$loadPlayerStatsForSeason().subscribe((playerStatsResponse) => {
-        this.playerStats = playerStatsResponse;
         this.spinner.hide();
         this.$currentPlayerValuesLoaded.next();
       }, sleeperError => {
@@ -117,6 +131,17 @@ export class PlayerService {
       const observe = [];
       observe.push(this.sleeperApiService.getSleeperStatsForYear(this.playerStatsYear).pipe(map((response: any) => {
         this.playerStats = response;
+        // get league leaders
+        // tslint:disable-next-line:forin
+        for (const key in this.playerStats) {
+          for (const field in this.leagueLeaders) {
+            if (!key.includes('TEAM') && this.playerStats[key]?.[field]
+              && this.leagueLeaders[field].value < this.playerStats[key]?.[field]) {
+              this.leagueLeaders[field].value = this.playerStats[key]?.[field];
+              this.leagueLeaders[field].sleeperId = key;
+            }
+          }
+        }
         return of(this.playerStats);
       })));
       let currentWeekInd = this.nflService.stateOfNFL.week;
