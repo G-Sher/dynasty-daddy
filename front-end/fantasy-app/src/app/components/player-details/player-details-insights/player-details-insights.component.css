@@ -1,0 +1,35 @@
+.content {
+  width: 200px;
+}
+
+.item {
+  margin: 24px;
+  min-width: 300px;
+}
+
+
+.mat-column-name {
+  min-width: 150px;
+}
+
+.mat-column-rank {
+  max-width: 64px;
+}
+
+.mat-column-value {
+  text-align: right;
+  justify-content: flex-end;
+  padding-right: 15px;
+}
+
+.mat-column-rank,
+.mat-column-name {
+  text-align: left;
+  justify-content: flex-start;
+  padding-left: 15px;
+}
+
+
+.mat-table-highlight {
+  background: #577380;
+}

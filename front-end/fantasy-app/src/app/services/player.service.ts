@@ -280,4 +280,35 @@ export class PlayerService {
     }
     return null;
   }
+
+  /**
+   * return index of player in player values
+   * @param nameId
+   */
+  getRankOfPlayerByNameId(nameId: string): number {
+    for (let i = 0; i < this.playerValues.length; i++) {
+      if (nameId === this.playerValues[i].name_id) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  getAdjacentPlayersByNameId(nameId: string, posFilter: string = ''): KTCPlayer[] {
+    const players = [];
+    const playerRank = this.getRankOfPlayerByNameId(nameId);
+    for (let upInd = playerRank - 1; upInd >= 0 && players.length < 4; upInd--) {
+      if (posFilter.length === 0 || this.playerValues[upInd].position === posFilter) {
+        players.push(this.playerValues[upInd]);
+      }
+    }
+    for (let downInd = playerRank; downInd < this.playerValues.length && players.length < 9; downInd++) {
+      if (posFilter.length === 0 || this.playerValues[downInd].position === posFilter) {
+        players.push(this.playerValues[downInd]);
+      }
+    }
+    return players.sort((a, b) => {
+      return b.sf_trade_value - a.sf_trade_value;
+    });
+  }
 }

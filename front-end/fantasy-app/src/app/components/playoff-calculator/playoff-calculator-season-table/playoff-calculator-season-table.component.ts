@@ -6,7 +6,7 @@ import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import {PlayoffCalculatorService} from '../../services/playoff-calculator.service';
 import {ColorService} from '../../services/color.service';
-import {ConfigService} from "../../../services/init/config.service";
+import {ConfigService} from '../../../services/init/config.service';
 
 @Component({
   selector: 'app-playoff-calculator-season-table',

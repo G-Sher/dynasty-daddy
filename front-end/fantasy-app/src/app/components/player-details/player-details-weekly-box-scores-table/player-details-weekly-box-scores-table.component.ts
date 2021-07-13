@@ -92,7 +92,7 @@ export class PlayerDetailsWeeklyBoxScoresTableComponent implements OnInit {
       this.playerWeeklyStats.push(weekStats[this.selectedPlayer.sleeper_id]);
     }
     this.datasource = new MatTableDataSource<any>(this.playerWeeklyStats);
-    if (this.playerService.leagueLeaders.rec.sleeperId !== '' && this.doughnutChartLabels.length < 4) {
+    if (this.playerService.leagueLeaders.rec.sleeperId !== '') {
       this.setUpSeasonMetrics();
     }
   }

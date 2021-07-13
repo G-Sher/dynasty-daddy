@@ -69,6 +69,7 @@ import { PlayoffCalculatorSelectableGameCardComponent } from './components/playo
 import { FooterComponent } from './components/footer/footer.component';
 import { AboutComponent } from './components/about/about.component';
 import {DeviceDetectorService} from 'ngx-device-detector';
+import { PlayerDetailsInsightsComponent } from './components/player-details/player-details-insights/player-details-insights.component';
 
 
 export function initialize(startupService: StartupService): any {
@@ -112,6 +113,7 @@ let UniversalDeviceDetectorService;
     PlayoffCalculatorSelectableGameCardComponent,
     FooterComponent,
     AboutComponent,
+    PlayerDetailsInsightsComponent,
   ],
   imports: [
     BrowserModule,
