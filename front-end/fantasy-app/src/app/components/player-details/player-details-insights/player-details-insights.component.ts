@@ -1,6 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {KTCPlayer} from '../../../model/KTCPlayer';
 import {PlayerService} from '../../../services/player.service';
+import {Router} from '@angular/router';
+import {SleeperService} from '../../../services/sleeper.service';
 
 @Component({
   selector: 'app-player-details-insights',
@@ -17,11 +19,14 @@ export class PlayerDetailsInsightsComponent implements OnInit {
   positionAdjPlayers: KTCPlayer[];
   displayedColumns: string[] = ['rank', 'name', 'value'];
 
-  constructor(private playerService: PlayerService) { }
+  constructor(private playerService: PlayerService, public sleeperService: SleeperService) {
+  }
 
   ngOnInit(): void {
-    this.overallAdjPlayers = this.playerService.getAdjacentPlayersByNameId(this.selectedPlayer.name_id);
-    this.positionAdjPlayers = this.playerService.getAdjacentPlayersByNameId(this.selectedPlayer.name_id, this.selectedPlayer.position);
+    this.overallAdjPlayers = this.playerService.getAdjacentPlayersByNameId(
+      this.selectedPlayer.name_id,  '', this.sleeperService.selectedLeague?.isSuperflex);
+    this.positionAdjPlayers = this.playerService.getAdjacentPlayersByNameId(
+      this.selectedPlayer.name_id, this.selectedPlayer.position, this.sleeperService.selectedLeague?.isSuperflex);
   }
 
 }

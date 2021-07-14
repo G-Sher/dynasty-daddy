@@ -294,8 +294,19 @@ export class PlayerService {
     return -1;
   }
 
-  getAdjacentPlayersByNameId(nameId: string, posFilter: string = ''): KTCPlayer[] {
+  /**
+   * get Adjacent players by value
+   * @param nameId name of player to get adj to
+   * @param posFilter what pos to filter on, if empty include all
+   * @param isSuperflex is value superflex or standard, default to true
+   */
+  getAdjacentPlayersByNameId(nameId: string, posFilter: string = '', isSuperflex: boolean = true): KTCPlayer[] {
     const players = [];
+    if (!isSuperflex) {
+      this.playerValues.sort((a, b) => {
+        return b.trade_value - a.trade_value;
+      });
+    }
     const playerRank = this.getRankOfPlayerByNameId(nameId);
     for (let upInd = playerRank - 1; upInd >= 0 && players.length < 4; upInd--) {
       if (posFilter.length === 0 || this.playerValues[upInd].position === posFilter) {
@@ -308,7 +319,7 @@ export class PlayerService {
       }
     }
     return players.sort((a, b) => {
-      return b.sf_trade_value - a.sf_trade_value;
+      return isSuperflex ? b.sf_trade_value - a.sf_trade_value : b.trade_value - a.trade_value;
     });
   }
 }
