@@ -1,4 +1,39 @@
 <div class="table-container margin-top-10">
+  <div class="center-text mid-bold-text">
+    Draft Breakdown by Position
+  </div>
+  <div fxLayoutAlign="center" class="margin-top-25">
+    <div fxFlex="60%" style="max-width: 1000px">
+      <canvas baseChart
+              [data]="pieChartData"
+              [labels]="pieChartLabels"
+              [chartType]="pieChartType"
+              [options]="pieChartOptions"
+              [legend]="pieChartLegend">
+      </canvas>
+    </div>
+  </div>
+  <div class="center-text mid-bold-text margin-top-50">
+    Draft Metrics
+  </div>
+  <div fxLayout="row wrap" fxLayoutAlign="center" class="margin-top-25">
+    <mat-card fxFlex="20%" fxFlex.xs="100%" fxFlex.sm="33%" class="draft-metric-box">
+      <mat-card-subtitle>Best Overall Pick</mat-card-subtitle>
+      <div>{{bestOverallPickStr}}</div>
+    </mat-card>
+    <mat-card fxFlex="20%" fxFlex.xs="100%" fxFlex.sm="33%" class="draft-metric-box">
+      <mat-card-subtitle>Best Value Pick</mat-card-subtitle>
+      <div>{{bestValuePickStr}}</div>
+    </mat-card>
+    <mat-card fxFlex="20%" fxFlex.xs="100%" fxFlex.sm="33%" class="draft-metric-box">
+      <mat-card-subtitle>Best Draft</mat-card-subtitle>
+      <div>{{bestTeamDraft.team.owner.ownerName}} <span [ngClass]="{'urgent__alert': bestTeamDraft.valueAdded < 0, 'success__alert': bestTeamDraft.valueAdded > 0}">{{bestTeamDraft.valueAdded}}</span></div>
+    </mat-card>
+    <mat-card fxFlex="20%" fxFlex.xs="100%" fxFlex.sm="33%" class="draft-metric-box">
+      <mat-card-subtitle>Worst Draft</mat-card-subtitle>
+      <div>{{worstTeamDraft.team.owner.ownerName}} <span [ngClass]="{'urgent__alert': worstTeamDraft.valueAdded < 0, 'success__alert': worstTeamDraft.valueAdded > 0}">{{worstTeamDraft.valueAdded}}</span></div>
+    </mat-card>
+  </div>
   <div class="center-text mid-bold-text margin-top-25">
     Completed Draft: {{selectedDraft.draft.rounds}} Rounds
   </div>
@@ -34,19 +69,23 @@
     <!-- Pos Column -->
     <ng-container matColumnDef="team">
       <mat-header-cell *matHeaderCellDef>Team</mat-header-cell>
-      <mat-cell class="link--text__no__underline" *matCellDef="let element" [routerLink]="['../team', getOwnerName(element.rosterId)]">{{getTeamName(element.rosterId.toString())}}</mat-cell>
+      <mat-cell class="link--text__no__underline" *matCellDef="let element"
+                [routerLink]="['../team', getOwnerName(element.rosterId)]">{{getTeamName(element.rosterId.toString())}}</mat-cell>
     </ng-container>
 
     <!-- Age Column -->
     <ng-container matColumnDef="owner">
       <mat-header-cell *matHeaderCellDef>Owner</mat-header-cell>
-      <mat-cell *matCellDef="let element" [routerLink]="['../team', getOwnerName(element.rosterId)]" class="link--text__no__underline">{{getOwnerName(element.rosterId)}}</mat-cell>
+      <mat-cell *matCellDef="let element" [routerLink]="['../team', getOwnerName(element.rosterId)]"
+                class="link--text__no__underline">{{getOwnerName(element.rosterId)}}</mat-cell>
     </ng-container>
 
     <!-- Value Column -->
     <ng-container matColumnDef="selectedPlayer">
       <mat-header-cell *matHeaderCellDef>Selected Pick (current value)</mat-header-cell>
-      <mat-cell *matCellDef="let element" [routerLink]="['../../players/details/', getPlayerBySleeperId(element.sleeperId)?.name_id]" class="link--text__no__underline">{{configService.isMobile ? element.position + ' ' + element.lastName : element.position + ' ' + element.firstName + ' ' + element.lastName}}
+      <mat-cell *matCellDef="let element"
+                [routerLink]="['../../players/details/', getPlayerBySleeperId(element.sleeperId)?.name_id]"
+                class="link--text__no__underline">{{configService.isMobile ? element.position + ' ' + element.lastName : element.position + ' ' + element.firstName + ' ' + element.lastName}}
         - {{sleeperService.selectedLeague.isSuperflex ? getPlayerBySleeperId(element.sleeperId)?.sf_trade_value || 'None' : getPlayerBySleeperId(element.sleeperId)?.trade_value || 'None'}}
       </mat-cell>
     </ng-container>

@@ -5,7 +5,7 @@ import {PlayerComparisonService} from '../../services/player-comparison.service'
 import {BaseComponent} from '../../base-component.abstract';
 import 'chartjs-plugin-colorschemes/src/plugins/plugin.colorschemes';
 import {Classic10} from 'chartjs-plugin-colorschemes/src/colorschemes/colorschemes.tableau';
-import {ConfigService} from "../../../services/init/config.service";
+import {ConfigService} from '../../../services/init/config.service';
 
 
 @Component({
@@ -137,4 +137,4 @@ export class TradeValueLineChartComponent extends BaseComponent implements OnIni
     const diffDays = Math.round(Math.abs((firstDate.getTime() - secondDate.getTime()) / (oneDay)));
     return diffDays;
   }
-};
+}

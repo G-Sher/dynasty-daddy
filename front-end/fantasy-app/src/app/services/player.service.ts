@@ -8,6 +8,7 @@ import {SleeperStateOfNFL, SleeperTeam, SleeperTeamMatchUpData} from '../model/S
 import {SleeperApiService} from './api/sleeper/sleeper-api.service';
 import {map, mergeMap} from 'rxjs/operators';
 import {NflService} from './utilities/nfl.service';
+import {NUMPAD_NINE} from "@angular/cdk/keycodes";
 
 @Injectable({
   providedIn: 'root'
@@ -321,5 +322,18 @@ export class PlayerService {
     return players.sort((a, b) => {
       return isSuperflex ? b.sf_trade_value - a.sf_trade_value : b.trade_value - a.trade_value;
     });
+  }
+
+  /**
+   * returns draft picks values for year
+   * @param season season defaults to next season
+   */
+  getDraftPicksForYear(season: string = (Number(this.nflService.stateOfNFL.season) + 1).toString()): KTCPlayer[] {
+    const draftpicks = this.playerValues.filter(pick => {
+      if (pick.position === 'PI' && pick.full_name.includes(season)) {
+        return pick;
+      }
+    });
+    return draftpicks;
   }
 }
