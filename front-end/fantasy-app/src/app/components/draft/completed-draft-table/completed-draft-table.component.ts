@@ -99,6 +99,7 @@ export class CompletedDraftTableComponent implements OnInit, OnChanges {
   ngOnChanges(): void {
     this.isSuperFlex = this.sleeperService.selectedLeague.isSuperflex;
     this.dataSource = new MatTableDataSource(this.selectedDraft.picks);
+    this.paginator.pageIndex = 0;
     this.dataSource.paginator = this.paginator;
     this.refreshMetrics();
   }
@@ -172,6 +173,7 @@ export class CompletedDraftTableComponent implements OnInit, OnChanges {
       });
     }
     this.dataSource = new MatTableDataSource(this.filteredDraftPicks);
+    this.paginator.pageIndex = 0;
     this.dataSource.paginator = this.paginator;
   }
 

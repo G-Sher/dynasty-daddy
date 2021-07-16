@@ -81,6 +81,7 @@ export class PlayerService {
     fum_lost: {value: 0, sleeperId: ''},
     pass_int: {value: 0, sleeperId: ''},
     rec_td: {value: 0, sleeperId: ''},
+    rec_tgt: {value: 0, sleeperId: ''}
   };
 
   /** subject for loading player values */

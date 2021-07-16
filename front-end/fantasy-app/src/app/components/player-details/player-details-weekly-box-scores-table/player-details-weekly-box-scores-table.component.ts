@@ -175,9 +175,9 @@ export class PlayerDetailsWeeklyBoxScoresTableComponent implements OnInit {
         break;
       }
       default: {
-        this.doughnutChartLabels.push(['Receptions', 'Behind leader'], ['Receiving Yards', 'Behind leader'],
-          ['Receiving TDs', 'Behind leader'], ['Fumbles Lost', 'Behind leader']);
-        const order = ['rec', 'rec_yd', 'rec_td', 'fum_lost'];
+        this.doughnutChartLabels.push(['Targets', 'Behind leader'], ['Receptions', 'Behind leader'], ['Receiving Yards', 'Behind leader'],
+          ['Receiving TDs', 'Behind leader']);
+        const order = ['rec_tgt', 'rec', 'rec_yd', 'rec_td'];
         for (const field of order) {
           this.doughnutChartData.push([this.playerService.playerStats[this.selectedPlayer.sleeper_id]?.[field] || 0,
             this.playerService.leagueLeaders[field].value - (this.playerService.playerStats[this.selectedPlayer.sleeper_id]?.[field]

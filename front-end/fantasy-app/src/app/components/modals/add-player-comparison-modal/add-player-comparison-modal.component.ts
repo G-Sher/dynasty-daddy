@@ -213,14 +213,14 @@ export class AddPlayerComparisonModalComponent implements OnInit {
       }
     }
     if (!this.playerSearch || this.playerSearch === '') {
-      this.filteredList = this.filteredList.slice(0, 13);
+      this.filteredList = this.filteredList.slice(0, 11);
     } else {
       this.filteredList = this.filteredList.filter((player) => {
         return player.full_name.toLowerCase().includes(this.playerSearch.toLowerCase())
           || player.position.toLowerCase().includes(this.playerSearch.toLowerCase())
           || player.team.toLowerCase().includes(this.playerSearch.toLowerCase())
           || (player.owner?.ownerName.toLowerCase().includes(this.playerSearch.toLowerCase()) && this.sleeperService.selectedLeague);
-      }).slice(0, 13);
+      }).slice(0, 11);
     }
   }
 
