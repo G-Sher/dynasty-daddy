@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {EndpointsService} from '../endpoints.service';
+import {DeviceDetectorService} from 'ngx-device-detector';
 
 
 @Injectable({
@@ -7,7 +8,19 @@ import {EndpointsService} from '../endpoints.service';
 })
 export class ConfigService {
 
-  constructor(private endpointsService: EndpointsService) {
+  private _isMobile: boolean = false;
+
+  constructor(private endpointsService: EndpointsService,
+              private deviceDetectorService: DeviceDetectorService,
+              ) {
+  }
+
+  get isMobile(): boolean {
+    return this._isMobile;
+  }
+
+  checkIfMobile(): void {
+    this._isMobile = this.deviceDetectorService.isMobile();
   }
 
   applyConfigs(): void {

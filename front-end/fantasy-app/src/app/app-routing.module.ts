@@ -9,6 +9,7 @@ import {PlayerComparisonsComponent} from './components/player-comparisons/player
 import {PlayerDetailsComponent} from './components/player-details/player-details.component';
 import {FantasyTeamDetailsComponent} from './components/fantasy-team-details/fantasy-team-details.component';
 import {PlayoffCalculatorComponent} from './components/playoff-calculator/playoff-calculator.component';
+import {AboutComponent} from "./components/about/about.component";
 
 const routes: Routes = [
   {
@@ -45,6 +46,14 @@ const routes: Routes = [
   },
   {
     path: 'home',
+    component: HomeComponent
+  },
+  {
+    path: 'about',
+    component: AboutComponent
+  },
+  {
+    path: 'login',
     component: HomeComponent
   },
   {

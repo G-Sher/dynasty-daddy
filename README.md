@@ -51,7 +51,7 @@ First, clone repo and open up in your preferred IDE.
 - Better draft predictor based on team needs
 - Player value calculation based on points and trade value
 - More team analytics
-- Playoff odds and schedule predictions
+- Team Elo ranking like Chess
 - Refactor backend to map data better with RXJS
 
 
@@ -62,7 +62,8 @@ First, clone repo and open up in your preferred IDE.
 - Angular mat - for tables, and other styling components
 - javascript-color-gradient - color gradients
 - simple-statistics - statistics and probability calculations
-
+- angular2-query-builder - query builder for player comparison advanced search
+- ngx-device-detector - detects if using mobile device, tablet, or desktop
 
 ## Credits
 

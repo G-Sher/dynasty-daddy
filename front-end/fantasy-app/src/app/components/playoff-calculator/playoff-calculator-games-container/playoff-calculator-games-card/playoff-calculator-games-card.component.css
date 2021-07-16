@@ -14,8 +14,8 @@
   overflow: hidden;
 }
 
-.game-prob__color {
-  background: #577380;
+.game-win__color {
+  background: darkgreen;
 }
 
 .game-score__color {

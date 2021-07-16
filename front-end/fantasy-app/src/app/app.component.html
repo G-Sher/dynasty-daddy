@@ -1,8 +1,15 @@
-<app-header></app-header>
-<ngx-spinner
-  bdColor="rgba(51,51,51,0.8)"
-  size="medium"
-  color="#fff"
-  type="ball-scale-multiple"
-></ngx-spinner>
-<router-outlet></router-outlet>
+<div class="main">
+  <app-header></app-header>
+  <ngx-spinner
+    bdColor="rgba(51,51,51,0.8)"
+    size="medium"
+    color="#fff"
+    type="ball-scale-multiple"
+  ></ngx-spinner>
+  <div [ngClass]="{'content-wrapper': !configService.isMobile, 'content-wrapper__mobile': configService.isMobile}">
+    <router-outlet></router-outlet>
+  </div>
+</div>
+<div class="footer">
+  <app-footer></app-footer>
+</div>

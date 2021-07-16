@@ -3,19 +3,19 @@
     <span class="link--text__no__underline mid-bold-text" style="padding-right: 3px" [routerLink]="['../../rankings']">Power Rankings</span>
     <mat-icon class="arrow-icon__nav">chevron_right</mat-icon>
     <span class="mid-bold-text">{{selectedTeam.owner?.ownerName}}</span>
-    <div class="link--text__no__underline mid-bold-text button-right" [routerLink]="['../../standings']">
+    <div class="link--text__no__underline mid-bold-text button-right" [routerLink]="['../../standings']" *ngIf="!configService.isMobile">
       View in Standings
       <mat-icon class="arrow-icon__nav">chevron_right</mat-icon>
     </div>
   </div>
-  <div class="flex-start-container margin-top-50">
-    <div class="flex-item-home grid-15">
+  <div class="flex-details-container margin-top-50">
+    <div class="flex-item-details grid-15">
       <div class="profile--pic">
         <img #image [src]="'https://sleepercdn.com/avatars/thumbs/' + selectedTeam.owner?.avatar"
              (error)="image.hidden = true" [hidden]="image.hidden" class="responsive">
       </div>
     </div>
-    <div class="flex-item-home grid-70">
+    <div class="flex-item-details grid-70">
       <div class="large-bold-header-text">Team {{selectedTeam.owner?.teamName}}</div>
       <br>
       <div>
@@ -46,7 +46,7 @@
         </div>
       </div>
     </div>
-    <div class="flex-item-home grid-15">
+    <div class="flex-item-details grid-15">
       <div class="button-right center-text">
         <mat-card>
           <div class="text__light" style="padding-right: 10px; padding-left: 10px">Record</div>
@@ -114,7 +114,7 @@
         </div>
       </div>
       <div class="transaction--box">
-        <mat-form-field class="mat-dropdown-wide-300">
+        <mat-form-field class="mat-dropdown-wide-300" color="accent">
           <mat-label>Search Activities</mat-label>
           <input matInput type="text" (keyup)="updateActivityFilter()" [(ngModel)]="activitySearchVal">
         </mat-form-field>

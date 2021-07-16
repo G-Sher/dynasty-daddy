@@ -1,4 +1,4 @@
-<div class="table-container">
+<div class="playoff-calc-table-container" [ngStyle]="divisionTableCols.indexOf('teamDivision') !== -1?{'max-width': '1400px', 'min-width': '500px'} : {'max-width': '1000px', 'min-width': '500px'}">
   <mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort matSortActive="teamRating" matSortDirection="desc">
 
     <ng-container matColumnDef="teamRating">
@@ -10,9 +10,10 @@
       <mat-header-cell *matHeaderCellDef>Team</mat-header-cell>
       <mat-cell *matCellDef="let team" class="link--text__no__underline" [routerLink]="['../team', team.owner?.ownerName]">
         <img #image [src]="'https://sleepercdn.com/avatars/thumbs/' + team.owner?.avatar"
-             onerror="style.display = 'none'" class="table-image">
+             onerror="style.display = 'none'" class="table-image" *ngIf="!configService.isMobile">
         {{team.owner?.teamName}}
-        <span *ngIf="forecastWeek > 1" class="small-text__light" style="padding-left: 5px">{{playoffCalculatorService.getWinsAtWeek(team.roster.rosterId, forecastWeek - 1)}} - {{playoffCalculatorService.getLossesAtWeek(team.roster.rosterId, forecastWeek - 1)}}</span>
+        <span *ngIf="(forecastWeek > 1 || playoffCalculatorService.forceShowRecord) && !configService.isMobile"
+              class="small-text__light" style="padding-left: 5px">{{playoffCalculatorService.getWinsAtWeek(team.roster.rosterId, forecastWeek - 1) + playoffCalculatorService.selectedGameResults[team.roster.rosterId]?.selectedWins}} - {{playoffCalculatorService.getLossesAtWeek(team.roster.rosterId, forecastWeek - 1)  + playoffCalculatorService.selectedGameResults[team.roster.rosterId]?.selectedLosses}}</span>
       </mat-cell>
     </ng-container>
 

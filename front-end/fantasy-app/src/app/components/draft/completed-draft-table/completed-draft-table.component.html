@@ -1,6 +1,62 @@
-<div class="table-container margin-top-10 mat-elevation-z8">
+<div class="table-container margin-top-10">
   <div class="center-text mid-bold-text">
+    Draft Breakdown by Position
+  </div>
+  <div fxLayoutAlign="center" class="margin-top-25">
+    <div fxFlex="60%" style="max-width: 1000px">
+      <canvas baseChart
+              [data]="pieChartData"
+              [labels]="pieChartLabels"
+              [chartType]="pieChartType"
+              [options]="pieChartOptions"
+              [legend]="pieChartLegend">
+      </canvas>
+    </div>
+  </div>
+  <div class="center-text mid-bold-text margin-top-50">
+    Draft Metrics
+  </div>
+  <div fxLayout="row wrap" fxLayoutAlign="center" class="margin-top-25">
+    <mat-card fxFlex="20%" fxFlex.xs="100%" fxFlex.sm="33%" class="draft-metric-box">
+      <mat-card-subtitle>Best Overall Pick</mat-card-subtitle>
+      <div>{{bestOverallPickStr}}</div>
+    </mat-card>
+    <mat-card fxFlex="20%" fxFlex.xs="100%" fxFlex.sm="33%" class="draft-metric-box">
+      <mat-card-subtitle>Best Value Pick</mat-card-subtitle>
+      <div>{{bestValuePickStr}}</div>
+    </mat-card>
+    <mat-card fxFlex="20%" fxFlex.xs="100%" fxFlex.sm="33%" class="draft-metric-box">
+      <mat-card-subtitle>Best Draft</mat-card-subtitle>
+      <div>{{bestTeamDraft.team.owner.ownerName}} <span [ngClass]="{'urgent__alert': bestTeamDraft.valueAdded < 0, 'success__alert': bestTeamDraft.valueAdded > 0}">{{bestTeamDraft.valueAdded}}</span></div>
+    </mat-card>
+    <mat-card fxFlex="20%" fxFlex.xs="100%" fxFlex.sm="33%" class="draft-metric-box">
+      <mat-card-subtitle>Worst Draft</mat-card-subtitle>
+      <div>{{worstTeamDraft.team.owner.ownerName}} <span [ngClass]="{'urgent__alert': worstTeamDraft.valueAdded < 0, 'success__alert': worstTeamDraft.valueAdded > 0}">{{worstTeamDraft.valueAdded}}</span></div>
+    </mat-card>
+  </div>
+  <div class="center-text mid-bold-text margin-top-25">
     Completed Draft: {{selectedDraft.draft.rounds}} Rounds
+  </div>
+  <div>
+    <mat-form-field class="button-left player-value-checkbox-margin mat-dropdown-wide-300" color="accent">
+      <mat-label>Search Player, Round, or Owner</mat-label>
+      <input matInput type="text" (keyup)="updateDraftFilters()" [(ngModel)]="searchVal">
+    </mat-form-field>
+  </div>
+  <div>
+    <span class="button-left">
+      <mat-checkbox class="player-value-checkbox-margin" color="primary" [(ngModel)]="filterPosGroup[0]"
+                    (change)="updateDraftFilters()">QB</mat-checkbox>
+      <mat-checkbox class="player-value-checkbox-margin" color="primary" [(ngModel)]="filterPosGroup[1]"
+                    (change)="updateDraftFilters()">RB</mat-checkbox>
+      <mat-checkbox class="player-value-checkbox-margin" color="primary" [(ngModel)]="filterPosGroup[2]"
+                    (change)="updateDraftFilters()">WR</mat-checkbox>
+      <mat-checkbox class="player-value-checkbox-margin" color="primary" [(ngModel)]="filterPosGroup[3]"
+                    (change)="updateDraftFilters()">TE</mat-checkbox>
+    </span>
+    <span class="container_spacer"></span>
+    <span class="button-right">
+    </span>
   </div>
   <mat-table [dataSource]="dataSource" class="margin-top-10">
 
@@ -13,24 +69,30 @@
     <!-- Pos Column -->
     <ng-container matColumnDef="team">
       <mat-header-cell *matHeaderCellDef>Team</mat-header-cell>
-      <mat-cell *matCellDef="let element">{{getTeamName(element.rosterId.toString())}}</mat-cell>
+      <mat-cell class="link--text__no__underline" *matCellDef="let element"
+                [routerLink]="['../team', getOwnerName(element.rosterId)]">{{getTeamName(element.rosterId.toString())}}</mat-cell>
     </ng-container>
 
     <!-- Age Column -->
     <ng-container matColumnDef="owner">
       <mat-header-cell *matHeaderCellDef>Owner</mat-header-cell>
-      <mat-cell *matCellDef="let element">{{getOwnerName(element.rosterId)}}</mat-cell>
+      <mat-cell *matCellDef="let element" [routerLink]="['../team', getOwnerName(element.rosterId)]"
+                class="link--text__no__underline">{{getOwnerName(element.rosterId)}}</mat-cell>
     </ng-container>
 
     <!-- Value Column -->
     <ng-container matColumnDef="selectedPlayer">
       <mat-header-cell *matHeaderCellDef>Selected Pick (current value)</mat-header-cell>
-      <mat-cell *matCellDef="let element">{{element.position + ' ' + element.firstName + ' ' + element.lastName}} - {{sleeperService.selectedLeague.isSuperflex ? getPlayerBySleeperId(element.sleeperId)?.sf_trade_value || 'None' : getPlayerBySleeperId(element.sleeperId)?.trade_value || 'None'}}
+      <mat-cell *matCellDef="let element"
+                [routerLink]="['../../players/details/', getPlayerBySleeperId(element.sleeperId)?.name_id]"
+                class="link--text__no__underline">{{configService.isMobile ? element.position + ' ' + element.lastName : element.position + ' ' + element.firstName + ' ' + element.lastName}}
+        - {{sleeperService.selectedLeague.isSuperflex ? getPlayerBySleeperId(element.sleeperId)?.sf_trade_value || 'None' : getPlayerBySleeperId(element.sleeperId)?.trade_value || 'None'}}
       </mat-cell>
     </ng-container>
 
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{'accent__color__background': sleeperService.sleeperUser?.userData.username === getOwnerName(row.rosterId)}"></mat-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;" class="draft-element-row"
+             [ngClass]="{'accent__color__background': sleeperService.sleeperUser?.userData.username === getOwnerName(row.rosterId)}"></mat-row>
   </mat-table>
   <mat-paginator [pageSizeOptions]="[pageLength, 2 * pageLength, 4 * pageLength]" showFirstLastButtons></mat-paginator>
 </div>

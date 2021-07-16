@@ -6,6 +6,7 @@ import {KTCApiService} from '../../services/api/ktc-api.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SleeperService} from '../../services/sleeper.service';
 import {PlayerComparisonService} from '../services/player-comparison.service';
+import {ConfigService} from '../../services/init/config.service';
 
 @Component({
   selector: 'app-player-details',
@@ -28,7 +29,8 @@ export class PlayerDetailsComponent extends BaseComponent implements OnInit {
               private route: ActivatedRoute,
               public sleeperService: SleeperService,
               private router: Router,
-              private playerComparisonService: PlayerComparisonService) {
+              private playerComparisonService: PlayerComparisonService,
+              public configService: ConfigService) {
     super();
   }
 

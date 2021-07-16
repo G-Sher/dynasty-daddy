@@ -3,7 +3,7 @@
   View past drafts with current day values, or create a mock draft for upcoming draft with the new rookie class.
 </div>
 <div *ngIf="sleeperService.leagueLoaded && (mockDraftService.teamPicks.length > 0 || sleeperService.completedDrafts.length > 0)" class="grid-100 button-right margin-top-10">
-  <mat-form-field appearance="outline">
+  <mat-form-field appearance="outline" color="accent">
     <mat-label>Select a Draft</mat-label>
     <mat-select [(ngModel)]="selectedDraft">
       <mat-optgroup label="Upcoming" *ngIf="mockDraftService.teamPicks.length > 0">

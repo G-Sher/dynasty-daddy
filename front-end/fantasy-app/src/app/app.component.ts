@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {KTCApiService} from './services/api/ktc-api.service';
 import {KTCPlayer} from './model/KTCPlayer';
+import {ConfigService} from './services/init/config.service';
 
 @Component({
   selector: 'app-root',
@@ -10,9 +11,11 @@ import {KTCPlayer} from './model/KTCPlayer';
 export class AppComponent implements OnInit{
   title = 'fantasy-app';
 
-  constructor() {
+  constructor(public configService: ConfigService) {
   }
 
   ngOnInit(): void {
+    this.configService.checkIfMobile();
+    console.log('isMobile ' + this.configService.isMobile);
   }
 }

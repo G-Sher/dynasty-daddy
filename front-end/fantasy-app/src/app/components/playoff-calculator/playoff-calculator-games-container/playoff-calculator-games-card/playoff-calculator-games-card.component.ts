@@ -11,16 +11,21 @@ import {ColorService} from '../../../services/color.service';
 })
 export class PlayoffCalculatorGamesCardComponent implements OnInit {
 
+  /** match up details with probability */
   @Input()
   game: MatchUpProbability;
 
+  /** show header info */
   @Input()
   showHeader: boolean = true;
 
+  /** team 1 sleeper object */
   team1: SleeperTeam;
 
+  /** team 2 sleeper object */
   team2: SleeperTeam;
 
+  /** color gradient for prob */
   probGradient: string[];
 
   constructor(private sleeperService: SleeperService, private colorService: ColorService) { }
@@ -28,9 +33,10 @@ export class PlayoffCalculatorGamesCardComponent implements OnInit {
   ngOnInit(): void {
     this.team1 = this.sleeperService.getTeamByRosterId(this.game?.matchUpDetails.team1RosterId);
     this.team2 = this.sleeperService.getTeamByRosterId(this.game?.matchUpDetails.team2RosterId);
-    this.probGradient = this.colorService.getColorGradientArray(100, '#7f7f7f', '#e74c3c');
+    this.probGradient = this.colorService.getColorGradientArray(100, '#7f7f7f', '#0173aa');
   }
 
+  /** get color for percent */
   getProbColor(prob: number): string {
     return this.probGradient[prob];
   }

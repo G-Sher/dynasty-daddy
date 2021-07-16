@@ -33,6 +33,23 @@ export class PlayerComparisonService {
   /** is player mode or group mode */
   isGroupMode = false;
 
+  /** query object with query configuration */
+  query = {
+    condition: 'and',
+    rules: [
+      {field: 'position', operator: '=', value: 'QB'},
+    ]
+  };
+
+  /** query return limit */
+  limit: number = 5;
+
+  /** query selected aggregate */
+  selectedAggregate: string = 'sf_trade_value';
+
+  /** is query desc or asc */
+  isOrderByDesc: boolean = true;
+
   constructor(private ktcApiService: KTCApiService, private sleeperService: SleeperService) {
   }
 
@@ -43,7 +60,7 @@ export class PlayerComparisonService {
    * TODO clean up redundant code
    */
   private addNewPlayer(player: KTCPlayer[], isGroup2: boolean = false): void {
-    if (this.lineChartData[0].data.length === 0) {
+    if (this.lineChartData[0]?.data.length === 0) {
       this.lineChartData.splice(0, 1);
     }
     if (!this.isGroupMode) {

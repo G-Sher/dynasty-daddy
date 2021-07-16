@@ -5,6 +5,7 @@
 
 .profile--pic {
   display: inline-flex;
+  justify-content: center;
   /*max-width: 2000px;*/
   /*max-height: 2000px;*/
 }

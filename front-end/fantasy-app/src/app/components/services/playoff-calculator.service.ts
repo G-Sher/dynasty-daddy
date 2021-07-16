@@ -29,6 +29,12 @@ export class PlayoffCalculatorService {
   /** odds values by roster id */
   teamPlayoffOdds = {};
 
+  /** how many selected wins by roster id, used for season table record */
+  selectedGameResults = {};
+
+  /** force show records of teams on table if game results are selected */
+  forceShowRecord: boolean = false;
+
   /** total number of simulations, if changed make sure to update percentage function */
   NUMBER_OF_SIMULATIONS = 10000;
 
@@ -65,6 +71,7 @@ export class PlayoffCalculatorService {
     this.matchUpService.leagueMatchUpUI.map(weekMatchups => {
       const games: MatchUpProbability[] = [];
       weekMatchups.map(matchup => {
+        matchup.selectedWinner = 0;
         games.push(this.getProbabilityForGame(matchup));
       });
       this.matchUpsWithProb.push(games);
@@ -77,7 +84,7 @@ export class PlayoffCalculatorService {
    * get probability for each match up
    * @param matchup array of arrays of match up prob
    */
-  getProbabilityForGame(matchup: MatchUpUI): MatchUpProbability {
+  private getProbabilityForGame(matchup: MatchUpUI): MatchUpProbability {
     const team1Prob = 0.5 + (this.teamRatingsPValues[matchup.team1RosterId] - this.teamRatingsPValues[matchup.team2RosterId]) / 2;
     const team2Prob = 0.5 + (this.teamRatingsPValues[matchup.team2RosterId] - this.teamRatingsPValues[matchup.team1RosterId]) / 2;
     return new MatchUpProbability(
@@ -90,27 +97,49 @@ export class PlayoffCalculatorService {
   /**
    * calculates projected record based on points
    */
-  getProjectedRecord(startWeek: number = this.getStartWeek()): void {
+  private getProjectedRecord(startWeek: number = this.getStartWeek()): void {
     for (let rosterId = 1; rosterId <= this.sleeperService.selectedLeague.totalRosters; rosterId++) {
       let totalWins = 0;
       let projectedWeeks = 0;
+      let selectedWins = 0;
+      let selectedLosses = 0;
       for (let week = startWeek; week < this.sleeperService.selectedLeague.playoffStartWeek; week++) {
         projectedWeeks++;
         this.matchUpsWithProb[week - 1]?.map(matchUp => {
           if (matchUp.matchUpDetails.team1RosterId === rosterId) {
-            totalWins += matchUp.team1Prob;
+            if (matchUp.matchUpDetails.selectedWinner === 0) {
+              totalWins += matchUp.team1Prob;
+            } else if (matchUp.matchUpDetails.selectedWinner === 1) {
+              selectedWins++;
+              projectedWeeks--;
+            } else if (matchUp.matchUpDetails.selectedWinner === 2) {
+              selectedLosses++;
+              projectedWeeks--;
+            }
             return;
           } else if (matchUp.matchUpDetails.team2RosterId === rosterId) {
-            totalWins += matchUp.team2Prob;
+            if (matchUp.matchUpDetails.selectedWinner === 0) {
+              totalWins += matchUp.team2Prob;
+            } else if (matchUp.matchUpDetails.selectedWinner === 2) {
+              selectedWins++;
+              projectedWeeks--;
+            } else if (matchUp.matchUpDetails.selectedWinner === 1) {
+              selectedLosses++;
+              projectedWeeks--;
+            }
             return;
           }
         });
       }
       const winsAtDate = this.getWinsAtWeek(rosterId, startWeek - 1);
       const lossesAtDate = this.getLossesAtWeek(rosterId, startWeek - 1);
+      this.selectedGameResults[rosterId] = {
+        selectedWins,
+        selectedLosses
+      };
       this.teamsProjectedRecord[rosterId] = {
-        projWins: winsAtDate + Math.round(totalWins / 100),
-        projLoss: lossesAtDate + projectedWeeks - Math.round(totalWins / 100)
+        projWins: winsAtDate + selectedWins + Math.round(totalWins / 100),
+        projLoss: lossesAtDate + selectedLosses + projectedWeeks - Math.round(totalWins / 100)
       };
     }
   }
@@ -138,7 +167,7 @@ export class PlayoffCalculatorService {
 
   /**
    * get number of losses at a current week in the past
-   * TODO maybe move to seperate service?
+   * TODO maybe move to separate service?
    * @param rosterId
    * @param endWeek
    */
@@ -217,7 +246,7 @@ export class PlayoffCalculatorService {
    * update season odds handler may remove later if unnecessary
    * @param value
    */
-  updateSeasonOdds(selectedWeek: number): void {
+  updateSeasonOdds(selectedWeek?: number): void {
     this.getProjectedRecord(selectedWeek);
     this.generatePlayoffOdds(selectedWeek);
   }
@@ -250,12 +279,20 @@ export class PlayoffCalculatorService {
       for (let week = startWeek; week < this.sleeperService.selectedLeague.playoffStartWeek; week++) {
         this.matchUpsWithProb[week - 1]?.map(matchUp => {
           if (matchUp.matchUpDetails.team1RosterId === rosterId) {
-            if (this.getRandomInt(100) < matchUp.team1Prob) {
+            if (matchUp.matchUpDetails.selectedWinner === 0) {
+              if (this.getRandomInt(100) < matchUp.team1Prob) {
+                totalWins++;
+              }
+            } else if (matchUp.matchUpDetails.selectedWinner === 1) {
               totalWins++;
             }
             return;
           } else if (matchUp.matchUpDetails.team2RosterId === rosterId) {
-            if (this.getRandomInt(100) < matchUp.team2Prob) {
+            if (matchUp.matchUpDetails.selectedWinner === 0) {
+              if (this.getRandomInt(100) < matchUp.team2Prob) {
+                totalWins++;
+              }
+            } else if (matchUp.matchUpDetails.selectedWinner === 2) {
               totalWins++;
             }
             return;
@@ -615,7 +652,7 @@ export class PlayoffCalculatorService {
    * simulate 10000 seasons
    * @param startWeek
    */
-  generatePlayoffOdds(startWeek: number = this.getStartWeek()): void {
+  private generatePlayoffOdds(startWeek: number = this.getStartWeek()): void {
     // initialize odds values
     for (const team of this.sleeperService.sleeperTeamDetails) {
       this.teamPlayoffOdds[team.roster.rosterId] = {
@@ -635,14 +672,17 @@ export class PlayoffCalculatorService {
       }
     }
 
+    // divisor for percent calculations
+    const divisor = (this.NUMBER_OF_SIMULATIONS / 100);
+
     for (const team of this.sleeperService.sleeperTeamDetails) {
       this.teamPlayoffOdds[team.roster.rosterId] = {
-        timesMakingPlayoffs: Math.round(this.teamPlayoffOdds[team.roster.rosterId].timesMakingPlayoffs / 100),
-        timesWinningDivision: Math.round(this.teamPlayoffOdds[team.roster.rosterId].timesWinningDivision / 100),
-        timesWithBye: Math.round(this.teamPlayoffOdds[team.roster.rosterId].timesWithBye / 100),
-        timesMakeConfRd: Math.round(this.teamPlayoffOdds[team.roster.rosterId].timesMakeConfRd / 100),
-        timesMakeChampionship: Math.round(this.teamPlayoffOdds[team.roster.rosterId].timesMakeChampionship / 100),
-        timesWinChampionship: Math.round(this.teamPlayoffOdds[team.roster.rosterId].timesWinChampionship / 100),
+        timesMakingPlayoffs: Math.round(this.teamPlayoffOdds[team.roster.rosterId].timesMakingPlayoffs / divisor),
+        timesWinningDivision: Math.round(this.teamPlayoffOdds[team.roster.rosterId].timesWinningDivision / divisor),
+        timesWithBye: Math.round(this.teamPlayoffOdds[team.roster.rosterId].timesWithBye / divisor),
+        timesMakeConfRd: Math.round(this.teamPlayoffOdds[team.roster.rosterId].timesMakeConfRd / divisor),
+        timesMakeChampionship: Math.round(this.teamPlayoffOdds[team.roster.rosterId].timesMakeChampionship / divisor),
+        timesWinChampionship: Math.round(this.teamPlayoffOdds[team.roster.rosterId].timesWinChampionship / divisor),
       };
     }
     console.table(this.teamPlayoffOdds);

@@ -7,6 +7,7 @@ import {SleeperService} from '../../../services/sleeper.service';
 import {PlayerService} from '../../../services/player.service';
 import {PlayerComparisonService} from '../../services/player-comparison.service';
 import {Router} from '@angular/router';
+import {ConfigService} from "../../../services/init/config.service";
 
 @Component({
   selector: 'app-ktc-table',
@@ -52,7 +53,8 @@ export class KtcTableComponent implements OnInit {
   constructor(public sleeperService: SleeperService,
               public playerService: PlayerService,
               private playerComparisonService: PlayerComparisonService,
-              private router: Router) {
+              private router: Router,
+              public configService: ConfigService) {
   }
 
   ngOnInit(): void {
@@ -121,9 +123,9 @@ export class KtcTableComponent implements OnInit {
   updateSuperFlex(): void {
     this.displayedColumns = [];
     if (this.sleeperService.selectedLeague) {
-      this.displayedColumns = ['full_name', 'position', 'age', 'owner', 'halfppr', this.isSuperFlex ? 'sf_trade_value' : 'trade_value', 'actions'];
+      this.displayedColumns = this.configService.isMobile ? ['full_name', 'position', 'owner', this.isSuperFlex ? 'sf_trade_value' : 'trade_value'] : ['full_name', 'position', 'age', 'owner', 'halfppr', this.isSuperFlex ? 'sf_trade_value' : 'trade_value', 'actions'];
     } else {
-      this.displayedColumns = ['full_name', 'position', 'age', 'halfppr', this.isSuperFlex ? 'sf_trade_value' : 'trade_value', 'actions'];
+      this.displayedColumns = this.configService.isMobile ? ['full_name', 'position', 'halfppr', this.isSuperFlex ? 'sf_trade_value' : 'trade_value'] : ['full_name', 'position', 'age', 'halfppr', this.isSuperFlex ? 'sf_trade_value' : 'trade_value', 'actions'];
     }
     this.dataSource.data = this.filteredPlayers;
     this.dataSource.sort.sort({

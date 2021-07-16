@@ -1,0 +1,10 @@
+.player-comp-chart{
+  height: 400px;
+  min-width: 600px;
+}
+
+.player-comp-chart-wrapper{
+  width: 300px;
+  overflow-x: scroll;
+  margin: 0 auto;
+}

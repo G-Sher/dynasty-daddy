@@ -10,6 +10,7 @@ import {KTCPlayer} from '../../model/KTCPlayer';
 import {PlayerComparisonService} from '../services/player-comparison.service';
 import {TransactionsService} from '../services/transactions.service';
 import {TransactionUI} from '../model/transaction';
+import {ConfigService} from '../../services/init/config.service';
 
 @Component({
   selector: 'app-fantasy-team-details',
@@ -42,7 +43,8 @@ export class FantasyTeamDetailsComponent implements OnInit {
               public playerService: PlayerService,
               private playerComparisonService: PlayerComparisonService,
               private router: Router,
-              public transactionsService: TransactionsService) {
+              public transactionsService: TransactionsService,
+              public configService: ConfigService) {
   }
 
   ngOnInit(): void {
@@ -69,8 +71,8 @@ export class FantasyTeamDetailsComponent implements OnInit {
 
       // generates team activities and cleans data for display
       this.teamActivity = this.transactionsService.generateTeamTransactionHistory(this.selectedTeam);
-      this.activityShowMore = this.teamActivity.length <= 20;
-      this.filterTeamActivity = this.teamActivity.slice(0, 20);
+      this.activityShowMore = this.teamActivity.length <= 5;
+      this.filterTeamActivity = this.teamActivity.slice(0, 5);
     }
   }
 
@@ -102,10 +104,10 @@ export class FantasyTeamDetailsComponent implements OnInit {
           || activity.type.toLowerCase().includes(this.activitySearchVal.toLowerCase())
           || activity.headerDisplay.toLowerCase().includes(this.activitySearchVal.toLowerCase()));
       });
-      this.activityShowMore ? this.filterTeamActivity = fullFilteredList.slice() : this.filterTeamActivity = fullFilteredList.slice(0, 20);
+      this.activityShowMore ? this.filterTeamActivity = fullFilteredList.slice() : this.filterTeamActivity = fullFilteredList.slice(0, 5);
     } else {
       this.activityShowMore ? this.filterTeamActivity =
-        this.teamActivity.slice() : this.filterTeamActivity = this.teamActivity.slice(0, 20);
+        this.teamActivity.slice() : this.filterTeamActivity = this.teamActivity.slice(0, 5);
     }
   }
 }

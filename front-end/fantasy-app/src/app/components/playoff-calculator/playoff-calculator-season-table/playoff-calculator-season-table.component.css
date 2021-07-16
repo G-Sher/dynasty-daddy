@@ -30,6 +30,15 @@
   justify-content: start;
 }
 
+.mat-column-teamName {
+  min-width: 120px;
+}
+
 .mat-column-makePlayoffs {
   border-left: #585859 solid 1px;
+}
+
+.mat-row,
+.mat-footer-row {
+  max-height: 48px;
 }

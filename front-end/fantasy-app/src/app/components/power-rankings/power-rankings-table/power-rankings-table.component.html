@@ -1,7 +1,7 @@
 <div class="power-ranking-container">
   <div class="margin-bot-20">
     <span class="container_spacer"></span>
-    <button mat-raised-button color="accent" class="button-right"
+    <button mat-raised-button color="accent" [ngClass]="{'button-right': !configService.isMobile, 'button-left': configService.isMobile}"
             (click)="expandCollapseAll()">{{expandedElement.length == powerRankings.length ? 'Collapse' : 'Expand'}} All
     </button>
   </div>
@@ -60,11 +60,11 @@
         <div [@detailExpand]="checkExpanded(element) ? 'expanded' : 'collapsed'">
           <div *ngIf="checkExpanded(element)" class="power-ranking-element-detail">
             <div class="grid-20">
-              <div><span class="text__light">Team</span>
+              <div *ngIf="!configService.isMobile"><span class="text__light">Team</span>
                 <div class="mid-bold-text link--text__no__underline" [routerLink]="['../team', element.team.owner?.ownerName]">{{element.team.owner?.teamName}}</div>
               </div>
               <br>
-              <div><span class="small-text__light">Owner: </span>
+              <div *ngIf="!configService.isMobile"><span class="small-text__light">Owner: </span>
                 <div class="mid-bold-text">{{element.team.owner?.ownerName}}</div>
               </div>
               <div>
@@ -96,7 +96,7 @@
               <hr class="dark">
               <div *ngFor="let player of positionGroup.players">
                 <span class="starter-icon"><mat-icon [inline]="true" *ngIf="isStarter(element, player)">grade</mat-icon></span>
-                <span>{{player.full_name}} </span>
+                <span>{{configService.isMobile ? player.last_name : player.full_name}} </span>
                 <span [ngClass]="{'success__alert': (isSuperFlex ? player.sf_trade_value : player.trade_value) > 6000, 'urgent__alert': (isSuperFlex ? player.sf_trade_value : player.trade_value) < 2000}">{{isSuperFlex ? player.sf_trade_value : player.trade_value}}</span>
               </div>
             </div>
@@ -110,7 +110,7 @@
               </div>
               <hr class="dark">
               <div *ngFor="let player of element.picks.players">
-                <span>{{player.full_name}} </span>
+                <span>{{configService.isMobile ? player.last_name : player.full_name}} </span>
                 <span [ngClass]="{'success__alert': (isSuperFlex ? player.sf_trade_value : player.trade_value) > 6000, 'urgent__alert': (isSuperFlex ? player.sf_trade_value : player.trade_value) < 2000}">{{isSuperFlex ? player.sf_trade_value : player.trade_value}}</span>
               </div>
             </div>

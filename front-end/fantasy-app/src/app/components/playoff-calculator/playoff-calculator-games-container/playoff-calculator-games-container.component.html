@@ -1,5 +1,5 @@
 <div class="games-container">
-  <div class="margin-top-25">
+  <div class="margin-top-25" *ngIf="!selectable">
     <span class="mid-bold-text">Week {{weekMatchUps[0].matchUpDetails.week}}</span>
     <span *ngIf="recordString.length > 0" class="small-text__light" style="padding-left: 15px">({{recordString}})</span>
     <span *ngIf="weekMatchUps[0].matchUpDetails.week === sleeperService.selectedLeague.playoffStartWeek - 1" class="small-text__light" style="padding-left: 15px">Last week of the regular season.</span>
@@ -8,7 +8,11 @@
   </div>
   <div fxLayout="row wrap" fxLayoutAlign="center" class="margin-top-25">
     <div *ngFor="let game of weekMatchUps; let i = index" class="item">
-      <app-playoff-calculator-games-card [game]="game"></app-playoff-calculator-games-card>
+      <app-playoff-calculator-games-card [game]="game" *ngIf="!selectable"></app-playoff-calculator-games-card>
+      <app-playoff-calculator-selectable-game-card [game]="game" *ngIf="selectable"></app-playoff-calculator-selectable-game-card>
     </div>
+  </div>
+  <div class="margin-top-10 center-text" *ngIf="selectable">
+    <button mat-stroked-button (click)="resetSelectableGames()"><mat-icon class="add-icon-button">restart_alt</mat-icon> Reset Week</button>
   </div>
 </div>

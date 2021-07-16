@@ -1,35 +1,35 @@
-<div class="table-container">
+<div class="ktc-table-container">
   <div>
-    <mat-form-field class="button-left player-value-checkbox-margin mat-dropdown-wide-300">
+    <mat-form-field class="button-left player-value-checkbox-margin mat-dropdown-wide-300" color="accent">
       <mat-label>Search Player</mat-label>
       <input matInput type="text" (keyup)="updatePlayerFilters()" [(ngModel)]="searchVal">
     </mat-form-field>
   </div>
-  <div>
-    <span class="button-left">
-      <mat-checkbox class="player-value-checkbox-margin" color="primary" [(ngModel)]="filterPosGroup[0]"
+  <div [ngClass]="{'center-text': configService.isMobile}">
+    <span [ngClass]="{'button-left': !configService.isMobile}">
+      <mat-checkbox [ngClass]="{'player-value-checkbox-margin': !configService.isMobile, 'player-value-checkbox-margin__mobile': configService.isMobile}" color="primary" [(ngModel)]="filterPosGroup[0]"
                     (change)="updatePlayerFilters()">QB</mat-checkbox>
-      <mat-checkbox class="player-value-checkbox-margin" color="primary" [(ngModel)]="filterPosGroup[1]"
+      <mat-checkbox [ngClass]="{'player-value-checkbox-margin': !configService.isMobile, 'player-value-checkbox-margin__mobile': configService.isMobile}" color="primary" [(ngModel)]="filterPosGroup[1]"
                     (change)="updatePlayerFilters()">RB</mat-checkbox>
-      <mat-checkbox class="player-value-checkbox-margin" color="primary" [(ngModel)]="filterPosGroup[2]"
+      <mat-checkbox [ngClass]="{'player-value-checkbox-margin': !configService.isMobile, 'player-value-checkbox-margin__mobile': configService.isMobile}" color="primary" [(ngModel)]="filterPosGroup[2]"
                     (change)="updatePlayerFilters()">WR</mat-checkbox>
-      <mat-checkbox class="player-value-checkbox-margin" color="primary" [(ngModel)]="filterPosGroup[3]"
+      <mat-checkbox [ngClass]="{'player-value-checkbox-margin': !configService.isMobile, 'player-value-checkbox-margin__mobile': configService.isMobile}" color="primary" [(ngModel)]="filterPosGroup[3]"
                     (change)="updatePlayerFilters()">TE</mat-checkbox>
-      <mat-checkbox class="player-value-checkbox-margin" color="primary" [(ngModel)]="filterPosGroup[4]" [disabled]="showFreeAgents || showRookies"
+      <mat-checkbox [ngClass]="{'player-value-checkbox-margin': !configService.isMobile, 'player-value-checkbox-margin__mobile': configService.isMobile}" color="primary" [(ngModel)]="filterPosGroup[4]" [disabled]="showFreeAgents || showRookies"
                     (change)="updatePlayerFilters()">Picks</mat-checkbox>
     </span>
-    <span class="container_spacer"></span>
-    <span class="button-right">
+    <span *ngIf="!configService.isMobile" class="container_spacer"></span>
+    <div [ngClass]="{'button-right': !configService.isMobile, 'margin-top-10': configService.isMobile}">
       <mat-slide-toggle *ngIf="sleeperService.leagueLoaded" color="primary" [(ngModel)]="showFreeAgents" (change)="updatePlayerFilters()" class="player-value-checkbox-margin">
-        Free Agents
+        {{configService.isMobile ? 'FA' : 'Free Agents'}}
       </mat-slide-toggle>
           <mat-slide-toggle color="primary" [(ngModel)]="showRookies" (change)="updatePlayerFilters()" class="player-value-checkbox-margin">
-      Rookies Only
-    </mat-slide-toggle>
+            {{configService.isMobile ? 'Rookies' : 'Rookies Only'}}
+          </mat-slide-toggle>
           <mat-slide-toggle color="primary" [(ngModel)]="isSuperFlex" (change)="updateSuperFlex()"  class="player-value-checkbox-margin" >
-      SuperFlex
+      {{configService.isMobile ? 'SF' : 'SuperFlex'}}
     </mat-slide-toggle>
-    </span>
+    </div>
   </div>
   <div class="margin-top-10 mat-elevation-z8" [hidden]="filteredPlayers.length === 0">
     <mat-table [dataSource]="dataSource" matSort matSortActive="{{isSuperFlex ? 'sf_trade_value' : 'trade_value'}}"
@@ -38,7 +38,7 @@
       <!-- Name Column -->
       <ng-container matColumnDef="full_name">
         <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.full_name}} <span
+        <mat-cell *matCellDef="let element"> {{configService.isMobile ? element.first_name.substr(0, 1) + '. ' + element.last_name : element.full_name}} <span
           *ngIf="(element.experience === 0 && element.position !== 'PI')" matBadge="R" matBadgeOverlap="false"></span>
 <!--          <span class="small-text__light">{{element.team}}</span>-->
         </mat-cell>
@@ -46,7 +46,7 @@
 
       <!-- Pos Column -->
       <ng-container matColumnDef="position">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>Position</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header>{{configService.isMobile ? 'Pos' : 'Position'}}</mat-header-cell>
         <mat-cell
           *matCellDef="let element"> {{element.position == 'PI' ? 'PICK' : element.position}} {{isSuperFlex ? element.sf_position_rank : element.position_rank}}</mat-cell>
       </ng-container>
@@ -101,7 +101,7 @@
 
           <ng-container *ngIf="sleeperService.selectedLeague" matColumnDef="owner">
             <mat-header-cell *matHeaderCellDef mat-sort-header>Owner</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{element.owner?.ownerName || '---'}}</mat-cell>
+            <mat-cell *matCellDef="let element" style="text-overflow-ellipsis: true">{{element.owner?.ownerName || '---'}}</mat-cell>
           </ng-container>
 
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
