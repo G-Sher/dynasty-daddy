@@ -3,7 +3,6 @@ import {SleeperTeam} from '../../model/SleeperLeague';
 import {KTCPlayer} from '../../model/KTCPlayer';
 import {PositionPowerRanking, TeamPowerRanking} from '../model/powerRankings';
 import {SleeperService} from '../../services/sleeper.service';
-import {ChartDataSets} from 'chart.js';
 
 @Injectable({
   providedIn: 'root'
@@ -230,6 +229,18 @@ export class PowerRankingsService {
       }
     });
   }
+
+  // private selectStarters(players: KTCPlayer[], slots: number): KTCPlayer[] {
+  //   const starters = [];
+  //   for (let i = 0; starters.length < slots; i++) {
+  //     if (this.sleeperService.sleeperPlayers[players[i].sleeper_id]?.injury_status !== 'IR'
+  //       && this.sleeperService.sleeperPlayers[players[i].sleeper_id]?.injury_status !== 'Out') {
+  //       console.log(this.sleeperService.sleeperPlayers[players[i].sleeper_id])
+  //       starters.push(players[i]);
+  //     }
+  //   }
+  //   return starters;
+  // }
 
   /**
    * determines the best available flex option for team by trade value

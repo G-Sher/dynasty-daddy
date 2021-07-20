@@ -685,7 +685,7 @@ export class PlayoffCalculatorService {
         timesWinChampionship: Math.round(this.teamPlayoffOdds[team.roster.rosterId].timesWinChampionship / divisor),
       };
     }
-    console.table(this.teamPlayoffOdds);
+    // console.table(this.teamPlayoffOdds);
   }
 
   /**

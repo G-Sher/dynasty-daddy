@@ -94,14 +94,16 @@ export class CompletedDraftTableComponent implements OnInit, OnChanges {
     this.isSuperFlex = this.sleeperService.selectedLeague.isSuperflex;
     this.pickValues = this.playerService.getDraftPicksForYear();
     this.refreshMetrics();
+    this.paginator.pageIndex = 0;
+    this.dataSource.paginator = this.paginator;
   }
 
   ngOnChanges(): void {
     this.isSuperFlex = this.sleeperService.selectedLeague.isSuperflex;
     this.dataSource = new MatTableDataSource(this.selectedDraft.picks);
+    this.refreshMetrics();
     this.paginator.pageIndex = 0;
     this.dataSource.paginator = this.paginator;
-    this.refreshMetrics();
   }
 
   /**
@@ -277,6 +279,8 @@ export class CompletedDraftTableComponent implements OnInit, OnChanges {
     }
     this.pieChartLabels = labels;
     this.pieChartData = data;
-    this.chart.updateColors();
+    if (this.chart?.datasets?.length > 0) {
+      this.chart.updateColors();
+    }
   }
 }
