@@ -50,7 +50,7 @@ export class FantasyTeamDetailsComponent implements OnInit {
   ngOnInit(): void {
     const ownerName = this.route.snapshot.paramMap.get('ownerName');
 
-    if (this.sleeperService.leagueLoaded) {
+    if (this.sleeperService.leagueLoaded && this.sleeperService.selectedLeague) {
       // get selected team from sleeper data
       const teamIndex = this.sleeperService.sleeperTeamDetails.map(e => e.owner?.ownerName).indexOf(ownerName);
       this.selectedTeam = this.sleeperService.sleeperTeamDetails[teamIndex];

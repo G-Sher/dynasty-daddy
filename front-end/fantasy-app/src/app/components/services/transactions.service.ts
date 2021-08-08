@@ -19,8 +19,7 @@ export class TransactionsService {
    */
   generateTeamTransactionHistory(selectedTeam: SleeperTeam): TransactionUI[] {
     const teamActivity = [];
-    for (let i = this.sleeperService.selectedLeague.startWeek; i < this.sleeperService.selectedLeague.playoffStartWeek
-    || this.nflService.stateOfNFL.week; i++) {
+    for (let i = this.sleeperService.selectedLeague.startWeek; i < this.sleeperService.selectedLeague.playoffStartWeek; i++) {
       for (const transaction of this.sleeperService.selectedLeague.leagueTransactions[i] as SleeperTeamTransactionData[]) {
         if (transaction.rosterIds.includes(selectedTeam.roster.rosterId) && transaction.status === 'complete') {
           teamActivity.push(this.formatTransactionUI(transaction, selectedTeam));
