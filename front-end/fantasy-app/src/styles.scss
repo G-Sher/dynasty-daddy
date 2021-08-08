@@ -51,7 +51,6 @@ html, body, app-root, .app-frame {
   box-sizing: border-box;
   color: #e0e0e0;
 }
-
 .content-wrapper {
   display: flex;
   flex: 1 1 auto;     /* 1 */
@@ -64,6 +63,7 @@ html, body, app-root, .app-frame {
   width: 100%;        /* 2 */
   padding: 8px 24px 24px;
 }
+
 
 .content-wrapper__mobile {
   display: flex;
