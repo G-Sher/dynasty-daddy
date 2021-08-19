@@ -19,6 +19,10 @@ export class NflService {
    * save state of nfl to service for other services to reference
    */
   public $initStateOfNfl(): Observable<SleeperStateOfNFL> {
-    return this.sleeperApiService.getSleeperStateOfNFL().pipe(map((season) => this.stateOfNFL = season));
+    return this.sleeperApiService.getSleeperStateOfNFL().pipe(map((season) => {
+      this.stateOfNFL = season;
+      this.stateOfNFL.completedWeek = season.seasonType !== 'pre' && season.week > 0 ? season.week - 1 : 0;
+      return this.stateOfNFL;
+    }));
   }
 }

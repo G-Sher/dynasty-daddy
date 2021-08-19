@@ -146,7 +146,7 @@ export class PlayerService {
         }
         return of(this.playerStats);
       })));
-      let currentWeekInd = this.nflService.stateOfNFL.week === 0 ? 0 : this.nflService.stateOfNFL.week - 1;
+      let currentWeekInd = this.nflService.stateOfNFL.completedWeek;
       let currentYearInd = Number(this.nflService.stateOfNFL.season);
       for (let weekNum = 1; weekNum < 19; weekNum++) {
         if (currentWeekInd === 0) {
@@ -247,7 +247,7 @@ export class PlayerService {
   getWeekByIndex(index: number): string {
     index--;
     if (this.nflService.stateOfNFL) {
-      let weekNum = (this.nflService.stateOfNFL.week === 0 ? 0 : this.nflService.stateOfNFL.week - 1) - index;
+      let weekNum = this.nflService.stateOfNFL.completedWeek - index;
       let year = Number(this.nflService.stateOfNFL.season);
       if (weekNum < 1) {
         year--;

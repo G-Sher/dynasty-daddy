@@ -698,11 +698,12 @@ export class PlayoffCalculatorService {
 
   /**
    * handles if start week is null
+   * TODO check when new weeks are processed
    * @private
    */
   private getStartWeek(): number {
     if (this.nflService.stateOfNFL.season === this.sleeperService.selectedLeague.season) {
-      return this.nflService.stateOfNFL.week === 0 ? 1 : this.nflService.stateOfNFL.week;
+      return this.nflService.stateOfNFL.completedWeek + 1;
     }
     return Number(this.nflService.stateOfNFL.season) < 2021 ? 17 : 18;
   }

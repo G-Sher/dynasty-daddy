@@ -19,7 +19,7 @@ export class PlayerDetailsInsightsComponent implements OnInit {
   positionAdjPlayers: KTCPlayer[];
   displayedColumns: string[] = ['rank', 'name', 'value'];
 
-  constructor(private playerService: PlayerService, public sleeperService: SleeperService) {
+  constructor(public playerService: PlayerService, public sleeperService: SleeperService) {
   }
 
   ngOnInit(): void {
