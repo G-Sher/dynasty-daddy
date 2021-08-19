@@ -118,7 +118,7 @@ export class PlayerDetailsWeeklyStatsLineChartComponent extends BaseComponent im
     this.lineChartData.push({label: 'Actual', data: stats.reverse()});
     this.lineChartData.push({label: 'Projected', data: projections.reverse()});
     this.lineChartLabels.reverse();
-    if(this.chart && this.chart.chart) {
+    if (this.chart && this.chart.chart) {
       this.chart.chart.data.datasets = this.lineChartData;
       this.chart.chart.data.labels = this.lineChartLabels;
     }

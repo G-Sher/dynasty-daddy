@@ -51,7 +51,7 @@ export class PlayoffCalculatorComponent implements OnInit {
         console.warn('Warning: Match Data was not loaded correctly. Recalculating Data...');
         this.matchupService.initMatchUpCharts(this.sleeperService.selectedLeague);
       }
-      this.playoffMachineWeek = this.nflService.stateOfNFL.week !== 0 ? this.nflService.stateOfNFL.week : 1;
+      this.playoffMachineWeek = this.nflService.stateOfNFL.completedWeek > 0 ? this.nflService.stateOfNFL.completedWeek : 1;
       this.refreshGames();
       this.generateSelectableWeeks();
     }
@@ -59,23 +59,18 @@ export class PlayoffCalculatorComponent implements OnInit {
 
   /**
    * generate valid weeks to select probability
-   * TODO refactor redundant code
    * @private
    */
   private generateSelectableWeeks(): void {
     this.selectableWeeks.push({week: this.sleeperService.selectedLeague.startWeek, value: 'Preseason'});
-    if (this.sleeperService.selectedLeague.status !== 'complete') {
-      for (let i = 1; i <= this.nflService.stateOfNFL.week; i++) {
-        const disclaimer = this.sleeperService.selectedLeague.playoffStartWeek === this.sleeperService.selectedLeague.startWeek + i ? ' (End of regular season)' : '';
-        this.selectableWeeks.push({week: this.sleeperService.selectedLeague.startWeek + i, value: 'Before Week '
-            + (this.sleeperService.selectedLeague.startWeek + i) + disclaimer});
-      }
-    } else {
-      for (let i = 1; i <= this.playoffCalculatorService.matchUpsWithProb.length; i++) {
-        const disclaimer = this.sleeperService.selectedLeague.playoffStartWeek === this.sleeperService.selectedLeague.startWeek + i ? ' (End of regular season)' : '';
-        this.selectableWeeks.push({week: this.sleeperService.selectedLeague.startWeek + i, value: 'Before Week '
-            + (this.sleeperService.selectedLeague.startWeek + i) + disclaimer});
-      }
+    const selectableWeekMax = this.sleeperService.selectedLeague.status !== 'complete' ? this.nflService.stateOfNFL.completedWeek
+      : this.playoffCalculatorService.matchUpsWithProb.length;
+    for (let i = 1; i <= selectableWeekMax; i++) {
+      const disclaimer = this.sleeperService.selectedLeague.playoffStartWeek === this.sleeperService.selectedLeague.startWeek + i ? ' (End of regular season)' : '';
+      this.selectableWeeks.push({week: this.sleeperService.selectedLeague.startWeek + i, value: 'Before Week '
+          + (this.sleeperService.selectedLeague.startWeek + i) + disclaimer});
+    }
+    if (this.sleeperService.selectedLeague.status === 'complete') {
       this.selectableWeeks.push({week: this.sleeperService.selectedLeague.startWeek
           + this.playoffCalculatorService.matchUpsWithProb.length + 1, value: 'Today'});
     }
@@ -90,13 +85,14 @@ export class PlayoffCalculatorComponent implements OnInit {
     if (this.playoffCalculatorService.matchUpsWithProb.length > 0) {
       if (this.sleeperService.selectedLeague.season === this.nflService.stateOfNFL.season) {
         this.upcomingMatchUps = this.playoffCalculatorService.matchUpsWithProb.slice(
-          this.nflService.stateOfNFL.week,
+          this.nflService.stateOfNFL.completedWeek,
           this.sleeperService.selectedLeague.playoffStartWeek - 1,
         );
         this.playoffMatchUps = this.playoffCalculatorService.matchUpsWithProb.slice(
           this.sleeperService.selectedLeague.playoffStartWeek - 1
         );
-        this.completedMatchUps = this.playoffCalculatorService.matchUpsWithProb.slice(0, this.nflService.stateOfNFL.week).reverse();
+        this.completedMatchUps =
+          this.playoffCalculatorService.matchUpsWithProb.slice(0, this.nflService.stateOfNFL.completedWeek).reverse();
       } else {
         this.completedMatchUps = this.playoffCalculatorService.matchUpsWithProb.slice().reverse();
       }
@@ -107,7 +103,7 @@ export class PlayoffCalculatorComponent implements OnInit {
    * update probability handler may remove later idk
    * @param value
    */
-  updateProbability(value: any): void {
+  updateProbability(value: number): void {
     this.selectedWeek = value;
     this.playoffCalculatorService.updateSeasonOdds(value);
   }

@@ -9,7 +9,7 @@ import {PlayerService} from '../../services/player.service';
 import {MockDraftService} from '../services/mock-draft.service';
 import {MatchupService} from '../services/matchup.service';
 import {PlayoffCalculatorService} from '../services/playoff-calculator.service';
-import {ConfigService} from "../../services/init/config.service";
+import {ConfigService} from '../../services/init/config.service';
 
 @Component({
   selector: 'app-home',
@@ -128,6 +128,9 @@ export class HomeComponent extends BaseComponent implements OnInit {
     });
   }
 
+  /**
+   * log in with a previous year league id
+   */
   loginWithPrevSeason(): void {
     this.loginWithLeagueId(this.sleeperService.selectedLeague.prevLeagueId);
   }

@@ -198,6 +198,7 @@ export class SleeperStateOfNFL {
   season: string;
   previousSeason: string;
   seasonType: string;
+  completedWeek: number;
 }
 
 export class SleeperPlayoffMatchUp {

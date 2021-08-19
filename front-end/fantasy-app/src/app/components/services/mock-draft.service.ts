@@ -17,8 +17,6 @@ export class MockDraftService {
   /** available players */
   selectablePlayers: KTCPlayer[] = [];
 
-  // picks: KTCPlayer[] = [];
-
   constructor(private sleeperService: SleeperService) {
   }
 
@@ -28,7 +26,7 @@ export class MockDraftService {
    * @param isSuperFlex is draft superflex
    * @param playerType draft type, 1 == rookies only, 2 == vets only, 3 == all players
    */
-  generateDraft(players: KTCPlayer[], isSuperFlex: boolean = true, playerType: number = 1): void {
+  generateDraft(players: KTCPlayer[], isSuperFlex: boolean = true, playerType: number = 3): void {
     if (playerType === 1) { // rookies only
       this.selectablePlayers = players.filter(player => {
         return player.experience === 0 && player.position !== 'PI';
