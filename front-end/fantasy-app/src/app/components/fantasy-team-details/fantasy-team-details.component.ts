@@ -110,4 +110,12 @@ export class FantasyTeamDetailsComponent implements OnInit {
         this.teamActivity.slice() : this.filterTeamActivity = this.teamActivity.slice(0, 5);
     }
   }
+
+  /**
+   * set filter value to trade to only show team trades
+   */
+  showOnlyTrades(): void {
+    this.activitySearchVal = 'trade';
+    this.updateActivityFilter();
+  }
 }

@@ -103,7 +103,7 @@
             <div class="small-text__light text__light disabled__color">Total Moves</div>
             <div class="mid-bold-text">{{teamActivity.length}}</div>
           </mat-card>
-          <mat-card>
+          <mat-card style="cursor: pointer" (click)="showOnlyTrades()">
             <div class="small-text__light text__light disabled__color">Total Trades</div>
             <div class="mid-bold-text">{{transactionsService.getTradeTotal(teamActivity)}}</div>
           </mat-card>
