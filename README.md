@@ -26,6 +26,12 @@ Requirements:
 
 First, clone repo and open up in your preferred IDE.
 
+### Database
+
+- Run scripts in `/back-end/database/scripts` directory to create database and insert data.
+
+    - data is found in the `data` directory
+
 ###  Front End
 
 1. Navigate to the front end project directory `/front-end/fantasy-app/`
@@ -34,13 +40,8 @@ First, clone repo and open up in your preferred IDE.
 ### API
 
 1. Navigate to the project directory `/back-end/express-api`
-2. Run `npm install` and `npm run start` and the api should spin up.
-
-### Database
-
-- Run scripts in `/back-end/database/scripts` directory to create database and insert data.
-
-    - data is found in the `data` directory
+2. Copy the `.env.example` file renaming it to just `.env`. Then update the `CONNECTION_STRING` to point to the local db containing the data.
+3. Now, run `npm install` and `npm run start` and the api should spin up.
 
 
 
@@ -52,9 +53,7 @@ First, clone repo and open up in your preferred IDE.
 - Player value calculation based on points and trade value
 - More team analytics
 - Team Elo ranking like Chess
-- Refactor backend to map data better with RXJS
-
-
+- Code clean up on API and Front End
 
 ## Packages
 
@@ -64,6 +63,7 @@ First, clone repo and open up in your preferred IDE.
 - simple-statistics - statistics and probability calculations
 - angular2-query-builder - query builder for player comparison advanced search
 - ngx-device-detector - detects if using mobile device, tablet, or desktop
+- ngx-spinner - displays spinner when waiting for api calls to return
 
 ## Credits
 
