@@ -40,7 +40,7 @@
 
       <ng-container matColumnDef="value">
         <mat-header-cell *matHeaderCellDef>Trade Value</mat-header-cell>
-        <mat-cell *matCellDef="let player">{{sleeperService.leagueLoaded && !sleeperService.selectedLeague.isSuperflex ? player.trade_value : player.sf_trade_value}}</mat-cell>
+        <mat-cell *matCellDef="let player">{{sleeperService.leagueLoaded && !sleeperService.selectedLeague.isSuperflex ? playerService.playerValueAnalysis[player.name_id].trade_value : playerService.playerValueAnalysis[player.name_id].sf_trade_value}}</mat-cell>
       </ng-container>
 
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
@@ -63,7 +63,7 @@
 
       <ng-container matColumnDef="value">
         <mat-header-cell *matHeaderCellDef>Trade Value</mat-header-cell>
-        <mat-cell *matCellDef="let player">{{sleeperService.leagueLoaded && !sleeperService.selectedLeague.isSuperflex ? player.trade_value : player.sf_trade_value}}</mat-cell>
+        <mat-cell *matCellDef="let player">{{sleeperService.leagueLoaded && !sleeperService.selectedLeague.isSuperflex ? playerService.playerValueAnalysis[player.name_id].trade_value : playerService.playerValueAnalysis[player.name_id].sf_trade_value}}</mat-cell>
       </ng-container>
 
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

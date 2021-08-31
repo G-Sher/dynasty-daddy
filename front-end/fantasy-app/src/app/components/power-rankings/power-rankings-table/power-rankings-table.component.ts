@@ -4,9 +4,9 @@ import {TeamPowerRanking} from '../../model/powerRankings';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatSort} from '@angular/material/sort';
 import {KTCPlayer} from '../../../model/KTCPlayer';
-import {SleeperTeam} from '../../../model/SleeperLeague';
 import {SleeperService} from '../../../services/sleeper.service';
-import {ConfigService} from "../../../services/init/config.service";
+import {ConfigService} from '../../../services/init/config.service';
+import {PlayerService} from '../../../services/player.service';
 
 // details animation
 export const detailExpand = trigger('detailExpand',
@@ -48,7 +48,7 @@ export class PowerRankingsTableComponent implements OnInit {
   // mat sort element
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
-  constructor(public sleeperService: SleeperService, public configService: ConfigService) { }
+  constructor(public sleeperService: SleeperService, public configService: ConfigService, public playerService: PlayerService) { }
 
   ngOnInit(): void {
     this.alertThreshold = this.powerRankings.length / 3;

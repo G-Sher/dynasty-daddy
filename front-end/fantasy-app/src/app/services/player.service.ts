@@ -3,12 +3,11 @@ import {Injectable} from '@angular/core';
 import {KTCPlayer, KTCPlayerDataPoint} from '../model/KTCPlayer';
 import {KTCApiService} from './api/ktc-api.service';
 import {NgxSpinnerService} from 'ngx-spinner';
-import {forkJoin, Observable, of, Subject, timer} from 'rxjs';
-import {SleeperStateOfNFL, SleeperTeam, SleeperTeamMatchUpData} from '../model/SleeperLeague';
+import {forkJoin, Observable, of, Subject} from 'rxjs';
+import {SleeperTeam} from '../model/SleeperLeague';
 import {SleeperApiService} from './api/sleeper/sleeper-api.service';
-import {map, mergeMap} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import {NflService} from './utilities/nfl.service';
-import {NUMPAD_NINE} from '@angular/cdk/keycodes';
 
 @Injectable({
   providedIn: 'root'
@@ -30,11 +29,8 @@ export class PlayerService {
   /** past week dict from sleeper for projections. 18 weeks */
   pastSeasonWeeklyProjections = {};
 
-  /** dict of percent change values for super flex */
-  superFlexPercentChange = {};
-
-  /** dict of percent change values for standard */
-  standardPercentChange = {};
+  /** dict of trade value calculations by player name id */
+  playerValueAnalysis = {};
 
   /** full team name based on acc */
   private teamAccToFullName = {
@@ -129,8 +125,12 @@ export class PlayerService {
         this.spinner.hide();
       });
       this.playerValues.map(player => {
-        this.superFlexPercentChange[player.name_id] = this.getPercentChange(player, true);
-        this.standardPercentChange[player.name_id] = this.getPercentChange(player, false);
+        this.playerValueAnalysis[player.name_id] = {
+          sf_change: this.getPercentChange(player, true),
+          standard_change: this.getPercentChange(player, false),
+          sf_trade_value: this.getCurrentPlayerValue(player, true),
+          trade_value: this.getCurrentPlayerValue(player, false)
+        };
       });
       return of(this.playerValues);
     }, error => {
@@ -340,7 +340,7 @@ export class PlayerService {
     const players = [];
     if (!isSuperflex) {
       this.playerValues.sort((a, b) => {
-        return b.trade_value - a.trade_value;
+        return this.playerValueAnalysis[b.name_id].trade_value - this.playerValueAnalysis[a.name_id].trade_value;
       });
     }
     const playerRank = this.getRankOfPlayerByNameId(nameId);
@@ -355,7 +355,8 @@ export class PlayerService {
       }
     }
     return players.sort((a, b) => {
-      return isSuperflex ? b.sf_trade_value - a.sf_trade_value : b.trade_value - a.trade_value;
+      return isSuperflex ? this.playerValueAnalysis[b.name_id].sf_trade_value - this.playerValueAnalysis[a.name_id].sf_trade_value
+        : this.playerValueAnalysis[b.name_id].trade_value - this.playerValueAnalysis[a.name_id].trade_value;
     });
   }
 
@@ -390,6 +391,19 @@ export class PlayerService {
       const changeAmount = isSuperFlex ? (isCurrent ? element.sf_trade_value : 0) - 0
         : (isCurrent ? element.trade_value : 0) - 0;
       return Math.round(changeAmount);
+    }
+  }
+
+  /**
+   * returns current value of player
+   * @param player ktc player
+   * @param isSuperFlex boolean
+   */
+  getCurrentPlayerValue(player: KTCPlayer, isSuperFlex: boolean): number {
+    if (new Date(player.date).setHours(0, 0, 0, 0) !== new Date().setHours(0, 0, 0, 0)) {
+      return 0;
+    } else {
+      return isSuperFlex ? player.sf_trade_value : player.trade_value;
     }
   }
 }

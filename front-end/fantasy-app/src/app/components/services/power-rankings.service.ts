@@ -3,6 +3,7 @@ import {SleeperTeam} from '../../model/SleeperLeague';
 import {KTCPlayer} from '../../model/KTCPlayer';
 import {PositionPowerRanking, TeamPowerRanking} from '../model/powerRankings';
 import {SleeperService} from '../../services/sleeper.service';
+import {PlayerService} from "../../services/player.service";
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class PowerRankingsService {
   /** team power rankings */
   powerRankings: TeamPowerRanking[] = [];
 
-  constructor(private sleeperService: SleeperService) {
+  constructor(private sleeperService: SleeperService, public playerService: PlayerService) {
   }
 
   /** supported position groups to power rank */
@@ -34,8 +35,8 @@ export class PowerRankingsService {
             for (const player of players) {
               if (sleeperId === player.sleeper_id) {
                 roster.push(player);
-                sfTradeValueTotal += player.sf_trade_value;
-                tradeValueTotal += player.trade_value;
+                sfTradeValueTotal += this.playerService.playerValueAnalysis[player.name_id].sf_trade_value;
+                tradeValueTotal += this.playerService.playerValueAnalysis[player.name_id].trade_value;
                 break;
               }
             }
@@ -47,8 +48,8 @@ export class PowerRankingsService {
             let groupList: KTCPlayer[] = [];
             groupList = roster.filter(player => {
               if (player.position === group) {
-                sfTradeValue += player.sf_trade_value;
-                tradeValue += player.trade_value;
+                sfTradeValue += this.playerService.playerValueAnalysis[player.name_id].sf_trade_value;
+                tradeValue += this.playerService.playerValueAnalysis[player.name_id].trade_value;
                 return player;
               }
             });
@@ -109,9 +110,11 @@ export class PowerRankingsService {
       for (const group of team.roster) {
         group.players.sort((a, b) => {
           if (isSuperflex) {
-            return b.sf_trade_value - a.sf_trade_value;
+            return this.playerService.playerValueAnalysis[b.name_id].sf_trade_value
+              - this.playerService.playerValueAnalysis[a.name_id].sf_trade_value;
           } else {
-            return b.trade_value - a.trade_value;
+            return this.playerService.playerValueAnalysis[b.name_id].trade_value
+              - this.playerService.playerValueAnalysis[a.name_id].trade_value;
           }
         });
       }
