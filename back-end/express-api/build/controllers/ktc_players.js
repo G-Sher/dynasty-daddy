@@ -5,7 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getHistoricalPlayerValueById = exports.getLastMonthPlayerValues = exports.getCurrentPlayerValues = void 0;
+exports.getHistoricalPlayerValueById = exports.getLastThreeMonthPlayerValues = exports.getCurrentPlayerValues = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -52,7 +52,7 @@ var getCurrentPlayerValues = /*#__PURE__*/function () {
 
 exports.getCurrentPlayerValues = getCurrentPlayerValues;
 
-var getLastMonthPlayerValues = /*#__PURE__*/function () {
+var getLastThreeMonthPlayerValues = /*#__PURE__*/function () {
   var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(req, res) {
     var data;
     return _regenerator["default"].wrap(function _callee2$(_context2) {
@@ -61,7 +61,7 @@ var getLastMonthPlayerValues = /*#__PURE__*/function () {
           case 0:
             _context2.prev = 0;
             _context2.next = 3;
-            return playersModel.select('*', ' WHERE date::date = now()::date - 30 order by sf_trade_value desc ');
+            return playersModel.select('*', ' WHERE date::date = now()::date - 90 order by sf_trade_value desc ');
 
           case 3:
             data = _context2.sent;
@@ -93,12 +93,12 @@ var getLastMonthPlayerValues = /*#__PURE__*/function () {
     }, _callee2, null, [[0, 7]]);
   }));
 
-  return function getLastMonthPlayerValues(_x3, _x4) {
+  return function getLastThreeMonthPlayerValues(_x3, _x4) {
     return _ref2.apply(this, arguments);
   };
 }();
 
-exports.getLastMonthPlayerValues = getLastMonthPlayerValues;
+exports.getLastThreeMonthPlayerValues = getLastThreeMonthPlayerValues;
 
 var getHistoricalPlayerValueById = /*#__PURE__*/function () {
   var _ref3 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(req, res) {

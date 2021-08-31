@@ -2,13 +2,7 @@ import {Injectable} from '@angular/core';
 import {CompletedDraft, DraftCapital, SleeperData, SleeperLeagueData, SleeperUserData} from '../model/SleeperUser';
 import {SleeperApiService} from './api/sleeper/sleeper-api.service';
 import {NgxSpinnerService} from 'ngx-spinner';
-import {
-  SleeperOwnerData, SleeperPlayoffMatchUp,
-  SleeperRawDraftOrderData,
-  SleeperRawTradePicksData,
-  SleeperRosterData,
-  SleeperTeam, SleeperTeamMatchUpData, SleeperTeamTransactionData,
-} from '../model/SleeperLeague';
+import {SleeperOwnerData, SleeperPlayoffMatchUp, SleeperRawDraftOrderData, SleeperRawTradePicksData, SleeperRosterData, SleeperTeam, SleeperTeamMatchUpData, SleeperTeamTransactionData,} from '../model/SleeperLeague';
 import {forkJoin, Observable, of} from 'rxjs';
 import {map, mergeMap} from 'rxjs/operators';
 
@@ -91,8 +85,8 @@ export class SleeperService {
           }))
         );
         observe.push(this.sleeperApiService.getSleeperPlayoffsByLeagueId(this.selectedLeague.leagueId).pipe(map((playoffs) => {
-          this.playoffMatchUps = playoffs;
-          return of(this.playoffMatchUps);
+            this.playoffMatchUps = playoffs;
+            return of(this.playoffMatchUps);
           }))
         );
         forkJoin(observe).subscribe(() => {
@@ -230,9 +224,9 @@ export class SleeperService {
           }));
         this.upcomingDrafts.push(draft);
       } else if (draft.status === 'complete' && draft.draftOrder) {
-        forkJoin(
+        forkJoin([
           this.sleeperApiService.getSleeperCompletedDraftsByDraftId(draft.draftId),
-          this.sleeperApiService.getSleeperTradedPicksByDraftId(draft.draftId)
+          this.sleeperApiService.getSleeperTradedPicksByDraftId(draft.draftId)]
         ).subscribe(([picks, tradedPicks]) => {
             tradedPicks.reverse().map((tradedPick: SleeperRawTradePicksData) => {
               picks.filter(pick => {

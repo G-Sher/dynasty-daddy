@@ -65,19 +65,18 @@
           *matCellDef="let element">{{playerService.playerStats[element.sleeper_id]?.pts_half_ppr || '---'}}</mat-cell>
       </ng-container>
 
-      <!-- Fantasy Points -->
-<!--      <ng-container matColumnDef="valueRatio">-->
-<!--        <mat-header-cell *matHeaderCellDef mat-sort-header>VPP Ratio <mat-icon style="font-size: 20px" [matTooltip]="'Value Per Point Ratio = Value / (points/games play)'" [matTooltipPosition]="'above'">help_outline</mat-icon></mat-header-cell>-->
-<!--        <mat-cell-->
-<!--          *matCellDef="let element">{{getValueRatio(element) || '-&#45;&#45;'}}</mat-cell>-->
-<!--      </ng-container>-->
-
-
       <!-- Value Column -->
       <ng-container matColumnDef="{{isSuperFlex ? 'sf_trade_value' : 'trade_value'}}">
         <mat-header-cell *matHeaderCellDef mat-sort-header>Trade Value</mat-header-cell>
         <mat-cell *matCellDef="let element"> {{isSuperFlex ? element.sf_trade_value : element.trade_value}} </mat-cell>
       </ng-container>
+
+      <!-- % change Column -->
+      <ng-container matColumnDef="change">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>% Change</mat-header-cell>
+        <mat-cell *matCellDef="let element"> <span [ngClass]="{'success__alert': isSuperFlex ? playerService.superFlexPercentChange[element.name_id] > 0 : playerService.standardPercentChange[element.name_id] > 0, 'urgent__alert': isSuperFlex ? playerService.superFlexPercentChange[element.name_id] < 0 : playerService.standardPercentChange[element.name_id] < 0}">{{isSuperFlex ? playerService.superFlexPercentChange[element.name_id] : playerService.standardPercentChange[element.name_id]}}%</span></mat-cell>
+      </ng-container>
+
 
       <ng-container matColumnDef="actions">
         <mat-header-cell *matHeaderCellDef></mat-header-cell>

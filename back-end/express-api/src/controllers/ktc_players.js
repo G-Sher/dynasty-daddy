@@ -16,11 +16,11 @@ export const getCurrentPlayerValues = async (req, res) => {
   }
 };
 
-export const getLastMonthPlayerValues = async (req, res) => {
+export const getLastThreeMonthPlayerValues = async (req, res) => {
   try {
     const data = await playersModel.select(
       '*',
-      ' WHERE date::date = now()::date - 30 order by sf_trade_value desc '
+      ' WHERE date::date = now()::date - 90 order by sf_trade_value desc '
     );
     res.status(200).json(data.rows.map(player =>
       (

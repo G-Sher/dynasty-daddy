@@ -47,7 +47,7 @@
         </div>
         <div class="standings-col vertical-break__right__dark">
           <div class="small-text__light text__light disabled__color">{{playerService.playerStatsYear}} Points</div>
-          <div class="mid-bold-text">{{playerService.playerStats[selectedPlayer.sleeper_id]?.pts_half_ppr}}</div>
+          <div class="mid-bold-text">{{playerService.playerStats[selectedPlayer.sleeper_id]?.pts_half_ppr || '--'}}</div>
         </div>
         <div class="standings-col">
           <div class="small-text__light text__light disabled__color">Last 5 Weeks Average</div>
@@ -59,7 +59,8 @@
       <div class="button-right center-text">
         <mat-card>
           <div class="text__light">{{configService.isMobile ? 'Value' : 'Trade Value'}}</div>
-          <div *ngIf="sleeperService.selectedLeague" class="large-bold-header-text">{{sleeperService.selectedLeague.isSuperflex ? selectedPlayer.sf_trade_value : selectedPlayer.trade_value}}</div>
+          <div *ngIf="sleeperService.selectedLeague" class="large-bold-header-text">{{sleeperService.selectedLeague.isSuperflex ? selectedPlayer.sf_trade_value : selectedPlayer.trade_value}}
+          <div class="small-text__light margin-top-10">{{sleeperService.selectedLeague.isSuperflex ? playerService.superFlexPercentChange[selectedPlayer.name_id] : playerService.standardPercentChange[selectedPlayer.name_id]}}% change in 90 days</div></div>
           <div *ngIf="!sleeperService.selectedLeague" [ngClass]="{'large-bold-header-text': !configService.isMobile}"><span class="small-text__light">Superflex: </span>  {{selectedPlayer.sf_trade_value}}
             <div *ngIf="!configService.isMobile"><span class="small-text__light">Standard: </span> {{selectedPlayer.trade_value}}</div>
           </div>

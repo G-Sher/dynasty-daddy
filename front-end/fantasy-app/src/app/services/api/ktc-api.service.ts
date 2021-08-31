@@ -21,7 +21,7 @@ export class KTCApiService {
    * cached prev month player list
    * @private
    */
-  private prevMonthPlayerList: KTCPlayerDataPoint[];
+  private prevPlayerList: KTCPlayerDataPoint[];
 
   constructor(private http: HttpClient, private ktcApiConfigService: KTCApiConfigService) {
   }
@@ -47,16 +47,16 @@ export class KTCApiService {
   /**
    * get player values for last month
    */
-  getPlayerValuesForLastMonth(): Observable<KTCPlayerDataPoint[]> {
-    return this.prevMonthPlayerList ? of(this.prevMonthPlayerList) : this.refreshPlayerValuesForLastMonth();
+  getPlayerValuesForLastThreeMonth(): Observable<KTCPlayerDataPoint[]> {
+    return this.prevPlayerList ? of(this.prevPlayerList) : this.refreshPlayerValuesForLastThreeMonth();
   }
 
   /**
    * refresh cached player values for last month
    */
-  refreshPlayerValuesForLastMonth(): Observable<KTCPlayerDataPoint[]> {
-    return this.http.get<KTCPlayerDataPoint[]>(this.ktcApiConfigService.getPlayerValuesForTodayEndpoint)
-      .pipe(tap((players: KTCPlayerDataPoint[]) => this.prevMonthPlayerList = players, err => {
+  refreshPlayerValuesForLastThreeMonth(): Observable<KTCPlayerDataPoint[]> {
+    return this.http.get<KTCPlayerDataPoint[]>(this.ktcApiConfigService.getPlayerValuesForLastThreeMonthEndpoint)
+      .pipe(tap((players: KTCPlayerDataPoint[]) => this.prevPlayerList = players, err => {
           throw new Error(err);
         }
       ));

@@ -8,7 +8,7 @@ export class KTCApiConfigService {
   // tslint:disable-next-line:variable-name
   private _getPlayerValuesForTodayEndpoint = '';
 
-  private _getPlayerValuesForLastMonthEndpoint = '';
+  private _getPlayerValuesForLastThreeMonthEndpoint = '';
 
   private _getHistoricalPlayerValues = '';
 
@@ -20,12 +20,12 @@ export class KTCApiConfigService {
     this._getPlayerValuesForTodayEndpoint = value;
   }
 
-  get getPlayerValuesForLastMonthEndpoint(): string {
-    return this._getPlayerValuesForLastMonthEndpoint;
+  get getPlayerValuesForLastThreeMonthEndpoint(): string {
+    return this._getPlayerValuesForLastThreeMonthEndpoint;
   }
 
-  set getPlayerValuesForLastMonthEndpoint(value: string) {
-    this._getPlayerValuesForLastMonthEndpoint = value;
+  set getPlayerValuesForLastThreeMonthEndpoint(value: string) {
+    this._getPlayerValuesForLastThreeMonthEndpoint = value;
   }
 
 
