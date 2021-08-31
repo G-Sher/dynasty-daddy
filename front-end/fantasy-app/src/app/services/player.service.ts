@@ -1,6 +1,6 @@
 /* tslint:disable:object-literal-key-quotes */
 import {Injectable} from '@angular/core';
-import {KTCPlayer} from '../model/KTCPlayer';
+import {KTCPlayer, KTCPlayerDataPoint} from '../model/KTCPlayer';
 import {KTCApiService} from './api/ktc-api.service';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {forkJoin, Observable, of, Subject, timer} from 'rxjs';
@@ -8,7 +8,7 @@ import {SleeperStateOfNFL, SleeperTeam, SleeperTeamMatchUpData} from '../model/S
 import {SleeperApiService} from './api/sleeper/sleeper-api.service';
 import {map, mergeMap} from 'rxjs/operators';
 import {NflService} from './utilities/nfl.service';
-import {NUMPAD_NINE} from "@angular/cdk/keycodes";
+import {NUMPAD_NINE} from '@angular/cdk/keycodes';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +18,9 @@ export class PlayerService {
   /** player values for today */
   playerValues: KTCPlayer[] = [];
 
+  /** player values for last month */
+  prevPlayerValues: KTCPlayerDataPoint[] = [];
+
   /** player yearly stats dict from sleeper */
   playerStats = {};
 
@@ -26,6 +29,12 @@ export class PlayerService {
 
   /** past week dict from sleeper for projections. 18 weeks */
   pastSeasonWeeklyProjections = {};
+
+  /** dict of percent change values for super flex */
+  superFlexPercentChange = {};
+
+  /** dict of percent change values for standard */
+  standardPercentChange = {};
 
   /** full team name based on acc */
   private teamAccToFullName = {
@@ -98,8 +107,14 @@ export class PlayerService {
    */
   loadPlayerValuesForToday(): void {
     this.spinner.show();
-    this.ktcApiService.getPlayerValuesForToday().subscribe((response: KTCPlayer[]) => {
-      this.playerValues = response.filter(player => {
+    forkJoin(
+      [
+        this.ktcApiService.getPlayerValuesForToday(),
+        this.ktcApiService.getPlayerValuesForLastThreeMonth()
+      ]
+    ).subscribe(([currentPlayers, pastPlayers]) => {
+      this.prevPlayerValues = pastPlayers;
+      this.playerValues = currentPlayers.filter(player => {
         if (player.position === 'PI') {
           return Number(player.first_name) >= new Date().getFullYear();
         } else {
@@ -113,9 +128,15 @@ export class PlayerService {
         console.error(`Could Not Load Player Points from sleeper - ${sleeperError}`);
         this.spinner.hide();
       });
+      this.playerValues.map(player => {
+        this.superFlexPercentChange[player.name_id] = this.getPercentChange(player, true);
+        this.standardPercentChange[player.name_id] = this.getPercentChange(player, false);
+      });
+      return of(this.playerValues);
     }, error => {
       console.error(`Could Not Load Player Values - ${error}`);
       this.spinner.hide();
+      return of(null);
     });
   }
 
@@ -203,6 +224,19 @@ export class PlayerService {
    */
   getPlayerBySleeperId(id: string): KTCPlayer {
     for (const player of this.playerValues) {
+      if (id === player.sleeper_id) {
+        return player;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * get player based on sleeper id for previous month
+   * @param id
+   */
+  getPlayerBySleeperIdFromThreeMonth(id: string): KTCPlayerDataPoint {
+    for (const player of this.prevPlayerValues) {
       if (id === player.sleeper_id) {
         return player;
       }
@@ -336,5 +370,26 @@ export class PlayerService {
       }
     });
     return draftpicks;
+  }
+
+  /**
+   * calculate and return percent change over a month
+   * @param element ktcplayer
+   * @param isSuperFlex boolean
+   */
+  getPercentChange(element: KTCPlayer, isSuperFlex: boolean): number {
+    const playerDataPoint = this.getPlayerBySleeperIdFromThreeMonth(element.sleeper_id);
+    const isCurrent = new Date(element.date).setHours(0, 0, 0, 0) === new Date().setHours(0, 0, 0, 0);
+    if (playerDataPoint) {
+      const changeAmount = isSuperFlex ? (isCurrent ? element.sf_trade_value : 0) - playerDataPoint.sf_trade_value
+        : (isCurrent ? element.trade_value : 0) - playerDataPoint.trade_value;
+      const prevAmount = isSuperFlex ? (playerDataPoint.sf_trade_value > 0 ? playerDataPoint.sf_trade_value : 1)
+        : (playerDataPoint.trade_value > 0 ? playerDataPoint.trade_value : 1);
+      return Math.round(changeAmount / prevAmount * 100);
+    } else {
+      const changeAmount = isSuperFlex ? (isCurrent ? element.sf_trade_value : 0) - 0
+        : (isCurrent ? element.trade_value : 0) - 0;
+      return Math.round(changeAmount * 100);
+    }
   }
 }

@@ -1,13 +1,13 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {KTCPlayer} from '../../../model/KTCPlayer';
 import {MatTableDataSource} from '@angular/material/table';
-import {MatPaginator, PageEvent} from '@angular/material/paginator';
+import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {SleeperService} from '../../../services/sleeper.service';
 import {PlayerService} from '../../../services/player.service';
 import {PlayerComparisonService} from '../../services/player-comparison.service';
 import {Router} from '@angular/router';
-import {ConfigService} from "../../../services/init/config.service";
+import {ConfigService} from '../../../services/init/config.service';
 
 @Component({
   selector: 'app-ktc-table',
@@ -59,14 +59,18 @@ export class KtcTableComponent implements OnInit {
 
   ngOnInit(): void {
     this.isSuperFlex = this.sleeperService?.selectedLeague?.isSuperflex !== undefined ?
-      this.sleeperService?.selectedLeague?.isSuperflex  : true;
+      this.sleeperService?.selectedLeague?.isSuperflex : true;
     this.filteredPlayers = this.players.slice(0);
     this.dataSource = new MatTableDataSource(this.filteredPlayers);
     this.dataSource.sortingDataAccessor = (item, property) => {
       switch (property) {
-        case 'halfppr': return this.playerService.playerStats[item.sleeper_id]?.pts_half_ppr;
-        // case 'valueRatio': return this.getValueRatio(item);
-        default: return item[property];
+        case 'halfppr':
+          return this.playerService.playerStats[item.sleeper_id]?.pts_half_ppr;
+        case 'change':
+          return this.isSuperFlex ? this.playerService.superFlexPercentChange[item.name_id]
+            : this.playerService.standardPercentChange[item.name_id];
+        default:
+          return item[property];
       }
     };
     this.dataSource.paginator = this.paginator;
@@ -80,7 +84,7 @@ export class KtcTableComponent implements OnInit {
   updatePlayerFilters(): void {
     this.filteredPlayers = this.players.slice(0);
     const filterOptions = ['QB', 'RB', 'WR', 'TE', 'PI'];
-    if (this.showRookies){
+    if (this.showRookies) {
       this.filterPosGroup[4] = false;
       this.filteredPlayers = this.filteredPlayers.filter(player => {
         if (player.experience === 0 && player.position !== 'PI') {
@@ -88,7 +92,7 @@ export class KtcTableComponent implements OnInit {
         }
       });
     }
-    if (this.showFreeAgents){
+    if (this.showFreeAgents) {
       this.filterPosGroup[4] = false;
       this.filteredPlayers = this.filteredPlayers.filter(player => {
         if (!player.owner && player.position !== 'PI') {
@@ -105,7 +109,7 @@ export class KtcTableComponent implements OnInit {
         });
       }
     }
-    if (this.searchVal && this.searchVal.length > 0){
+    if (this.searchVal && this.searchVal.length > 0) {
       this.filteredPlayers = this.filteredPlayers.filter(player => {
         return (player.full_name.toLowerCase().indexOf(this.searchVal.toLowerCase()) >= 0
           || player.age?.toString().indexOf(this.searchVal) >= 0
@@ -123,9 +127,9 @@ export class KtcTableComponent implements OnInit {
   updateSuperFlex(): void {
     this.displayedColumns = [];
     if (this.sleeperService.selectedLeague) {
-      this.displayedColumns = this.configService.isMobile ? ['full_name', 'position', 'owner', this.isSuperFlex ? 'sf_trade_value' : 'trade_value'] : ['full_name', 'position', 'age', 'owner', 'halfppr', this.isSuperFlex ? 'sf_trade_value' : 'trade_value', 'actions'];
+      this.displayedColumns = this.configService.isMobile ? ['full_name', 'position', 'owner', this.isSuperFlex ? 'sf_trade_value' : 'trade_value'] : ['full_name', 'position', 'age', 'owner', 'halfppr', this.isSuperFlex ? 'sf_trade_value' : 'trade_value', 'change', 'actions'];
     } else {
-      this.displayedColumns = this.configService.isMobile ? ['full_name', 'position', 'halfppr', this.isSuperFlex ? 'sf_trade_value' : 'trade_value'] : ['full_name', 'position', 'age', 'halfppr', this.isSuperFlex ? 'sf_trade_value' : 'trade_value', 'actions'];
+      this.displayedColumns = this.configService.isMobile ? ['full_name', 'position', 'halfppr', this.isSuperFlex ? 'sf_trade_value' : 'trade_value'] : ['full_name', 'position', 'age', 'halfppr', this.isSuperFlex ? 'sf_trade_value' : 'trade_value', 'change', 'actions'];
     }
     this.dataSource.data = this.filteredPlayers;
     this.dataSource.sort.sort({
@@ -134,16 +138,6 @@ export class KtcTableComponent implements OnInit {
       disableClear: false
     });
   }
-
-  /**
-   * get value ratio
-   * TODO fix the logic to make more meaningful
-   * @param player player
-   */
-  // getValueRatio(player: KTCPlayer) {
-  // tslint:disable-next-line:max-line-length
-  //   return Math.round((this.isSuperFlex ? player.sf_trade_value : player.trade_value)/(this.playerService.playerStats[player.sleeper_id]?.pts_half_ppr/this.playerService.playerStats[player.sleeper_id]?.gp)) || '---';
-  // }
 
   /**
    * route ot player comparison page

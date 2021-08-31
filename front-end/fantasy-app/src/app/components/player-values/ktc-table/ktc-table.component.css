@@ -24,6 +24,7 @@
 .mat-column-halfppr,
 .mat-column-trade_value,
 .mat-column-sf_trade_value,
+.mat-column-change,
 .mat-column-actions {
   text-align: right;
   justify-content: flex-end;

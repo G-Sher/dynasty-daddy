@@ -84,7 +84,7 @@
     <ng-container matColumnDef="selectedPlayer">
       <mat-header-cell *matHeaderCellDef>Selected Pick (current value)</mat-header-cell>
       <mat-cell *matCellDef="let element"
-                [routerLink]="['../../players/details/', getPlayerBySleeperId(element.sleeperId)?.name_id]"
+                [routerLink]="getPlayerBySleeperId(element.sleeperId) !== null ? ['../../players/details/', getPlayerBySleeperId(element.sleeperId)?.name_id] : []"
                 class="link--text__no__underline">{{configService.isMobile ? element.position + ' ' + element.lastName : element.position + ' ' + element.firstName + ' ' + element.lastName}}
         - {{sleeperService.selectedLeague.isSuperflex ? getPlayerBySleeperId(element.sleeperId)?.sf_trade_value || 'None' : getPlayerBySleeperId(element.sleeperId)?.trade_value || 'None'}}
       </mat-cell>

@@ -10,13 +10,31 @@ export const getCurrentPlayerValues = async (req, res) => {
       + '    order by name_id, id desc \n'
       + ') as T \n'
       + '  order by sf_trade_value desc  ');
-    // let data = await playersModel.select('*',
-    // ' WHERE date::date = now()::date order by sf_trade_value desc ');
-    // if (data.rows.length === 0) {
-    //   data = await playersModel.select('*',
-    //   ' WHERE date::date = (NOW() - interval \'1 day\')::date order by sf_trade_value desc ');
-    // }
     res.status(200).json(data.rows);
+  } catch (err) {
+    res.status(405).json(err.stack);
+  }
+};
+
+export const getLastThreeMonthPlayerValues = async (req, res) => {
+  try {
+    const data = await playersModel.select(
+      '*',
+      ' WHERE date::date = now()::date - 90 order by sf_trade_value desc '
+    );
+    res.status(200).json(data.rows.map(player =>
+      (
+        {
+          name_id: player.name_id,
+          sleeper_id: player.sleeper_id,
+          full_name: player.full_name,
+          sf_position_rank: player.sf_position_rank,
+          position_rank: player.position_rank,
+          sf_trade_value: player.sf_trade_value,
+          trade_value: player.trade_value,
+          date: player.date
+        }
+      )));
   } catch (err) {
     res.status(405).json(err.stack);
   }
@@ -24,7 +42,7 @@ export const getCurrentPlayerValues = async (req, res) => {
 
 export const getHistoricalPlayerValueById = async (req, res) => {
   try {
-    const { id } = req.params;
+    const {id} = req.params;
     const data = await playersModel.select('*', ` WHERE name_id = '${id}'`);
     res.status(200).json(data.rows);
   } catch (err) {

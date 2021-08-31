@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {KTCPlayer} from '../../model/KTCPlayer';
+import {KTCPlayer, KTCPlayerDataPoint} from '../../model/KTCPlayer';
 import {HttpClient} from '@angular/common/http';
 import {KTCApiConfigService} from './ktc-api-config.service';
 import {Observable, of} from 'rxjs';
@@ -16,6 +16,12 @@ export class KTCApiService {
    * @private
    */
   private playersList: KTCPlayer[];
+
+  /**
+   * cached prev month player list
+   * @private
+   */
+  private prevPlayerList: KTCPlayerDataPoint[];
 
   constructor(private http: HttpClient, private ktcApiConfigService: KTCApiConfigService) {
   }
@@ -37,6 +43,25 @@ export class KTCApiService {
         }
       ));
   }
+
+  /**
+   * get player values for last month
+   */
+  getPlayerValuesForLastThreeMonth(): Observable<KTCPlayerDataPoint[]> {
+    return this.prevPlayerList ? of(this.prevPlayerList) : this.refreshPlayerValuesForLastThreeMonth();
+  }
+
+  /**
+   * refresh cached player values for last month
+   */
+  refreshPlayerValuesForLastThreeMonth(): Observable<KTCPlayerDataPoint[]> {
+    return this.http.get<KTCPlayerDataPoint[]>(this.ktcApiConfigService.getPlayerValuesForLastThreeMonthEndpoint)
+      .pipe(tap((players: KTCPlayerDataPoint[]) => this.prevPlayerList = players, err => {
+          throw new Error(err);
+        }
+      ));
+  }
+
 
   /**
    * get historical player value over time by id
