@@ -65,7 +65,18 @@ var getLastMonthPlayerValues = /*#__PURE__*/function () {
 
           case 3:
             data = _context2.sent;
-            res.status(200).json(data.rows);
+            res.status(200).json(data.rows.map(function (player) {
+              return {
+                name_id: player.name_id,
+                sleeper_id: player.sleeper_id,
+                full_name: player.full_name,
+                sf_position_rank: player.sf_position_rank,
+                position_rank: player.position_rank,
+                sf_trade_value: player.sf_trade_value,
+                trade_value: player.trade_value,
+                date: player.date
+              };
+            }));
             _context2.next = 10;
             break;
 

@@ -17,6 +17,7 @@ export class EndpointsService {
 
     // KTC Database Endpoints
     this.ktcApiConfigService.getPlayerValuesForTodayEndpoint = this.baseUrl + '/v1/player/all/today';
+    this.ktcApiConfigService.getPlayerValuesForLastMonthEndpoint = this.baseUrl + '/v1/player/all/prev/month';
     this.ktcApiConfigService.getHistoricalPlayerValues = this.baseUrl + '/v1/player/sleeper/';
 
     // Sleeper Endpoints
