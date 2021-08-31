@@ -74,7 +74,7 @@
       <!-- % change Column -->
       <ng-container matColumnDef="change">
         <mat-header-cell *matHeaderCellDef mat-sort-header>% Change</mat-header-cell>
-        <mat-cell *matCellDef="let element"> <span [ngClass]="{'success__alert': isSuperFlex ? playerService.playerValueAnalysis[element.name_id].sf_change > 0 : playerService.playerValueAnalysis[element.name_id].standard_change > 0, 'urgent__alert': isSuperFlex ? playerService.playerValueAnalysis[element.name_id].sf_change < 0 : playerService.playerValueAnalysis[element.name_id].standard_change < 0}">{{isSuperFlex ? playerService.playerValueAnalysis[element.name_id].sf_change : playerService.playerValueAnalysis[element.name_id].standard_change}}%</span></mat-cell>
+        <mat-cell *matCellDef="let element"> <span [ngClass]="{'success__alert': isSuperFlex ? playerService.playerValueAnalysis[element.name_id].sf_change > 0 : playerService.playerValueAnalysis[element.name_id].standard_change > 0, 'warning__alert': isSuperFlex ? playerService.playerValueAnalysis[element.name_id].sf_change < 0 : playerService.playerValueAnalysis[element.name_id].standard_change < 0}">{{isSuperFlex ? playerService.playerValueAnalysis[element.name_id].sf_change : playerService.playerValueAnalysis[element.name_id].standard_change}}%</span></mat-cell>
       </ng-container>
 
 
