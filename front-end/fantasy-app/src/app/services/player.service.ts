@@ -389,7 +389,7 @@ export class PlayerService {
     } else {
       const changeAmount = isSuperFlex ? (isCurrent ? element.sf_trade_value : 0) - 0
         : (isCurrent ? element.trade_value : 0) - 0;
-      return Math.round(changeAmount * 100);
+      return Math.round(changeAmount);
     }
   }
 }
