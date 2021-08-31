@@ -10,12 +10,18 @@ export const getCurrentPlayerValues = async (req, res) => {
       + '    order by name_id, id desc \n'
       + ') as T \n'
       + '  order by sf_trade_value desc  ');
-    // let data = await playersModel.select('*',
-    // ' WHERE date::date = now()::date order by sf_trade_value desc ');
-    // if (data.rows.length === 0) {
-    //   data = await playersModel.select('*',
-    //   ' WHERE date::date = (NOW() - interval \'1 day\')::date order by sf_trade_value desc ');
-    // }
+    res.status(200).json(data.rows);
+  } catch (err) {
+    res.status(405).json(err.stack);
+  }
+};
+
+export const getLastMonthPlayerValues = async (req, res) => {
+  try {
+    const data = await playersModel.select(
+      '*',
+      ' WHERE date::date = now()::date - 30 order by sf_trade_value desc '
+    );
     res.status(200).json(data.rows);
   } catch (err) {
     res.status(405).json(err.stack);

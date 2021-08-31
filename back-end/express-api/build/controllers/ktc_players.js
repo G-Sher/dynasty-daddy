@@ -5,7 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getHistoricalPlayerValueById = exports.getCurrentPlayerValues = void 0;
+exports.getHistoricalPlayerValueById = exports.getLastMonthPlayerValues = exports.getCurrentPlayerValues = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -28,12 +28,6 @@ var getCurrentPlayerValues = /*#__PURE__*/function () {
 
           case 3:
             data = _context.sent;
-            // let data = await playersModel.select('*',
-            // ' WHERE date::date = now()::date order by sf_trade_value desc ');
-            // if (data.rows.length === 0) {
-            //   data = await playersModel.select('*',
-            //   ' WHERE date::date = (NOW() - interval \'1 day\')::date order by sf_trade_value desc ');
-            // }
             res.status(200).json(data.rows);
             _context.next = 10;
             break;
@@ -58,39 +52,76 @@ var getCurrentPlayerValues = /*#__PURE__*/function () {
 
 exports.getCurrentPlayerValues = getCurrentPlayerValues;
 
-var getHistoricalPlayerValueById = /*#__PURE__*/function () {
+var getLastMonthPlayerValues = /*#__PURE__*/function () {
   var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(req, res) {
-    var id, data;
+    var data;
     return _regenerator["default"].wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
             _context2.prev = 0;
-            id = req.params.id;
-            _context2.next = 4;
-            return playersModel.select('*', " WHERE name_id = '".concat(id, "'"));
+            _context2.next = 3;
+            return playersModel.select('*', ' WHERE date::date = now()::date - 30 order by sf_trade_value desc ');
 
-          case 4:
+          case 3:
             data = _context2.sent;
             res.status(200).json(data.rows);
-            _context2.next = 11;
+            _context2.next = 10;
             break;
 
-          case 8:
-            _context2.prev = 8;
+          case 7:
+            _context2.prev = 7;
             _context2.t0 = _context2["catch"](0);
             res.status(405).json(_context2.t0.stack);
 
-          case 11:
+          case 10:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2, null, [[0, 8]]);
+    }, _callee2, null, [[0, 7]]);
   }));
 
-  return function getHistoricalPlayerValueById(_x3, _x4) {
+  return function getLastMonthPlayerValues(_x3, _x4) {
     return _ref2.apply(this, arguments);
+  };
+}();
+
+exports.getLastMonthPlayerValues = getLastMonthPlayerValues;
+
+var getHistoricalPlayerValueById = /*#__PURE__*/function () {
+  var _ref3 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(req, res) {
+    var id, data;
+    return _regenerator["default"].wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            _context3.prev = 0;
+            id = req.params.id;
+            _context3.next = 4;
+            return playersModel.select('*', " WHERE name_id = '".concat(id, "'"));
+
+          case 4:
+            data = _context3.sent;
+            res.status(200).json(data.rows);
+            _context3.next = 11;
+            break;
+
+          case 8:
+            _context3.prev = 8;
+            _context3.t0 = _context3["catch"](0);
+            res.status(405).json(_context3.t0.stack);
+
+          case 11:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3, null, [[0, 8]]);
+  }));
+
+  return function getHistoricalPlayerValueById(_x5, _x6) {
+    return _ref3.apply(this, arguments);
   };
 }();
 
