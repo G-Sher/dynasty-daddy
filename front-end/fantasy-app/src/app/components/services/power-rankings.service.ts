@@ -227,23 +227,11 @@ export class PowerRankingsService {
         }
       }
       for (const starter of team.starters) {
-        team.sfTradeValueStarter += starter.sf_trade_value;
-        team.tradeValueStarter += starter.trade_value;
+        team.sfTradeValueStarter += this.playerService.playerValueAnalysis[starter.name_id].sf_trade_value;
+        team.tradeValueStarter += this.playerService.playerValueAnalysis[starter.name_id].trade_value;
       }
     });
   }
-
-  // private selectStarters(players: KTCPlayer[], slots: number): KTCPlayer[] {
-  //   const starters = [];
-  //   for (let i = 0; starters.length < slots; i++) {
-  //     if (this.sleeperService.sleeperPlayers[players[i].sleeper_id]?.injury_status !== 'IR'
-  //       && this.sleeperService.sleeperPlayers[players[i].sleeper_id]?.injury_status !== 'Out') {
-  //       console.log(this.sleeperService.sleeperPlayers[players[i].sleeper_id])
-  //       starters.push(players[i]);
-  //     }
-  //   }
-  //   return starters;
-  // }
 
   /**
    * determines the best available flex option for team by trade value

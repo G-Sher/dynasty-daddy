@@ -395,12 +395,14 @@ export class PlayerService {
   }
 
   /**
-   * returns current value of player
+   * returns current value of player with a week buffer
    * @param player ktc player
    * @param isSuperFlex boolean
    */
   getCurrentPlayerValue(player: KTCPlayer, isSuperFlex: boolean): number {
-    if (new Date(player.date).setHours(0, 0, 0, 0) !== new Date().setHours(0, 0, 0, 0)) {
+    const now = new Date();
+    const lastWeekMs = now.getTime() - 1000 * 60 * 60 * 24 * 7;
+    if (new Date(player.date).setHours(0, 0, 0, 0) < new Date(lastWeekMs).setHours(0, 0, 0, 0)) {
       return 0;
     } else {
       return isSuperFlex ? player.sf_trade_value : player.trade_value;
