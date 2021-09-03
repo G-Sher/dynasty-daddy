@@ -11,7 +11,7 @@
         <img #image [src]="'https://sleepercdn.com/avatars/thumbs/' + team1.owner?.avatar"
              onerror="style.display = 'none'" class="games-image">
         <span>
-          {{team1.owner?.teamName}}
+          {{displayService.truncate(team1.owner?.teamName, 30)}}
         </span>
       </td>
       <td class="td-game--metrics game-score__color" (click)="updateGameResultOption(1)" [ngClass]="{'game-score__color': game.matchUpDetails.selectedWinner === 0, 'game-win__color': game.matchUpDetails.selectedWinner === 1, 'game-loss__color': game.matchUpDetails.selectedWinner === 2, 'game-tie__color': game.matchUpDetails.selectedWinner === 3}">
@@ -26,7 +26,7 @@
         <img #image [src]="'https://sleepercdn.com/avatars/thumbs/' + team2.owner?.avatar"
              onerror="style.display = 'none'" class="games-image">
         <span>
-          {{team2.owner?.teamName}}
+          {{displayService.truncate(team2.owner?.teamName, 30)}}
         </span>
       </td>
       <td class="td-game--metrics" (click)="updateGameResultOption(2)" [ngClass]="{'game-score__color': game.matchUpDetails.selectedWinner === 0, 'game-win__color': game.matchUpDetails.selectedWinner === 2, 'game-loss__color': game.matchUpDetails.selectedWinner === 1, 'game-tie__color': game.matchUpDetails.selectedWinner === 3}" >

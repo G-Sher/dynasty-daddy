@@ -3,6 +3,7 @@ import {MatchUpProbability} from '../../../model/playoffCalculator';
 import {SleeperTeam} from '../../../../model/SleeperLeague';
 import {SleeperService} from '../../../../services/sleeper.service';
 import {ColorService} from '../../../services/color.service';
+import {DisplayService} from "../../../../services/utilities/display.service";
 
 @Component({
   selector: 'app-playoff-calculator-games-card',
@@ -28,7 +29,7 @@ export class PlayoffCalculatorGamesCardComponent implements OnInit {
   /** color gradient for prob */
   probGradient: string[];
 
-  constructor(private sleeperService: SleeperService, private colorService: ColorService) { }
+  constructor(private sleeperService: SleeperService, private colorService: ColorService, public displayService: DisplayService) { }
 
   ngOnInit(): void {
     this.team1 = this.sleeperService.getTeamByRosterId(this.game?.matchUpDetails.team1RosterId);
