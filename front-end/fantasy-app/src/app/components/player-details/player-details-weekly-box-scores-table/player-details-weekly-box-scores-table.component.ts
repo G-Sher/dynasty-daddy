@@ -89,7 +89,7 @@ export class PlayerDetailsWeeklyBoxScoresTableComponent implements OnInit {
     this.setDisplayColumns();
     for (let i = 1; i < 19; i++) {
       const weekStats = this.playerService.pastSeasonWeeklyStats[i];
-      this.playerWeeklyStats.push(weekStats[this.selectedPlayer.sleeper_id]);
+      if (weekStats[this.selectedPlayer.sleeper_id]) { this.playerWeeklyStats.push(weekStats[this.selectedPlayer.sleeper_id]); }
     }
     this.datasource = new MatTableDataSource<any>(this.playerWeeklyStats);
     if (this.playerService.leagueLeaders.rec.sleeperId !== '') {
