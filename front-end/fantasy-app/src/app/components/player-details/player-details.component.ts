@@ -70,8 +70,7 @@ export class PlayerDetailsComponent extends BaseComponent implements OnInit {
    * TODO update with rxjs
    */
   isPlayerStatsGenerated(): boolean {
-    return this.playerService.pastSeasonWeeklyStats[1] &&
-      this.playerService.pastSeasonWeeklyStats[2] &&
+    return this.playerService.pastSeasonWeeklyStats[2] &&
       this.playerService.pastSeasonWeeklyStats[3] &&
       this.playerService.pastSeasonWeeklyStats[4] &&
       this.playerService.pastSeasonWeeklyStats[5] &&
@@ -88,7 +87,6 @@ export class PlayerDetailsComponent extends BaseComponent implements OnInit {
       this.playerService.pastSeasonWeeklyStats[16] &&
       this.playerService.pastSeasonWeeklyStats[17] &&
       this.playerService.pastSeasonWeeklyStats[18] &&
-      this.playerService.pastSeasonWeeklyProjections[1] &&
       this.playerService.pastSeasonWeeklyProjections[2] &&
       this.playerService.pastSeasonWeeklyProjections[3] &&
       this.playerService.pastSeasonWeeklyProjections[4] &&
@@ -105,7 +103,7 @@ export class PlayerDetailsComponent extends BaseComponent implements OnInit {
       this.playerService.pastSeasonWeeklyProjections[15] &&
       this.playerService.pastSeasonWeeklyProjections[16] &&
       this.playerService.pastSeasonWeeklyProjections[17] &&
-      this.playerService.pastSeasonWeeklyProjections[18];
+      this.playerService.pastSeasonWeeklyProjections[18]
   }
 
   /**
